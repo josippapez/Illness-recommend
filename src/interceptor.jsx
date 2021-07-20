@@ -21,12 +21,14 @@ export const addSubscriber = callback => {
   subscribers.push(callback);
 };
 
-export const refreshAuthentication = refreshToken => {
+export const refreshAuthentication = () => {
   return axios({
     method: 'GET',
     url: `${process.env.REACT_APP_API_URL}/authentication/refresh`,
     withCredentials: true,
-  });
+  })
+    .then(response => response)
+    .catch(error => error);
 };
 
 export const logOutAndWipeLocalStorage = () => {
@@ -50,7 +52,6 @@ export const onAccessTokenFetched = accessToken => {
 };
 
 export const refreshAccessTokenAndReattemptRequest = async error => {
-  console.log('refreshing');
   try {
     const { response: errorResponse } = error;
     const { refreshToken } = getAuthData(store.getState());
@@ -66,7 +67,7 @@ export const refreshAccessTokenAndReattemptRequest = async error => {
     });
     if (!isAlreadyFetchingAccessToken) {
       isAlreadyFetchingAccessToken = true;
-      const response = await refreshAuthentication(refreshToken);
+      const response = await refreshAuthentication();
 
       if (response.status !== 200) logOutAndWipeLocalStorage();
       if (!response.data) return Promise.reject(error);

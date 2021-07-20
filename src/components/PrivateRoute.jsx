@@ -36,7 +36,7 @@ const PrivateRoute = props => {
       setResponse(true);
       setAlreadyFetched(false);
     } else if (!alreadyFetched && refreshToken != null && refreshToken !== '') {
-      const response = await refreshAuthentication(refreshToken);
+      const response = await refreshAuthentication();
       if (response.status !== 200) {
         logOutAndWipeLocalStorage();
       }
@@ -49,7 +49,7 @@ const PrivateRoute = props => {
       renderFunc();
     }
   };
-
+  // TODO: COOKIES NOT PERSISTED!!! pa zato vrti stalno ko blesav kada ugasim i upalim ponovno browserž
   return response ? (
     <Route {...props} render={() => <Component {...props} />} />
   ) : response === false ? (
