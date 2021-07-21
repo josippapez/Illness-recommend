@@ -2,10 +2,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { logOutAndWipeLocalStorage } from '../../interceptor';
 
-const AdminHomepage = props => {
+const Home = props => {
   return (
     <div>
-      Admin
+      hgsdgsdfsdfsdf
       <button
         onClick={() => {
           logOutAndWipeLocalStorage();
@@ -17,6 +17,6 @@ const AdminHomepage = props => {
   );
 };
 
-AdminHomepage.propTypes = {};
+Home.propTypes = {};
 
-export default AdminHomepage;
+export default Home;

@@ -2,7 +2,7 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import token from 'jsonwebtoken';
 import moment from 'moment';
-import { userLoggedOut } from './store/actions';
+import { userLoggedIn } from './store/actions';
 
 import { persistor, store } from './store/store';
 
@@ -27,12 +27,14 @@ export const refreshAuthentication = () => {
     url: `${process.env.REACT_APP_API_URL}/authentication/refresh`,
     withCredentials: true,
   })
-    .then(response => response)
+    .then(response => {
+      store.dispatch(userLoggedIn(response.data));
+      return response;
+    })
     .catch(error => error);
 };
 
 export const logOutAndWipeLocalStorage = () => {
-  window.location.replace('/login');
   persistor.pause();
   persistor
     .purge()
@@ -43,7 +45,7 @@ export const logOutAndWipeLocalStorage = () => {
       Cookies.remove('Refreshtoken');
       Cookies.remove('Accesstoken');
     });
-  store.dispatch(userLoggedOut());
+  window.location.replace('/login');
 };
 
 export const onAccessTokenFetched = accessToken => {

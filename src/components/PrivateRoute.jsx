@@ -29,7 +29,7 @@ const PrivateRoute = props => {
     if (refreshTokenCookie) {
       refreshToken = token.decode(refreshTokenCookie);
     }
-    if (refreshToken == null || refreshToken === '') {
+    if (!refreshToken || refreshToken == null || refreshToken === '') {
       setResponse(false);
     }
     if (expiredToken > moment.utc().unix()) {
@@ -49,7 +49,7 @@ const PrivateRoute = props => {
       renderFunc();
     }
   };
-  // TODO: COOKIES NOT PERSISTED!!! pa zato vrti stalno ko blesav kada ugasim i upalim ponovno browserž
+
   return response ? (
     <Route {...props} render={() => <Component {...props} />} />
   ) : response === false ? (

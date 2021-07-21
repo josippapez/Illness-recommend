@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
+import { SET_ERROR_USER, USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
 
 export const registerUser = (name, email, password) => {
   return (dispatch, getState) => {
@@ -13,10 +13,16 @@ export const registerUser = (name, email, password) => {
       },
     })
       .then(response => {
-        console.log(response);
         dispatch(loginUser(email, password));
       })
-      .catch(error => console.log(error));
+      .catch(error =>
+        dispatch(
+          loginError({
+            message: error.response.data.message,
+            status: error.response.status,
+          })
+        )
+      );
   };
 };
 
@@ -32,10 +38,17 @@ export const loginUser = (email, password) => {
       },
     })
       .then(response => {
-        console.log(response);
+        console.log(response.data);
         dispatch(userLoggedIn(response.data));
       })
-      .catch(error => console.log(error));
+      .catch(error =>
+        dispatch(
+          loginError({
+            message: error.response.data.message,
+            status: error.response.status,
+          })
+        )
+      );
   };
 };
 
@@ -45,9 +58,18 @@ export const userLoggedIn = user => ({
     id: user.id,
     email: user.email,
     name: user.name,
+    role: user.role
   },
 });
 
 export const userLoggedOut = () => ({
   type: USER_LOGGED_OUT,
+});
+
+export const loginError = error => ({
+  type: SET_ERROR_USER,
+  payload: {
+    error: error.message,
+    status: error.status,
+  },
 });
