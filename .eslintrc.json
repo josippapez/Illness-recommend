@@ -28,8 +28,8 @@
     "no-extra-parens": 0,
     "comma-style": ["error", "last"],
     "react-hooks/exhaustive-deps": "off",
-    "no-unused-vars": "warn",
     "no-unused-expressions": "warn",
+    "no-unused-vars": "off",
     "react/prop-types": [1]
   }
 }

@@ -1,0 +1,101 @@
+.list-table {
+  border-spacing: 0;
+  border-collapse: collapse;
+  border-style: hidden;
+  box-shadow: 0 0 0 1px var(--unnamed-color-e2e2e3);
+  border-radius: 4px 4px 0 0;
+  overflow: hidden;
+  &__table-header {
+    text-align: left;
+    &__row {
+      background: var(--unnamed-color-f9fafb) 0% 0% no-repeat padding-box;
+      border-bottom: 1px solid var(--unnamed-color-e2e2e3);
+      border-radius: 4px 4px 0px 0px;
+      height: 47px;
+      &__header {
+        padding: 0 0 0 40px;
+        font: normal normal normal 14px "Lato, Bold";
+        user-select: none;
+        -webkit-user-select: none;
+        &:last-child {
+          padding: 0 40px 0 0;
+        }
+      }
+    }
+  }
+  &__item-row {
+    text-align: left;
+    font: normal normal normal 14px "Lato, Regular";
+    color: var(--main-text);
+    text-align: left;
+    letter-spacing: 0px;
+    .spacer {
+      height: 50px;
+    }
+    .item-row {
+      td {
+        padding: 0 0 0 40px;
+        #link-to-student-page,
+        #link-to-internship-page,
+        #link-to-mentor-page,
+        #link-to-subject-edit-page,
+        #link-to-professor-page,
+        .url,
+        .action-button {
+          border: none;
+          background: none;
+          color: var(--hyperlink);
+          cursor: pointer;
+          text-decoration: none;
+          padding: 0;
+          &.disabled {
+            cursor: not-allowed;
+            color: grey;
+          }
+          &:disabled {
+            cursor: not-allowed;
+            color: grey;
+          }
+        }
+
+        .choose {
+          user-select: none;
+          -webkit-user-select: none;
+          border: none;
+          cursor: pointer;
+        }
+        .decline {
+          user-select: none;
+          -webkit-user-select: none;
+          border: none;
+          cursor: pointer;
+          color: #db2828;
+        }
+
+        .company-url,
+        #open-send-email-modal {
+          color: var(--hyperlink);
+          cursor: pointer;
+          text-decoration: none;
+          padding: 0;
+        }
+        &:last-child {
+          padding: 0 40px 0 0;
+        }
+      }
+      &:nth-child(even) {
+        background: var(--unnamed-color-f9fafb) 0% 0% no-repeat padding-box;
+        border: 1px solid var(--unnamed-color-e2e2e3);
+      }
+
+      .action-row {
+        display: flex;
+        justify-content: space-around;
+        padding-right: 0px;
+        td {
+          padding: 0;
+        }
+      }
+    }
+  }
+}

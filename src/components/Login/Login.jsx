@@ -34,92 +34,116 @@ function Login() {
   }, [user]);
 
   return (
-    <div className="login">
-      <div className="login-site">
-        <div className="login-site__text">
-          <div className="site-title">Preporuke lijekova</div>
-          <div className="site-text-under-title">
-            Odaberite jednu od opcija za nastavak.
+    !user.isAuthenticated && (
+      <div className="login">
+        <div className="login-site">
+          <div className="login-site__text text-pop-up-top">
+            <div className="site-title">Preporuke lijekova</div>
+            <div className="site-text-under-title">
+              Odaberite jednu od opcija za nastavak.
+            </div>
+          </div>
+          <img src={backgroundImg} alt="background" className="site-logo" />
+          <div className="login__button-container">
+            <button
+              className="login__button-container__register-btn"
+              type="button"
+              onClick={() => {
+                setShowRegistration(true);
+                setShowForm(true);
+              }}
+            >
+              <div className="login__button-container__register-btn__text">
+                Registracija
+              </div>
+            </button>
+            <button
+              className="login__button-container__login-btn"
+              type="button"
+              onClick={() => setShowForm(true)}
+            >
+              <div className="login__button-container__login-btn__text">
+                Prijava
+              </div>
+            </button>
           </div>
         </div>
-        <img src={backgroundImg} alt="background" className="site-logo" />
-        <div className="login__button-container">
-          <button
-            className="login__button-container__register-btn"
-            type="button"
-            onClick={() => {
-              setShowRegistration(true);
-              setShowForm(true);
-            }}
-          >
-            <div className="login__button-container__register-btn__text">
-              Registracija
-            </div>
-          </button>
-          <button
-            className="login__button-container__login-btn"
-            type="button"
-            onClick={() => setShowForm(true)}
-          >
-            <div className="login__button-container__login-btn__text">
-              Prijava
-            </div>
-          </button>
-        </div>
-      </div>
-      <form
-        className={classNames({
-          'login-form': showForm || showForm === false,
-          isClosed: showForm === false,
-        })}
-        onSubmit={e => {
-          e.preventDefault();
-          if (showRegistration) {
-            dispatch(registerUser(name, email, password));
-          } else {
-            dispatch(loginUser(email, password));
-          }
-        }}
-        onClick={e => {
-          if (
-            e.target.className !== 'content-container__email' &&
-            e.target.className !== 'content-container__password' &&
-            buttonRef.current
-          ) {
-            buttonRef.current.focus();
-          }
-        }}
-      >
-        {showForm && (
-          <div className="login-form__form">
-            <div className="content-container">
-              <div className="header">
-                <div
-                  type="btn"
-                  className="header__back"
-                  onClick={() => {
-                    setShowForm(false);
-                    setShowRegistration(false);
-                    dispatch(loginError({ message: null, status: null }));
-                  }}
-                />
-                <div className="sign-in-image" />
-                <div className="form-title">
-                  <div className="form-title__main">
-                    {showRegistration ? 'Registracija' : 'Prijava'}
-                  </div>
-                  <div className="form-title__small-text">
-                    {`Unesite svoje podatke kako biste se ${
-                      showRegistration ? 'registrirali' : 'prijavili'
-                    }`}
+        <form
+          className={classNames({
+            'login-form': showForm || showForm === false,
+            isClosed: showForm === false,
+          })}
+          onSubmit={e => {
+            e.preventDefault();
+            if (showRegistration) {
+              dispatch(registerUser(name, email, password));
+            } else {
+              dispatch(loginUser(email, password));
+            }
+          }}
+          onClick={e => {
+            if (
+              e.target.className !== 'content-container__email' &&
+              e.target.className !== 'content-container__password' &&
+              buttonRef.current
+            ) {
+              buttonRef.current.focus();
+            }
+          }}
+        >
+          {showForm && (
+            <div className="login-form__form">
+              <div className="content-container">
+                <div className="header">
+                  <div
+                    type="btn"
+                    className="header__back"
+                    onClick={() => {
+                      setShowForm(false);
+                      setShowRegistration(false);
+                      dispatch(loginError({ message: null, status: null }));
+                    }}
+                  />
+                  <div className="sign-in-image" />
+                  <div className="form-title">
+                    <div className="form-title__main">
+                      {showRegistration ? 'Registracija' : 'Prijava'}
+                    </div>
+                    <div className="form-title__small-text">
+                      {`Unesite svoje podatke kako biste se ${
+                        showRegistration ? 'registrirali' : 'prijavili'
+                      }`}
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div className="body">
-                {showRegistration && (
+                <div className="body">
+                  {showRegistration && (
+                    <DataDisplay
+                      removeTopSeparator
+                      dataHeader="Ime i prezime"
+                      headerBolded
+                      headerFontSize={13}
+                      displayInColumn
+                      dataSeparatorTopSpacing={6}
+                      data={
+                        <input
+                          className="content-container__email"
+                          type="text"
+                          aria-autocomplete="inline"
+                          onChange={e => {
+                            e.preventDefault();
+                            setName(e.target.value);
+                          }}
+                          value={name ? name : ''}
+                          placeholder="Ime i prezime"
+                          name="name"
+                        />
+                      }
+                    />
+                  )}
                   <DataDisplay
-                    removeTopSeparator
-                    dataHeader="Ime i prezime"
+                    removeTopSeparator={!showRegistration}
+                    dataHeader="Email Adresa"
                     headerBolded
                     headerFontSize={13}
                     displayInColumn
@@ -127,89 +151,67 @@ function Login() {
                     data={
                       <input
                         className="content-container__email"
-                        type="text"
+                        type="email"
                         aria-autocomplete="inline"
                         onChange={e => {
                           e.preventDefault();
-                          setName(e.target.value);
+                          setEmail(e.target.value);
                         }}
-                        value={name ? name : ''}
-                        placeholder="Ime i prezime"
-                        name="name"
+                        value={email ? email : ''}
+                        placeholder="E-mail"
+                        name="email"
                       />
                     }
                   />
-                )}
-                <DataDisplay
-                  removeTopSeparator={!showRegistration}
-                  dataHeader="Email Adresa"
-                  headerBolded
-                  headerFontSize={13}
-                  displayInColumn
-                  dataSeparatorTopSpacing={6}
-                  data={
-                    <input
-                      className="content-container__email"
-                      type="email"
-                      aria-autocomplete="inline"
-                      onChange={e => {
-                        e.preventDefault();
-                        setEmail(e.target.value);
-                      }}
-                      value={email ? email : ''}
-                      placeholder="E-mail"
-                      name="email"
-                    />
-                  }
-                />
-                <DataDisplay
-                  dataHeader='Lozinka'
-                  headerBolded
-                  headerFontSize={13}
-                  displayInColumn
-                  dataSeparatorTopSpacing={6}
-                  data={
-                    <div className="password-input">
-                      <input
-                        className="content-container__password"
-                        type={displayPassword ? 'text' : 'password'}
-                        value={password ? password : ''}
-                        onChange={e => {
-                          e.stopPropagation();
-                          e.preventDefault();
-                          setPassword(e.target.value);
-                        }}
-                        placeholder="Lozinka"
-                        name="password"
-                      />
-                      <div
-                        onClick={() => setDisplayPassword(!displayPassword)}
-                        className={classNames({
-                          'password-icon': true,
-                          'hide-password': !displayPassword,
-                          'show-password': displayPassword,
-                        })}
-                      />
-                    </div>
-                  }
-                />
-                <button
-                  ref={buttonRef}
-                  className="content-container__btn"
-                  autoFocus
-                  type="submit"
-                >
-                  {showRegistration ? 'Registriraj se' : 'Prijavi se'}
-                </button>
-                {errorMessage && (
-                  <div className="login__message">{errorMessage}</div>
-                )}
+                  <DataDisplay
+                    dataHeader="Lozinka"
+                    headerBolded
+                    headerFontSize={13}
+                    displayInColumn
+                    dataSeparatorTopSpacing={6}
+                    data={
+                      <div className="password-input">
+                        <input
+                          className="content-container__password"
+                          type={displayPassword ? 'text' : 'password'}
+                          value={password ? password : ''}
+                          onChange={e => {
+                            e.stopPropagation();
+                            e.preventDefault();
+                            setPassword(e.target.value);
+                          }}
+                          placeholder="Lozinka"
+                          name="password"
+                        />
+                        <div
+                          onClick={() => setDisplayPassword(!displayPassword)}
+                          className={classNames({
+                            'password-icon': true,
+                            'hide-password': !displayPassword,
+                            'show-password': displayPassword,
+                          })}
+                        />
+                      </div>
+                    }
+                  />
+                  <button
+                    ref={buttonRef}
+                    className="content-container__btn"
+                    autoFocus
+                    type="submit"
+                  >
+                    {showRegistration ? 'Registriraj se' : 'Prijavi se'}
+                  </button>
+                  {errorMessage && (
+                    <div className="login__message">{errorMessage}</div>
+                  )}
+                </div>
               </div>
             </div>
-          </div>
-        )}
-      </form>
-    </div>
+          )}
+        </form>
+      </div>
+    )
   );
 }
 

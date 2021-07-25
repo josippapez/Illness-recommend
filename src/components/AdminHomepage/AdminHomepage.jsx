@@ -1,17 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { logOutAndWipeLocalStorage } from '../../interceptor';
+import { useDispatch } from 'react-redux';
+import { getAllUsers } from '../../store/actions/usersActions';
 
 const AdminHomepage = props => {
+  const dispatch = useDispatch();
   return (
     <div>
       Admin
       <button
         onClick={() => {
-          logOutAndWipeLocalStorage();
+          dispatch(getAllUsers());
         }}
       >
-        Odjava
+        dohvati sve usere
+      </button>
+      <button
+        onClick={() => {
+          dispatch(getAllUsers());
+        }}
+      >
+        dohvati
       </button>
     </div>
   );

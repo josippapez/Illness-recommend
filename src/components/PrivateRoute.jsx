@@ -1,5 +1,5 @@
 /* eslint-disable eqeqeq */
-import React, { Component, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Route, Redirect } from 'react-router-dom';
 import moment from 'moment';
 import token from 'jsonwebtoken';
@@ -20,22 +20,18 @@ const PrivateRoute = props => {
 
   const renderFunc = async () => {
     let expiredToken;
-    let refreshToken;
     const expiredTokenCookie = Cookies.get('Accesstoken');
     const refreshTokenCookie = Cookies.get('Refreshtoken');
     if (expiredTokenCookie) {
       expiredToken = token.decode(expiredTokenCookie).exp;
+    } else {
+      logOutAndWipeLocalStorage();
+      return;
     }
-    if (refreshTokenCookie) {
-      refreshToken = token.decode(refreshTokenCookie);
-    }
-    if (!refreshToken || refreshToken == null || refreshToken === '') {
-      setResponse(false);
-    }
-    if (expiredToken > moment.utc().unix()) {
+    if (expiredToken && expiredToken > moment.utc().unix()) {
       setResponse(true);
       setAlreadyFetched(false);
-    } else if (!alreadyFetched && refreshToken != null && refreshToken !== '') {
+    } else if (!alreadyFetched && refreshTokenCookie) {
       const response = await refreshAuthentication();
       if (response.status !== 200) {
         logOutAndWipeLocalStorage();
@@ -47,11 +43,18 @@ const PrivateRoute = props => {
       }
       setAlreadyFetched(true);
       renderFunc();
+    } else {
+      logOutAndWipeLocalStorage();
     }
   };
 
   return response ? (
-    <Route {...props} render={() => <Component {...props} />} />
+    <div className='page-container'>
+      <div className="navbar-container"></div>
+      <div className="page-content">
+        <Route {...props} />
+      </div>
+    </div>
   ) : response === false ? (
     <Redirect to="/login" />
   ) : null;

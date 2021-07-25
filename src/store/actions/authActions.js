@@ -38,7 +38,6 @@ export const loginUser = (email, password) => {
       },
     })
       .then(response => {
-        console.log(response.data);
         dispatch(userLoggedIn(response.data));
       })
       .catch(error =>

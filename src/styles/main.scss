@@ -39,3 +39,19 @@ body {
   src: local("Lato, Regular"),
     url(./assets/fonts/Lato-Regular.ttf) format("truetype");
 }
+
+.page-container {
+  display: flex;
+  width: 100%;
+  .navbar-container {
+    width: 20%;
+    min-width: 300px;
+    height: 100vh;
+  }
+
+  .page-content {
+    width: 80%;
+    position: relative;
+    padding: 20px 35px;
+  }
+}

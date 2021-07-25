@@ -2,17 +2,16 @@ import React from 'react';
 import { useSelector } from 'react-redux';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import AdminHomepage from './AdminHomepage/AdminHomepage';
+import UsersListPage from './AdminHomepage/UsersListPage/UsersListPage';
 import Home from './UserHomepage/Home';
 import UserHomepage from './UserHomepage/UserHomepage';
 
 const Routes = () => {
   const user = useSelector(state => state.user);
-
+  const adminRoutes = [{ route: '/users', component: UsersListPage }];
+  const userRoutes = [{ route: '/home', component: Home }];
   const isAdmin = user => {
-    if (user.role === 'admin') {
-      return true;
-    }
-    return false;
+    return user.role === 'admin';
   };
 
   return (
@@ -22,8 +21,26 @@ const Routes = () => {
         path="/"
         component={isAdmin(user) ? AdminHomepage : UserHomepage}
       />
-      {!isAdmin(user) ? (
-        <Route exact path="/home" component={Home} />
+      {isAdmin(user) ? (
+        adminRoutes.find(route => route.route === location.pathname) ? (
+          <Route
+            path={location.pathname}
+            component={
+              adminRoutes.find(route => route.route === location.pathname)
+                .component
+            }
+          />
+        ) : (
+          <Redirect to="/" />
+        )
+      ) : userRoutes.find(route => route.route === location.pathname) ? (
+        <Route
+          path={location.pathname}
+          component={
+            userRoutes.find(route => route.route === location.pathname)
+              .component
+          }
+        />
       ) : (
         <Redirect to="/" />
       )}
