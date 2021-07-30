@@ -55,3 +55,16 @@ body {
     padding: 20px 35px;
   }
 }
+
+.header-close-icon {
+  height: 24px;
+  width: 24px;
+  cursor: pointer;
+  position: absolute;
+  right: 20px;
+  background-image: url('../styles/assets/images/CloseIcon.svg');
+  &:hover {
+    background-color: #ebebeb;
+    border-radius: 50%;
+  }
+}

@@ -1,0 +1,83 @@
+.user-info-modal {
+  background: var(--white) 0% 0% no-repeat padding-box;
+  border-radius: 6px;
+  box-shadow: 0px 10px 20px #00000034;
+  width: 900px;
+  @media screen and (max-width: 900px) {
+    width: 100vw;
+  }
+
+  &__header {
+    display: flex;
+    box-shadow: 0px 1px 0px var(--unnamed-color-e2e2e3);
+    padding: 20px;
+    height: 78px;
+    align-items: center;
+    position: relative;
+    user-select: none;
+    -webkit-user-select: none;
+    &__header-text {
+      flex-direction: column;
+      display: flex;
+      left: 12px;
+      position: relative;
+      .header-main-text {
+        text-align: left;
+        font: normal normal normal 14px/17px "Lato, Bold";
+        color: #474747;
+      }
+      .header-small-text {
+        text-align: left;
+        font: normal normal normal 13px/19px "Lato, Regular";
+        letter-spacing: 0px;
+        color: #474747;
+      }
+    }
+  }
+
+  &__body {
+    padding: 20px;
+    .conclusion-text {
+      border: 1px solid #dededf;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    .alergy-list-display-title {
+      margin-top: 20px;
+    }
+    .alergy-list-display {
+      display: inline-flex;
+      justify-content: space-evenly;
+      width: 100%;
+      margin: 20px 0;
+      &__subject-name {
+        font-family: "Lato, Bold";
+      }
+      .name,
+      .slots,
+      .year,
+      .actions {
+        width: 25%;
+      }
+      .actions {
+        display: flex;
+        justify-content: space-evenly;
+        .edit,
+        .delete {
+          border: none;
+          background: var(--hyperlink) 0% 0% no-repeat padding-box;
+          border-radius: 4px;
+          font-size: 15px;
+          align-self: center;
+          padding: 4px 4px;
+          color: var(--white);
+          cursor: pointer;
+          font-family: "Lato, Bold";
+          &:hover {
+            opacity: 0.7;
+          }
+        }
+      }
+    }
+  }
+}

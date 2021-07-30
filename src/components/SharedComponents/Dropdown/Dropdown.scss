@@ -1,0 +1,186 @@
+.dropdown {
+  display: inline-flex;
+  align-items: flex-start;
+  @media screen and (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    width: 100%;
+    margin: auto !important;
+  }
+  &__wrapper {
+    width: 310px;
+    position: relative;
+    @media screen and (max-width: 768px) {
+      width: 100%;
+    }
+
+    &__header {
+      display: inline-flex;
+      width: 100%;
+      align-items: center;
+      font-size: 16px;
+      color: var(--main-text);
+
+      @media screen and (max-width: 768px) {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin: auto !important;
+      }
+
+      .suggestion-input {
+        font-family: 'Lato, Regular';
+      }
+
+      &.default {
+        color: var(--faded-gray);
+      }
+
+      &__box {
+        display: inline-flex;
+        width: 300px;
+        padding: 8px 16px;
+        background: var(--white);
+        border: 1px solid var(--light-gray);
+        border-radius: 3px;
+        justify-content: space-between;
+        margin-right: 10px;
+        cursor: pointer;
+
+        @media screen and (max-width: 768px) {
+          width: 95%;
+          margin: 2% auto 0 auto !important;
+        }
+        &:disabled {
+          cursor: not-allowed;
+        }
+        &__caret {
+          width: 10px;
+          transition: all ease-in 0.2s;
+
+          &.opened {
+            transition: all ease-in-out 0.2s;
+            transform: rotate(-180deg);
+          }
+        }
+      }
+
+      &__remove {
+        cursor: pointer;
+        transition: all ease-in-out 0.2s;
+        width: fit-content;
+        padding: 8px 0;
+        &:hover {
+          color: var(--faded-gray);
+        }
+        @media screen and (max-width: 768px) {
+          width: 95%;
+          margin: 1% auto 0 auto !important;
+        }
+      }
+    }
+
+    &__menu {
+      position: absolute;
+      top: 38px;
+      left: 0;
+      width: 300px;
+      height: fit-content;
+      max-height: 300px;
+      border: 1px solid var(--light-gray);
+      border-top: none;
+      border-radius: 3px;
+      padding: 8px 0 0 0;
+      overflow-y: auto;
+      cursor: pointer;
+      display: inline-flex;
+      flex-direction: column;
+      animation: growDown 0.2s ease-in-out forwards;
+      transform-origin: top center;
+      background: var(--white);
+      z-index: 1;
+
+      @media screen and (max-width: 768px) {
+        width: 95%;
+        max-height: none;
+        margin: 2% auto 0 auto !important;
+        left: 2.5%;
+      }
+
+      &__item {
+        padding: 8px 16px;
+        transition: all ease-in 0.15s;
+        display: inline-flex;
+        flex-direction: row;
+        width: 100%;
+        justify-content: space-between;
+        align-items: center;
+
+        &__selected {
+          width: 15px;
+          height: 15px;
+        }
+
+        &__name {
+          font: normal normal normal 16px 'Lato, Regular' !important;
+        }
+        &__name-default {
+          font: normal normal normal 16px 'Lato, Bold' !important;
+        }
+
+        &.selected {
+          .dropdown__wrapper__menu__item__name {
+            font: normal normal bold 16px 'Lato, Regular' !important;
+          }
+        }
+
+        &:hover {
+          background: var(--hover);
+          transition: all ease-in 0.15s;
+        }
+      }
+
+      .next,
+      .previous {
+        font-weight: bold;
+        font-size: 12px;
+        line-height: 15px;
+        color: var(--hyperlink);
+        width: 50%;
+        height: 35px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        cursor: pointer;
+        a {
+          width: 100%;
+          height: 100%;
+          text-align: center;
+          line-height: 45px;
+        }
+        &:disabled {
+          background-color: #dededf;
+          cursor: not-allowed;
+        }
+      }
+      .next {
+        border: 1px solid var(--unnamed-color-e2e2e3);
+      }
+      .previous {
+        border: 1px solid var(--unnamed-color-e2e2e3);
+      }
+    }
+  }
+}
+
+@keyframes growDown {
+  0% {
+    transform: scaleY(0);
+  }
+  80% {
+    transform: scaleY(1.1);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}

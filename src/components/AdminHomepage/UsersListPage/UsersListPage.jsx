@@ -1,14 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './UsersListPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
 import { getAllUsers } from '../../../store/actions/usersActions';
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import UsersList from './UsersList/UsersList';
+import UserInfoModal from './UserInfoModal/UserInfoModal';
 
 const UsersListPage = props => {
   const dispatch = useDispatch();
   const usersList = useSelector(state => state.usersList);
+
+  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
+  const [userId, setUserId] = useState(null);
   useEffect(() => {
     dispatch(getAllUsers());
   }, []);
@@ -73,13 +77,24 @@ const UsersListPage = props => {
         data={
           <div className="student-list-page__list__display-list">
             {usersList && usersList.users && usersList.users.length > 0 ? (
-              <UsersList usersList={usersList.users} />
+              <UsersList
+                usersList={usersList.users}
+                setUserId={setUserId}
+                setShowUserInfoModal={setShowUserInfoModal}
+              />
             ) : (
               'Nije pronađen student za odabrani predmet'
             )}
           </div>
         }
       />
+      {showUserInfoModal && (
+        <UserInfoModal
+          userId={userId}
+          setUserId={setUserId}
+          setShowUserInfoModal={setShowUserInfoModal}
+        />
+      )}
     </div>
   );
 };

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Container, Table } from 'reactstrap';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import ListHeader from '../../../SharedComponents/ListHeader/ListHeader';
 import '../../../../styles/ListTable.scss';
+import { userInfoFetched } from '../../../../store/actions/usersActions';
 
 const UsersList = props => {
   const currentUser = useSelector(state => state.user);
+  const dispatch = useDispatch();
   const [headers, setHeaders] = useState([
     {
       header: 'Ime i prezime',
@@ -30,34 +32,26 @@ const UsersList = props => {
       <tbody className="list-table__item-row">
         {props.usersList.map(user => {
           return (
-            user.id !== currentUser.id && (
-              <tr className="spacer  item-row" key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <button
-                    id="link-to-student-page"
-                    onClick={() => {
-                      /* if (student.id !== studentSelected?.id) {
-                        dispatch(certificateOfEmploymentFetched(null));
-                        if (student.studyType === "IZVANREDNI") {
-                          dispatch(
-                            fetchCertificateOfEmploymentProfessor(student.id)
-                          );
-                        }
-                        dispatch(startLoading());
-                        dispatch(fetchStudentInfo(student.id));
-                        dispatch(fetchInternshipStudentProfessor(student.id));
-                      }
-                      history?.push("/student-homepage"); */
-                    }}
-                  >
-                    Odaberi
-                  </button>
-                </td>
-              </tr>
-            )
+            /* user.id !== currentUser.id && */ <tr
+              className="spacer  item-row"
+              key={user.id}
+            >
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td>
+                <button
+                  id="link-to-student-page"
+                  onClick={() => {
+                    dispatch(userInfoFetched({ data: null }));
+                    props.setUserId(user.id);
+                    props.setShowUserInfoModal(true);
+                  }}
+                >
+                  Odaberi
+                </button>
+              </td>
+            </tr>
           );
         })}
       </tbody>
@@ -67,6 +61,8 @@ const UsersList = props => {
 
 UsersList.propTypes = {
   usersList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
+  setUserId: PropTypes.func,
+  setShowUserInfoModal: PropTypes.func,
 };
 
 export default UsersList;
