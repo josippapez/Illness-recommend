@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import './UserInfoModal.scss';
+import './MedicationInfoModal.scss';
 import Modal from '../../../SharedComponents/Modal/Modal';
 import DataDisplay from '../../../SharedComponents/DataDisplay/DataDisplay';
 import { Dropdown } from '../../../SharedComponents/Dropdown/Dropdown';
 import {
-  createNewAlery,
   createUserDetails,
   deleteAlergiesUserInfoRelation,
   fetchUserInfoById,
@@ -16,7 +15,7 @@ import {
   updateUserDetails,
 } from '../../../../store/actions';
 
-const UserInfoModal = props => {
+const MedicationInfoModal = props => {
   const dispatch = useDispatch();
   const userDetails = useSelector(state => state.user.userInfo);
   const alergies = useSelector(state => state.alergies.alergies);
@@ -29,8 +28,7 @@ const UserInfoModal = props => {
     weight: null,
   });
   const [selectedAlergie, setselectedAlergie] = useState(null);
-  const [alergyDropdownTitle, setAlergyDropdownTitle] =
-    useState('Odaberi ili upiši');
+  const [alergyDropdownTitle, setAlergyDropdownTitle] = useState('Odaberi');
 
   useEffect(() => {
     dispatch(getAllAlergies());
@@ -50,12 +48,12 @@ const UserInfoModal = props => {
 
   useEffect(() => {
     if (userDetails.status === 201 || userDetails.status === 200) {
-      props.setShowUserInfoModal(false);
+      props.setShowMedicationInfoModal(false);
     }
   }, [userDetails]);
 
   return (
-    <Modal closeModal={() => props.setShowUserInfoModal(false)}>
+    <Modal closeModal={() => props.setShowMedicationInfoModal(false)}>
       <div className="user-info-modal">
         <div className="user-info-modal__header">
           <div className="header-info-image"></div>
@@ -64,7 +62,7 @@ const UserInfoModal = props => {
           </div>
           <div
             className="header-close-icon"
-            onClick={() => props.setShowUserInfoModal(false)}
+            onClick={() => props.setShowMedicationInfoModal(false)}
           ></div>
         </div>
         <div className="user-info-modal__body">
@@ -158,8 +156,6 @@ const UserInfoModal = props => {
               <div>
                 <Dropdown
                   customclass="alergies-dropdown"
-                  inputNewData
-                  setNewData={data => dispatch(createNewAlery(data.name))}
                   handleSelect={item => {
                     if (item === 'Odaberi') {
                       setselectedAlergie(null);
@@ -185,8 +181,7 @@ const UserInfoModal = props => {
                       : []
                   }
                   headerTitle={alergyDropdownTitle}
-                  defaultHeaderOption="Odaberi ili upiši"
-                  inputNewDataPlaceholder='Odaberi ili upiši'
+                  defaultHeaderOption="Odaberi"
                 />
                 {userDetailsInfo.alergies &&
                   userDetailsInfo.alergies.length > 0 && (
@@ -256,10 +251,10 @@ const UserInfoModal = props => {
   );
 };
 
-UserInfoModal.propTypes = {
-  setShowUserInfoModal: PropTypes.func,
+MedicationInfoModal.propTypes = {
+  setShowMedicationInfoModal: PropTypes.func,
   setUserId: PropTypes.func,
   userId: PropTypes.number,
 };
 
-export default UserInfoModal;
+export default MedicationInfoModal;

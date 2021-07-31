@@ -56,6 +56,18 @@ body {
   }
 }
 
+.error {
+  font-family: "Lato, Bold";
+  color: var(--alert-text);
+}
+
+.header-info-image {
+  background-image: url('../styles/assets/images/information.svg');
+  background-repeat: no-repeat;
+  width: 38px;
+  height: 38px;
+}
+
 .header-close-icon {
   height: 24px;
   width: 24px;

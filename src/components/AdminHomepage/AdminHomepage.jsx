@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { logOutAndWipeLocalStorage } from '../../interceptor';
 import { useDispatch } from 'react-redux';
-import { getAllUsers } from '../../store/actions/usersActions';
+import { getAllUsers, removeUserById } from '../../store/actions/usersActions';
 
 const AdminHomepage = props => {
   const dispatch = useDispatch();

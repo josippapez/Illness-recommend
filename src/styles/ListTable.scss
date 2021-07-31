@@ -17,9 +17,9 @@
         font: normal normal normal 14px "Lato, Bold";
         user-select: none;
         -webkit-user-select: none;
-        &:last-child {
+        /* &:last-child {
           padding: 0 40px 0 0;
-        }
+        } */
       }
     }
   }
@@ -34,7 +34,7 @@
     }
     .item-row {
       td {
-        padding: 0 0 0 40px;
+        padding: 10px 0 10px 40px;
         #link-to-student-page,
         #link-to-internship-page,
         #link-to-mentor-page,
@@ -79,9 +79,9 @@
           text-decoration: none;
           padding: 0;
         }
-        &:last-child {
+        /* &:last-child {
           padding: 0 40px 0 0;
-        }
+        } */
       }
       &:nth-child(even) {
         background: var(--unnamed-color-f9fafb) 0% 0% no-repeat padding-box;
