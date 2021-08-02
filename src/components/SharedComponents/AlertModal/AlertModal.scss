@@ -1,0 +1,71 @@
+.modal-for-alert {
+  .overlay {
+    z-index: 2;
+  }
+  .modal-container-alert {
+    z-index: 5;
+    width: 320px;
+    background: var(--white) 0% 0% no-repeat padding-box;
+    box-shadow: 0px 10px 20px #00000034;
+    border-radius: 6px;
+    padding: 20px 12px 12px 12px;
+
+    .alert-modal {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      &__icon-alert {
+        background-image: url("../../../styles/assets/images/AlertIconwFrame.svg");
+        background-repeat: no-repeat;
+        width: 38px;
+        height: 38px;
+      }
+      &__header-text {
+        margin-top: 10px;
+        margin-bottom: 30px;
+        .header-main-text {
+        }
+        .header-small-text {
+          margin-top: 10px;
+          font: normal normal normal 13px/19px "Lato, Regular";
+          letter-spacing: 0px;
+          color: #474747;
+        }
+      }
+      .button-container {
+        display: flex;
+        flex-direction: row;
+        .alert-decline-button {
+          width: 146px;
+          height: 38px;
+          background: #00000020 0% 0% no-repeat padding-box;
+          border-radius: 4px;
+          border: none;
+          color: var(--main-text);
+          font: normal normal bold 14px/17px "Lato, Regular";
+          letter-spacing: 0;
+          margin-right: 10px;
+          &:hover {
+            cursor: pointer;
+            background: #0000004b 0% 0% no-repeat padding-box;
+          }
+        }
+        .alert-confirm-button {
+          color: var(--white);
+          letter-spacing: 0px;
+          border: none;
+          width: 144px;
+          height: 38px;
+          background: var(--hyperlink) 0% 0% no-repeat padding-box;
+          border-radius: 4px;
+          font: normal normal bold 14px/17px "Lato, Regular";
+          &:hover {
+            cursor: pointer;
+            background: #0063c0 0% 0% no-repeat padding-box;
+          }
+        }
+      }
+    }
+  }
+}

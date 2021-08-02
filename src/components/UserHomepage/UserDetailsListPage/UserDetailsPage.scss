@@ -1,11 +1,14 @@
-.medication-info-modal {
+.user-details-page {
   background: var(--white) 0% 0% no-repeat padding-box;
-  border-radius: 6px;
-  box-shadow: 0px 10px 20px #00000034;
-  width: 900px;
-  @media screen and (max-width: 900px) {
-    width: 100vw;
-  }
+  width: 100%;
+  height: 100%;
+  background-image: url("../../../styles/assets/images/undraw_Social_bio_re_0t9u.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 700px;
+  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  position: relative;
 
   &__header {
     display: flex;
@@ -37,73 +40,20 @@
 
   &__body {
     padding: 20px;
-    display: flex;
-
-    @media screen and (max-width: 900px) {
-      flex-direction: column;
-      .medication-info-modal__body__left-side {
-        padding: 0;
-        width: 100%;
-      }
-      .medication-info-modal__body__right-side {
-        padding: 0;
-        width: 100%;
-        margin-top: 20px;
-      }
-    }
-    &__left-side {
-      padding-right: 10px;
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-    }
-    &__right-side {
-      padding-left: 10px;
-      width: 50%;
-      display: flex;
-      flex-direction: column;
-    }
-    input,
-    textarea {
+    input {
       padding: 8px 10px;
       font-size: 16px;
       width: 100%;
       height: 30px;
       background-color: var(--white);
-      border: 1px solid var(--light-gray);
+      border: 1px solid #dededf;
       border-radius: 4px;
     }
-    textarea {
-      height: 100px;
-      max-height: 300px;
-      min-height: 50px;
-      resize: vertical;
-    }
-    .new-alergy-input {
-      margin-top: 10px;
+    .checkbox {
+      width: 30px;
     }
     .alergy-list-display-title {
       margin-top: 20px;
-    }
-    .add-new-contraindication {
-      border: none;
-      color: var(--white);
-      border-radius: 4px;
-      height: 38px;
-      width: fit-content;
-      margin-top: 10px;
-      background: var(--hyperlink) 0% 0% no-repeat padding-box;
-      font: normal normal bold 14px "Lato, Regular";
-      &:hover {
-        cursor: pointer;
-        color: white;
-        background: #0964b9;
-      }
-      &:disabled {
-        color: var(--main-text);
-        background: var(--light-gray);
-        cursor: not-allowed;
-      }
     }
     .alergy-list-display {
       display: inline-flex;
@@ -146,8 +96,8 @@
     width: 100%;
     background: #f5f5f5 0% 0% no-repeat padding-box;
     border-radius: 0px 0px 10px 10px;
-    display: flex;
-    flex-direction: row;
+    position: absolute;
+    bottom: 0;
     &__send-button {
       border: none;
       color: var(--white);
@@ -161,22 +111,6 @@
         cursor: pointer;
         color: white;
         background: #0964b9;
-      }
-    }
-    &__remove-button {
-      border: none;
-      color: var(--white);
-      border-radius: 4px;
-      height: 38px;
-      width: 100%;
-      margin-top: 20px;
-      margin-right: 20px;
-      background: var(--alert-text) 0% 0% no-repeat padding-box;
-      font: normal normal bold 14px "Lato, Regular";
-      &:hover {
-        cursor: pointer;
-        color: white;
-        background: #a51e1e;
       }
     }
   }

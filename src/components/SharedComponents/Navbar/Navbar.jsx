@@ -82,6 +82,17 @@ const Navbar = () => {
               </NavLink>
             </div>
           )}
+          {user.role === 'user' && (
+            <div>
+              <NavLink
+                className="navbar-item"
+                to="/user-details"
+                activeClassName="active"
+              >
+                Korisnički detalji
+              </NavLink>
+            </div>
+          )}
           <button
             className="navbar-item"
             onClick={() => {

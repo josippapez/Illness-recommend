@@ -28,13 +28,18 @@ const DataDisplay = props => {
             color: props.headerTextColor,
             width:
               !props.displayInColumn &&
-              (props.dynamicHeaderWidth ? 'fit-content' : '25%'),
-            minWidth: !props.displayInColumn && '150px',
+              (props.dynamicHeaderWidth
+                ? 'fit-content'
+                : props.headerWidth
+                  ? `${props.headerWidth}px`
+                  : '150px'),
+            minWidth: !props.displayInColumn && !props.headerWidth && '25%',
             marginRight: !props.displayInColumn && '16px',
             fontSize: props.headerFontSize && `${props.headerFontSize}px`,
             background: props.headerBackground,
             textTransform: props.uppercaseHeader && 'uppercase',
-            alignSelf: props.centerHeader && 'center',
+            alignSelf: props.centerHeaderVertically && 'center',
+            textAlign: props.alignHeader ? props.alignHeader : 'left',
           }}
         >
           {props.dataHeader}
@@ -63,7 +68,17 @@ const DataDisplay = props => {
               paddingLeft:
                 !props.displayInColumn && props.dynamicHeaderWidth && '16px',
               color: props.dataDisplayColor && `${props.dataDisplayColor}`,
-              width: props.dataFullWidth && '100%',
+              width:
+                props.dataFullWidth &&
+                (!props.dataHeader
+                  ? '100%'
+                  : props.headerWidth
+                    ? `calc(100% - ${props.headerWidth + 16}px)`
+                    : props.floatDataRight
+                      ? '100%'
+                      : `calc(150 - ${16})px`),
+              display: props.floatDataRight && 'flex',
+              justifyContent: props.floatDataRight && 'flex-end',
             }}
           >
             {props.url ? (
@@ -91,6 +106,7 @@ DataDisplay.defaultProps = {
   TopSpacing: 20,
   BottomSpacing: 0,
   headerTextColor: 'black',
+  alignHeader: 'left',
 };
 
 DataDisplay.propTypes = {
@@ -123,7 +139,10 @@ DataDisplay.propTypes = {
   dataFullWidth: PropTypes.bool,
   TopSpacing: PropTypes.number,
   BottomSpacing: PropTypes.number,
-  centerHeader: PropTypes.bool,
+  centerHeaderVertically: PropTypes.bool,
+  headerWidth: PropTypes.number,
+  floatDataRight: PropTypes.bool,
+  alignHeader: PropTypes.string,
 };
 
 export default DataDisplay;

@@ -22,6 +22,7 @@ export const Dropdown = props => {
     customclass,
     inputNewDataPlaceholder,
     disabledInput,
+    fullWidth,
   } = props;
 
   const selectItem = item => {
@@ -29,8 +30,8 @@ export const Dropdown = props => {
   };
 
   return (
-    <div className="dropdown">
-      <div className="dropdown__wrapper">
+    <div className="dropdown" style={{ width: fullWidth && '100%' }}>
+      <div className="dropdown__wrapper" style={{ width: fullWidth && '100%' }}>
         <div
           className={classNames({
             dropdown__wrapper__header: true,
@@ -42,6 +43,7 @@ export const Dropdown = props => {
               className={classNames(customclass, {
                 dropdown__wrapper__header__box: true,
               })}
+              style={{ width: fullWidth && '100%' }}
               onClick={() => setDropdownOpened(!dropdownOpened)}
             >
               <div className="dropdown__wrapper__header__box__title">
@@ -76,7 +78,10 @@ export const Dropdown = props => {
         </div>
         {dropdownOpened &&
           (list.length > 0 ? (
-            <div className="dropdown__wrapper__menu">
+            <div
+              className="dropdown__wrapper__menu"
+              style={{ width: fullWidth && '100%' }}
+            >
               <div
                 className={classNames(customclass, {
                   dropdown__wrapper__menu__item: true,
@@ -151,7 +156,10 @@ export const Dropdown = props => {
               )}
             </div>
           ) : (
-            <div className="dropdown__wrapper__menu">
+            <div
+              className="dropdown__wrapper__menu"
+              style={{ width: fullWidth && '100%' }}
+            >
               <div className={classNames(customclass)}>
                 <div className="dropdown__wrapper__menu__item__name-default">
                   {loading ? (
@@ -180,4 +188,5 @@ Dropdown.propTypes = {
   inputNewData: PropTypes.bool,
   disabledInput: PropTypes.bool,
   inputNewDataPlaceholder: PropTypes.string,
+  fullWidth: PropTypes.bool,
 };

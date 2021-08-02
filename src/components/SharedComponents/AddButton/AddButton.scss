@@ -1,0 +1,29 @@
+.add-component {
+  height: 36px;
+  width: fit-content;
+  background: var(--hyperlink) 0% 0% no-repeat padding-box;
+  border-radius: 4px;
+  display: flex;
+  cursor: pointer;
+  &:hover {
+    background: var(--brand-blue);
+  }
+  .add-image-in-add-component {
+    background-image: url('../../../styles/assets/images/AddIconSmall.svg');
+    background-repeat: no-repeat;
+    width: 37px;
+    height: 100%;
+    background-position: center center;
+    background-color: var(--brand-blue);
+    border-radius: 3px 0px 0px 3px;
+  }
+  .add-button-in-add-component {
+    cursor: pointer;
+    font: normal normal normal 16px 'Lato, Bold';
+    padding: 0 16px;
+    border: none;
+    height: 100%;
+    background: none;
+    color: var(--white);
+  }
+}

@@ -1,32 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { logOutAndWipeLocalStorage } from '../../interceptor';
-import { useDispatch } from 'react-redux';
-import { getAllUsers, removeUserById } from '../../store/actions/usersActions';
+import './AdminHomepage.scss';
 
 const AdminHomepage = props => {
-  const dispatch = useDispatch();
   return (
-    <div>
-      Admin
-      <button
-        onClick={() => {
-          dispatch(getAllUsers());
-        }}
-      >
-        dohvati sve usere
-      </button>
-      <button
-        onClick={() => {
-          dispatch(getAllUsers());
-        }}
-      >
-        dohvati
-      </button>
+    <div className="admin-homepage">
+      <div className="admin-homepage__main-text">
+        Dobrodošli, {props.user.name}!
+      </div>
     </div>
   );
 };
 
-AdminHomepage.propTypes = {};
+AdminHomepage.propTypes = {
+  user: PropTypes.object,
+};
 
 export default AdminHomepage;

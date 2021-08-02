@@ -1,0 +1,24 @@
+.user-homepage {
+  height: 100%;
+  background-image: url("../../styles/assets/images/undraw_mornings_re_cofi-animated.svg");
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 700px;
+  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  @media screen and (max-width: 1060px) {
+    background-size: 100%;
+  }
+  &__main-text {
+    width: fit-content;
+    position: relative;
+    color: var(--brand-blue);
+    top: 20%;
+    left: 25%;
+    font-weight: bold;
+    font-size: 35px;
+    -webkit-user-select: none; /* Safari */
+    -ms-user-select: none; /* IE 10 and IE 11 */
+    user-select: none; /* Standard syntax */
+  }
+}

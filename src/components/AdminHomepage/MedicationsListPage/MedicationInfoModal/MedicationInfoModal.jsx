@@ -7,254 +7,654 @@ import Modal from '../../../SharedComponents/Modal/Modal';
 import DataDisplay from '../../../SharedComponents/DataDisplay/DataDisplay';
 import { Dropdown } from '../../../SharedComponents/Dropdown/Dropdown';
 import {
-  createUserDetails,
-  deleteAlergiesUserInfoRelation,
-  fetchUserInfoById,
+  createMedication,
   getAllAlergies,
-  removeUserById,
-  updateUserDetails,
+  getAllSymptoms,
+  removeMedicationById,
+  updateMedication,
 } from '../../../../store/actions';
+import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 
 const MedicationInfoModal = props => {
   const dispatch = useDispatch();
-  const userDetails = useSelector(state => state.user.userInfo);
   const alergies = useSelector(state => state.alergies.alergies);
+  const symptoms = useSelector(state => state.symptoms.symptoms);
+  const medication = useSelector(state => state.medicationList);
 
-  const [userDetailsInfo, setUserDetailsInfo] = useState({
-    id: props.userId,
-    age: null,
-    alergies: [],
-    pregnantOrBreastFeed: false,
-    weight: null,
-  });
+  const [newMedicationInfo, setNewMedicationInfo] = useState(
+    props.selectedMedication
+      ? props.selectedMedication
+      : {
+        name: null,
+        description: null,
+        contraindications: [],
+        sideEffects: { regular: [], rare: [], veryRare: [] },
+        alergies: [],
+        symptoms: [],
+      }
+  );
+  const [contraIndicationDescription, setContraIndicationDescription] =
+    useState(null);
+  const [regularSideEffectDescription, setRegularSideEffectDescription] =
+    useState(null);
+  const [rareSideEffectDescription, setRareSideEffectDescription] =
+    useState(null);
+  const [veryRareSideEffectDescription, setVeryRareSideEffectDescription] =
+    useState(null);
+  const [newAlergyName, setNewAlergyName] = useState(null);
+  const [newSymptomName, setNewSymptomName] = useState(null);
   const [selectedAlergie, setselectedAlergie] = useState(null);
-  const [alergyDropdownTitle, setAlergyDropdownTitle] = useState('Odaberi');
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [isTryingToDelete, setIsTryingToDelete] = useState(false);
+  const [isTryingToCloseWhenEdited, setIsTryingToCloseWhenEdited] =
+    useState(false);
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (props.userId) {
-      dispatch(fetchUserInfoById(props.userId));
-    }
+    dispatch(getAllSymptoms());
     return () => {
-      props.setUserId(null);
+      props.setSelectedMedication(null);
     };
   }, []);
 
   useEffect(() => {
-    if (userDetails.data) {
-      setUserDetailsInfo(userDetails.data);
-    }
-  }, [userDetails]);
-
-  useEffect(() => {
-    if (userDetails.status === 201 || userDetails.status === 200) {
+    if (
+      medication.medicationInfo &&
+      (medication.medicationInfo.status === 201 ||
+        medication.medicationInfo.status === 200)
+    ) {
       props.setShowMedicationInfoModal(false);
     }
-  }, [userDetails]);
+  }, [medication]);
+
+  const sideEffectsArray = [
+    {
+      name: 'regular',
+      description: regularSideEffectDescription,
+      setDescription: setRegularSideEffectDescription,
+    },
+    {
+      name: 'rare',
+      description: rareSideEffectDescription,
+      setDescription: setRareSideEffectDescription,
+    },
+    {
+      name: 'veryRare',
+      description: veryRareSideEffectDescription,
+      setDescription: setVeryRareSideEffectDescription,
+    },
+  ];
+
+  const checkForClosingModal = () => {
+    if (
+      props.selectedMedication &&
+      props.selectedMedication !== newMedicationInfo
+    ) {
+      setIsTryingToCloseWhenEdited(true);
+      setShowAlertModal(true);
+    } else if (
+      !props.selectedMedication &&
+      (newMedicationInfo.name ||
+        newMedicationInfo.description ||
+        (newMedicationInfo.contraindication &&
+          newMedicationInfo.contraindication.length) ||
+        (newMedicationInfo.alergies && newMedicationInfo.alergies.length) ||
+        (newMedicationInfo.symptoms && newMedicationInfo.symptoms.length) ||
+        (newMedicationInfo.sideEffects &&
+          (newMedicationInfo.sideEffects.rare.length ||
+            newMedicationInfo.sideEffects.veryRare.length ||
+            newMedicationInfo.sideEffects.regular.length)))
+    ) {
+      setIsTryingToCloseWhenEdited(true);
+      setShowAlertModal(true);
+    } else {
+      props.setShowMedicationInfoModal(false);
+    }
+  };
 
   return (
-    <Modal closeModal={() => props.setShowMedicationInfoModal(false)}>
-      <div className="user-info-modal">
-        <div className="user-info-modal__header">
+    <Modal closeModal={() => checkForClosingModal()}>
+      <div className="medication-info-modal">
+        <div className="medication-info-modal__header">
           <div className="header-info-image"></div>
-          <div className="user-info-modal__header__header-text">
-            <div className="header-main-text">Pregled detalja korisnika</div>
+          <div className="medication-info-modal__header__header-text">
+            <div className="header-main-text">
+              {props.selectedMedication
+                ? 'Pregled detalja lijeka'
+                : 'Unos novog lijeka'}
+            </div>
+            <div className="header-small-text">
+              {props.selectedMedication
+                ? 'Ovdje možete pregledati i urediti informacije o lijeku'
+                : 'Unesite informacije o lijeku'}
+            </div>
           </div>
           <div
             className="header-close-icon"
-            onClick={() => props.setShowMedicationInfoModal(false)}
+            onClick={() => checkForClosingModal()}
           ></div>
         </div>
-        <div className="user-info-modal__body">
-          <DataDisplay
-            dataHeader="Dob (g)"
-            displayInColumn
-            headerBolded
-            removeTopSeparator
-            dataSeparatorTopSpacing={4}
-            data={
-              <input
-                type="number"
-                min="0"
-                value={userDetailsInfo.age ? userDetailsInfo.age : ''}
-                onChange={e => {
-                  console.log(e.target.valueAsNumber);
-                  setUserDetailsInfo({
-                    ...userDetailsInfo,
-                    age: e.target.value,
-                  });
-                }}
-              />
-            }
-          />
-          {userDetails.error &&
-            userDetails.error.find(error => error.field === 'age') && (
-            <div className="error">
-              {userDetails.error.find(error => error.field === 'age').message}
-            </div>
-          )}
-          <DataDisplay
-            dataHeader="Težina (kg)"
-            displayInColumn
-            headerBolded
-            dataSeparatorTopSpacing={4}
-            data={
-              <input
-                type="number"
-                min="0"
-                value={userDetailsInfo.weight ? userDetailsInfo.weight : ''}
-                onChange={e => {
-                  setUserDetailsInfo({
-                    ...userDetailsInfo,
-                    weight: e.target.value,
-                  });
-                }}
-              />
-            }
-          />
-          {userDetails.error &&
-            userDetails.error.find(error => error.field === 'weight') && (
-            <div className="error">
-              {
-                userDetails.error.find(error => error.field === 'weight')
-                  .message
-              }
-            </div>
-          )}
-          <DataDisplay
-            dataHeader="Dojenje ili trudnoća?"
-            displayInColumn
-            headerBolded
-            dataSeparatorTopSpacing={4}
-            data={
-              <div>
+        <div className="medication-info-modal__body">
+          <div className="medication-info-modal__body__left-side">
+            <DataDisplay
+              dataHeader="Naziv"
+              displayInColumn
+              headerBolded
+              removeTopSeparator
+              dataSeparatorTopSpacing={4}
+              data={
                 <input
-                  className="checkbox"
-                  type="checkbox"
-                  min={0}
-                  checked={
-                    userDetailsInfo.pregnantOrBreastFeed
-                      ? userDetailsInfo.pregnantOrBreastFeed
-                      : false
-                  }
+                  value={newMedicationInfo.name ? newMedicationInfo.name : ''}
                   onChange={e => {
-                    setUserDetailsInfo({
-                      ...userDetailsInfo,
-                      pregnantOrBreastFeed: e.target.checked,
+                    setNewMedicationInfo({
+                      ...newMedicationInfo,
+                      name: e.target.value,
                     });
                   }}
                 />
-              </div>
-            }
-          />
-          <DataDisplay
-            dataHeader="Alergije"
-            displayInColumn
-            headerBolded
-            dataSeparatorTopSpacing={4}
-            data={
+              }
+            />
+            {medication.medicationInfo &&
+              medication.medicationInfo.error &&
+              medication.medicationInfo.error.find(
+                error => error.field === 'name'
+              ) && (
               <div>
-                <Dropdown
-                  customclass="alergies-dropdown"
-                  handleSelect={item => {
-                    if (item === 'Odaberi') {
-                      setselectedAlergie(null);
-                    } else if (item.id) {
-                      setUserDetailsInfo({
-                        ...userDetailsInfo,
-                        alergies: [...userDetailsInfo.alergies, item],
-                      });
-                    }
-                  }}
-                  list={
-                    alergies
-                      ? [
-                        ...alergies.filter(alergy =>
-                          userDetailsInfo.alergies.length > 0
-                            ? !userDetailsInfo.alergies.find(
-                              userInfoAlergy =>
-                                userInfoAlergy.id === alergy.id
-                            )
-                            : alergy
-                        ),
-                      ]
-                      : []
-                  }
-                  headerTitle={alergyDropdownTitle}
-                  defaultHeaderOption="Odaberi"
-                />
-                {userDetailsInfo.alergies &&
-                  userDetailsInfo.alergies.length > 0 && (
-                  <>
-                    <div className="alergy-list-display-title">
-                        Odabrane alergije:
-                    </div>
-                    <div className="alergy-list-display">
-                      <div className="name">Naziv</div>
-                      <div className="actions">Akcije</div>
-                    </div>
-                  </>
+                {medication.medicationInfo.error.map(
+                  error =>
+                    error.field === 'name' && (
+                      <div className="error">{error.message}</div>
+                    )
                 )}
-                {userDetailsInfo.alergies &&
-                  userDetailsInfo.alergies.length > 0 &&
-                  userDetailsInfo.alergies.map(alergy => (
-                    <div className="alergy-list-display" key={alergy.id}>
-                      <div className="alergy-list-display__subject-name name">
-                        {alergy.name}
-                      </div>
-
-                      <div className="actions">
-                        <button
-                          className="delete"
-                          onClick={() => {
-                            setUserDetailsInfo({
-                              ...userDetailsInfo,
-                              alergies: [
-                                ...userDetailsInfo.alergies.filter(
-                                  savedAlergy => savedAlergy.id !== alergy.id
-                                ),
-                              ],
-                            });
-                          }}
-                        >
-                          Obriši
-                        </button>
-                      </div>
-                    </div>
-                  ))}
               </div>
-            }
-          />
+            )}
+            <DataDisplay
+              dataHeader="Opis"
+              displayInColumn
+              headerBolded
+              dataSeparatorTopSpacing={4}
+              data={
+                <textarea
+                  value={
+                    newMedicationInfo.description
+                      ? newMedicationInfo.description
+                      : ''
+                  }
+                  onChange={e => {
+                    setNewMedicationInfo({
+                      ...newMedicationInfo,
+                      description: e.target.value,
+                    });
+                  }}
+                />
+              }
+            />
+            {medication.medicationInfo &&
+              medication.medicationInfo.error &&
+              medication.medicationInfo.error.find(
+                error => error.field === 'description'
+              ) && (
+              <div>
+                {medication.medicationInfo.error.map(
+                  error =>
+                    error.field === 'description' && (
+                      <div className="error">{error.message}</div>
+                    )
+                )}
+              </div>
+            )}
+            <DataDisplay
+              dataHeader="Alergije"
+              displayInColumn
+              headerBolded
+              dataSeparatorTopSpacing={4}
+              data={
+                <div>
+                  <Dropdown
+                    fullWidth
+                    customclass="alergies-dropdown"
+                    handleSelect={item => {
+                      if (item.id) {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          alergies: [...newMedicationInfo.alergies, item],
+                        });
+                      }
+                    }}
+                    list={
+                      alergies
+                        ? [
+                          ...alergies.filter(alergy =>
+                            newMedicationInfo.alergies.length > 0
+                              ? !newMedicationInfo.alergies.find(
+                                medicationAlergy =>
+                                  medicationAlergy.id === alergy.id
+                              )
+                              : alergy
+                          ),
+                        ]
+                        : []
+                    }
+                    headerTitle="Odaberi postojeće alergije"
+                    defaultHeaderOption="Odaberi postojeće alergije"
+                  />
+                  <input
+                    className="new-alergy-input"
+                    value={newAlergyName ? newAlergyName : ''}
+                    placeholder="Unosi novu alergiju"
+                    onChange={e => {
+                      setNewAlergyName(e.target.value);
+                    }}
+                  />
+                  <button
+                    className="add-new-contraindication"
+                    disabled={!newAlergyName}
+                    onClick={() => {
+                      setNewMedicationInfo({
+                        ...newMedicationInfo,
+                        alergies: [
+                          ...newMedicationInfo.alergies,
+                          { name: newAlergyName },
+                        ],
+                      });
+                      setNewAlergyName(null);
+                    }}
+                  >
+                    Dodaj novu alergiju
+                  </button>
+                  {newMedicationInfo.alergies && (
+                    <div>
+                      <table
+                        style={{ width: '100%', marginTop: '20px' }}
+                        className="list-table"
+                      >
+                        <tbody className="list-table__item-row">
+                          {newMedicationInfo.alergies.length > 0 &&
+                            newMedicationInfo.alergies.map((alergy, index) => {
+                              return (
+                                <tr
+                                  className="spacer item-row"
+                                  style={{ textAlign: 'center' }}
+                                  key={index}
+                                >
+                                  <td>{alergy.name}</td>
+                                  <td>
+                                    <button
+                                      id="link-to-medication-page"
+                                      onClick={() => {
+                                        setNewMedicationInfo({
+                                          ...newMedicationInfo,
+                                          alergies: [
+                                            ...newMedicationInfo.alergies,
+                                          ].filter(
+                                            savedAlergy =>
+                                              savedAlergy.name !== alergy.name
+                                          ),
+                                        });
+                                      }}
+                                    >
+                                      Obriši
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              }
+            />
+            <DataDisplay
+              dataHeader="Simptomi"
+              displayInColumn
+              headerBolded
+              dataSeparatorTopSpacing={4}
+              data={
+                <div>
+                  <Dropdown
+                    fullWidth
+                    customclass="symptoms-dropdown"
+                    handleSelect={item => {
+                      if (item.id) {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          symptoms: [...newMedicationInfo.symptoms, item],
+                        });
+                      }
+                    }}
+                    list={
+                      symptoms
+                        ? [
+                          ...symptoms.filter(alergy =>
+                            newMedicationInfo.symptoms.length > 0
+                              ? !newMedicationInfo.symptoms.find(
+                                medicationSymptom =>
+                                  medicationSymptom.id === alergy.id
+                              )
+                              : alergy
+                          ),
+                        ]
+                        : []
+                    }
+                    headerTitle="Odaberi postojeće simptome"
+                    defaultHeaderOption="Odaberi postojeće simptome"
+                  />
+                  <input
+                    className="new-alergy-input"
+                    value={newSymptomName ? newSymptomName : ''}
+                    placeholder="Unosi novi simptom"
+                    onChange={e => {
+                      setNewSymptomName(e.target.value);
+                    }}
+                  />
+                  <button
+                    className="add-new-contraindication"
+                    disabled={!newSymptomName}
+                    onClick={() => {
+                      setNewMedicationInfo({
+                        ...newMedicationInfo,
+                        symptoms: [
+                          ...newMedicationInfo.symptoms,
+                          { name: newSymptomName },
+                        ],
+                      });
+                      setNewSymptomName(null);
+                    }}
+                  >
+                    Dodaj novi simptom
+                  </button>
+                  {newMedicationInfo.symptoms && (
+                    <div>
+                      <table
+                        style={{ width: '100%', marginTop: '20px' }}
+                        className="list-table"
+                      >
+                        <tbody className="list-table__item-row">
+                          {newMedicationInfo.symptoms.length > 0 &&
+                            newMedicationInfo.symptoms.map((symptom, index) => {
+                              return (
+                                <tr
+                                  className="spacer item-row"
+                                  style={{ textAlign: 'center' }}
+                                  key={index}
+                                >
+                                  <td>{symptom.name}</td>
+                                  <td>
+                                    <button
+                                      id="link-to-medication-page"
+                                      onClick={() => {
+                                        setNewMedicationInfo({
+                                          ...newMedicationInfo,
+                                          symptoms: [
+                                            ...newMedicationInfo.symptoms,
+                                          ].filter(
+                                            saveSymptom =>
+                                              saveSymptom.name !== symptom.name
+                                          ),
+                                        });
+                                      }}
+                                    >
+                                      Obriši
+                                    </button>
+                                  </td>
+                                </tr>
+                              );
+                            })}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              }
+            />
+          </div>
+          <div className="medication-info-modal__body__right-side">
+            <DataDisplay
+              dataHeader="Kontraindikacije"
+              displayInColumn
+              headerBolded
+              removeTopSeparator
+              dataSeparatorTopSpacing={4}
+              data={
+                <div>
+                  <div>
+                    <input
+                      value={
+                        contraIndicationDescription
+                          ? contraIndicationDescription
+                          : ''
+                      }
+                      onChange={e => {
+                        setContraIndicationDescription(e.target.value);
+                      }}
+                    />
+                    <button
+                      className="add-new-contraindication"
+                      disabled={!contraIndicationDescription}
+                      onClick={() => {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          contraindications: [
+                            ...newMedicationInfo.contraindications,
+                            contraIndicationDescription,
+                          ],
+                        });
+                        setContraIndicationDescription(null);
+                      }}
+                    >
+                      Dodaj novu kontraindikaciju
+                    </button>
+                  </div>
+                  {newMedicationInfo.contraindications && (
+                    <div>
+                      <table
+                        style={{ width: '100%', marginTop: '20px' }}
+                        className="list-table"
+                      >
+                        <tbody className="list-table__item-row">
+                          {newMedicationInfo.contraindications.length > 0 &&
+                            newMedicationInfo.contraindications.map(
+                              (contraindication, index) => {
+                                return (
+                                  <tr
+                                    className="spacer item-row"
+                                    style={{ textAlign: 'center' }}
+                                    key={index}
+                                  >
+                                    <td>{contraindication}</td>
+                                    <td>
+                                      <button
+                                        id="link-to-medication-page"
+                                        onClick={() => {
+                                          setNewMedicationInfo({
+                                            ...newMedicationInfo,
+                                            contraindications: [
+                                              ...newMedicationInfo.contraindications,
+                                            ].filter(
+                                              indication =>
+                                                indication !== contraindication
+                                            ),
+                                          });
+                                        }}
+                                      >
+                                        Obriši
+                                      </button>
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )}
+                </div>
+              }
+            />
+            <DataDisplay
+              dataHeader="Nuspojave"
+              displayInColumn
+              headerBolded
+              dataSeparatorTopSpacing={4}
+              data={
+                sideEffectsArray &&
+                sideEffectsArray.map((sideEffectItem, index) => (
+                  <div key={index} style={{ marginTop: index > 0 && '20px' }}>
+                    <div>
+                      <input
+                        placeholder={
+                          sideEffectItem.name === 'regular'
+                            ? 'Česta nuspojava'
+                            : sideEffectItem.name === 'rare'
+                              ? 'Rijetka nuspojava'
+                              : 'Vrlo rijetka nuspojava'
+                        }
+                        value={
+                          sideEffectItem.description
+                            ? sideEffectItem.description
+                            : ''
+                        }
+                        onChange={e => {
+                          sideEffectItem.setDescription(e.target.value);
+                        }}
+                      />
+                      <button
+                        className="add-new-contraindication"
+                        disabled={!sideEffectItem.description}
+                        onClick={() => {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            sideEffects: {
+                              ...newMedicationInfo.sideEffects,
+                              [`${sideEffectItem.name}`]: [
+                                ...newMedicationInfo.sideEffects[
+                                  sideEffectItem.name
+                                ],
+                                sideEffectItem.description,
+                              ],
+                            },
+                          });
+                          sideEffectItem.setDescription(null);
+                        }}
+                      >
+                        Dodaj novu nuspojavu
+                      </button>
+                    </div>
+                    {newMedicationInfo.sideEffects && (
+                      <div>
+                        <table
+                          style={{ width: '100%', marginTop: '20px' }}
+                          className="list-table"
+                        >
+                          <tbody className="list-table__item-row">
+                            {newMedicationInfo.sideEffects[
+                              sideEffectItem.name
+                            ] &&
+                              newMedicationInfo.sideEffects[sideEffectItem.name]
+                                .length > 0 &&
+                              newMedicationInfo.sideEffects[
+                                sideEffectItem.name
+                              ].map((sideEffect, index) => {
+                                return (
+                                  <tr
+                                    className="spacer item-row"
+                                    style={{ textAlign: 'center' }}
+                                    key={index}
+                                  >
+                                    <td>{sideEffect}</td>
+                                    <td>
+                                      <button
+                                        id="link-to-medication-page"
+                                        onClick={() => {
+                                          setNewMedicationInfo({
+                                            ...newMedicationInfo,
+                                            sideEffects: {
+                                              ...newMedicationInfo.sideEffects,
+                                              [`${sideEffectItem.name}`]: [
+                                                ...newMedicationInfo
+                                                  .sideEffects[
+                                                    sideEffectItem.name
+                                                  ],
+                                              ].filter(
+                                                effect => effect !== sideEffect
+                                              ),
+                                            },
+                                          });
+                                        }}
+                                      >
+                                        Obriši
+                                      </button>
+                                    </td>
+                                  </tr>
+                                );
+                              })}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                ))
+              }
+            />
+          </div>
         </div>
         <div className="footer">
-          <button
-            className="footer__remove-button"
-            onClick={() => dispatch(removeUserById(userDetailsInfo.id))}
-          >
-            Obriši korisnika
-          </button>
+          {props.selectedMedication && (
+            <button
+              className="footer__remove-button"
+              onClick={() => {
+                setIsTryingToDelete(true);
+                setShowAlertModal(true);
+              }}
+            >
+              Obriši lijek
+            </button>
+          )}
           <button
             className="footer__send-button"
             onClick={() => {
-              if (userDetails.data) {
-                dispatch(updateUserDetails(userDetailsInfo));
+              if (newMedicationInfo.id) {
+                dispatch(updateMedication(newMedicationInfo));
               } else {
-                dispatch(createUserDetails(userDetailsInfo));
+                dispatch(createMedication(newMedicationInfo));
               }
             }}
           >
             Spremi
           </button>
         </div>
+        {showAlertModal && (
+          <AlertModal
+            alertInfotext={
+              isTryingToDelete
+                ? 'Želite li obrisati ovaj lijek?'
+                : 'Jeste li sigurni da želite zatvoriti prozor? Imate ne spremljene promjene!'
+            }
+            confirmOptions={() => {
+              setShowAlertModal(false);
+              if (isTryingToDelete) {
+                dispatch(removeMedicationById(newMedicationInfo.id));
+              }
+              if (isTryingToCloseWhenEdited) {
+                props.setShowMedicationInfoModal(false);
+              }
+            }}
+            declineOptions={() => {
+              setShowAlertModal(false);
+            }}
+          />
+        )}
       </div>
     </Modal>
   );
 };
 
 MedicationInfoModal.propTypes = {
+  selectedMedication: PropTypes.object,
+  setSelectedMedication: PropTypes.func,
   setShowMedicationInfoModal: PropTypes.func,
-  setUserId: PropTypes.func,
-  userId: PropTypes.number,
 };
 
 export default MedicationInfoModal;

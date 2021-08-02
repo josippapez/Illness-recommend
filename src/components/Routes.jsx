@@ -4,16 +4,18 @@ import { Redirect, Switch, Route } from 'react-router-dom';
 import AdminHomepage from './AdminHomepage/AdminHomepage';
 import MedicationListPage from './AdminHomepage/MedicationsListPage/MedicationListPage';
 import UsersListPage from './AdminHomepage/UsersListPage/UsersListPage';
-import Home from './UserHomepage/Home';
+import UserDetailsPage from './UserHomepage/UserDetailsListPage/UserDetailsPage';
 import UserHomepage from './UserHomepage/UserHomepage';
 
 const Routes = () => {
   const user = useSelector(state => state.user);
   const adminRoutes = [
-    { route: '/users', component: UsersListPage },
-    { route: '/medications', component: MedicationListPage },
+    { route: '/users', component: <UsersListPage /> },
+    { route: '/medications', component: <MedicationListPage /> },
   ];
-  const userRoutes = [{ route: '/home', component: Home }];
+  const userRoutes = [
+    { route: '/user-details', component: <UserDetailsPage userId={user.id} /> },
+  ];
   const isAdmin = user => {
     return user.role === 'admin';
   };
@@ -23,13 +25,19 @@ const Routes = () => {
       <Route
         exact
         path="/"
-        component={isAdmin(user) ? AdminHomepage : UserHomepage}
+        render={() =>
+          isAdmin(user) ? (
+            <AdminHomepage user={user} />
+          ) : (
+            <UserHomepage user={user} />
+          )
+        }
       />
       {isAdmin(user) ? (
         adminRoutes.find(route => route.route === location.pathname) ? (
           <Route
             path={location.pathname}
-            component={
+            render={() =>
               adminRoutes.find(route => route.route === location.pathname)
                 .component
             }
@@ -40,7 +48,7 @@ const Routes = () => {
       ) : userRoutes.find(route => route.route === location.pathname) ? (
         <Route
           path={location.pathname}
-          component={
+          render={() =>
             userRoutes.find(route => route.route === location.pathname)
               .component
           }

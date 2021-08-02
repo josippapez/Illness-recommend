@@ -28,6 +28,92 @@ export const getAllMedications = () => {
   };
 };
 
+export const createMedication = medication => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/medications/`,
+      withCredentials: true,
+      data: medication,
+    })
+      .then(response => {
+        dispatch(
+          setErrorMedicationInfo({ error: null, status: response.status })
+        );
+        dispatch(setErrorMedicationInfo({ error: null, status: null }));
+        dispatch(getAllMedications());
+      })
+      .catch(error => {
+        dispatch(
+          setErrorMedicationInfo({
+            error: error.response.data,
+            status: error.status,
+          })
+        );
+      });
+  };
+};
+
+export const updateMedication = medication => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'PATCH',
+      url: `${process.env.REACT_APP_API_URL}/medications/`,
+      withCredentials: true,
+      data: medication,
+    })
+      .then(response => {
+        dispatch(
+          setErrorMedicationInfo({ error: null, status: response.status })
+        );
+        dispatch(setErrorMedicationInfo({ error: null, status: null }));
+        dispatch(getAllMedications());
+      })
+      .catch(error =>
+        dispatch(
+          setErrorMedicationInfo({
+            error: error.response.data,
+            status: error.status,
+          })
+        )
+      );
+  };
+};
+
+export const removeMedicationById = id => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'DELETE',
+      url: `${process.env.REACT_APP_API_URL}/medications/delete`,
+      withCredentials: true,
+      data: { id },
+    })
+      .then(response => {
+        dispatch(
+          setErrorMedicationInfo({
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorMedicationInfo({
+            error: null,
+            status: null,
+          })
+        );
+        dispatch(getAllMedications());
+      })
+      .catch(error =>
+        dispatch(
+          setErrorMedicationInfo({
+            error: error.response.data,
+            status: error.status,
+          })
+        )
+      );
+  };
+};
+
 export const setUsersList = data => ({
   type: MEDICATION_LIST_FETCHED,
   payload: data,

@@ -18,10 +18,11 @@ const UsersListPage = props => {
   }, []);
 
   return (
-    <div>
+    <div className="users-list-page">
       <DataDisplay
         dataHeader="Popis korisnika"
         headerBolded
+        centerHeaderVertically
         headerFontSize={23}
         headerTextColor={'#005BA7'}
         dataFullWidth
@@ -75,7 +76,7 @@ const UsersListPage = props => {
         TopSpacing={40}
         dataFullWidth
         data={
-          <div className="student-list-page__list__display-list">
+          <div className="users-list-page__list__display-list">
             {usersList && usersList.users && usersList.users.length > 0 ? (
               <UsersList
                 usersList={usersList.users}
@@ -83,7 +84,9 @@ const UsersListPage = props => {
                 setShowUserInfoModal={setShowUserInfoModal}
               />
             ) : (
-              'Nije pronađen student za odabrani predmet'
+              <div className="users-list-page__list__display-list__not-found">
+                Nema pronđenih korisnika
+              </div>
             )}
           </div>
         }

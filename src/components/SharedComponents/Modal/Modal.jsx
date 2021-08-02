@@ -6,7 +6,7 @@ import './Modal.scss';
 const Modal = props => {
   return reactDom.createPortal(
     <div className={props.className ? `modal ${props.className}` : 'modal'}>
-      <div className="overlay" onMouseDown={e => props.closeModal()}>
+      <div className="overlay" onMouseDown={props.closeModal}>
         <div
           className="overlay__children"
           onMouseDown={e => e.stopPropagation()}

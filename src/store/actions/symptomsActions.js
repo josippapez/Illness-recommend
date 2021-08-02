@@ -1,19 +1,19 @@
 import axios from 'axios';
-import { ALERGIES_LIST_FETCHED, SET_ERROR_ALERGIES_LIST } from '../types';
+import { SYMPTOMS_LIST_FETCHED, SET_ERROR_SYMPTOMS_LIST } from '../types';
 
-export const getAllAlergies = () => {
+export const getAllSymptoms = () => {
   return (dispatch, getState) => {
     axios({
       method: 'GET',
-      url: `${process.env.REACT_APP_API_URL}/alergies`,
+      url: `${process.env.REACT_APP_API_URL}/symptom`,
       withCredentials: true,
     })
       .then(response => {
-        dispatch(setAlergiesList(response.data));
+        dispatch(setSymptomsList(response.data));
       })
       .catch(error =>
         dispatch({
-          type: SET_ERROR_ALERGIES_LIST,
+          type: SET_ERROR_SYMPTOMS_LIST,
           payload: {
             error: error.message,
             status: error.status,
@@ -23,7 +23,7 @@ export const getAllAlergies = () => {
   };
 };
 
-export const setAlergiesList = data => ({
-  type: ALERGIES_LIST_FETCHED,
+export const setSymptomsList = data => ({
+  type: SYMPTOMS_LIST_FETCHED,
   payload: data,
 });

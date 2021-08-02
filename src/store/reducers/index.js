@@ -5,10 +5,12 @@ import { user } from './userReducer';
 import { usersList } from './usersList';
 import { alergies } from './alergiesReducer';
 import { medicationList } from './medicationReducer';
+import { symptoms } from './symptomsReducer';
 
 export const reducers = combineReducers({
   user,
   usersList,
   alergies,
   medicationList,
+  symptoms,
 });

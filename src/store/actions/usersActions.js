@@ -35,9 +35,12 @@ export const removeUserById = id => {
       method: 'DELETE',
       url: `${process.env.REACT_APP_API_URL}/users/delete`,
       withCredentials: true,
+      data: { id },
     })
       .then(response => {
-        console.log(response);
+        dispatch(setErrorUserInfo({ error: null, status: response.status }));
+        dispatch(setErrorUserInfo({ error: null, status: null }));
+        dispatch(getAllUsers());
       })
       .catch(error =>
         dispatch({

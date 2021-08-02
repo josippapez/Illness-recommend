@@ -28,16 +28,18 @@ const MedicationList = props => {
         {props.medicationList.map(medication => {
           return (
             <tr className="spacer  item-row" key={medication.id}>
-              <td>{medication.name}</td>
+              <td style={{ width: '100px', minWidth: '50px' }}>
+                {medication.name}
+              </td>
               <td style={{ width: '600px', minWidth: '250px' }}>
                 {medication.description}
               </td>
-              <td>
+              <td style={{ width: '200px', minWidth: '50px' }}>
                 <button
-                  id="link-to-student-page"
+                  id="link-to-medication-page"
                   onClick={() => {
                     dispatch(medicationInfoFetched({ data: null }));
-                    props.setMedicationId(medication.id);
+                    props.setSelectedMedication(medication);
                     props.setShowMedicationInfoModal(true);
                   }}
                 >
@@ -54,7 +56,7 @@ const MedicationList = props => {
 
 MedicationList.propTypes = {
   medicationList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
-  setMedicationId: PropTypes.func,
+  setSelectedMedication: PropTypes.func,
   setShowMedicationInfoModal: PropTypes.func,
 };
 

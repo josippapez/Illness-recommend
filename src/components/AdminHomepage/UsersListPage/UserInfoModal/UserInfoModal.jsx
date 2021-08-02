@@ -7,20 +7,24 @@ import Modal from '../../../SharedComponents/Modal/Modal';
 import DataDisplay from '../../../SharedComponents/DataDisplay/DataDisplay';
 import { Dropdown } from '../../../SharedComponents/Dropdown/Dropdown';
 import {
-  createNewAlery,
   createUserDetails,
-  deleteAlergiesUserInfoRelation,
   fetchUserInfoById,
   getAllAlergies,
   removeUserById,
   updateUserDetails,
+  userInfoFetched,
 } from '../../../../store/actions';
+import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 
 const UserInfoModal = props => {
   const dispatch = useDispatch();
   const userDetails = useSelector(state => state.user.userInfo);
   const alergies = useSelector(state => state.alergies.alergies);
 
+  const [showAlertModal, setShowAlertModal] = useState(false);
+  const [isTryingToDelete, setIsTryingToDelete] = useState(false);
+  const [isTryingToCloseWhenEdited, setIsTryingToCloseWhenEdited] =
+    useState(false);
   const [userDetailsInfo, setUserDetailsInfo] = useState({
     id: props.userId,
     age: null,
@@ -39,6 +43,17 @@ const UserInfoModal = props => {
     }
     return () => {
       props.setUserId(null);
+      dispatch(
+        userInfoFetched({
+          data: {
+            id: null,
+            age: null,
+            alergies: [],
+            pregnantOrBreastFeed: false,
+            weight: null,
+          },
+        })
+      );
     };
   }, []);
 
@@ -54,8 +69,26 @@ const UserInfoModal = props => {
     }
   }, [userDetails]);
 
+  const checkForClosingModal = () => {
+    if (userDetails.data && userDetails.data !== userDetailsInfo) {
+      setIsTryingToCloseWhenEdited(true);
+      setShowAlertModal(true);
+    } else if (
+      !userDetails.data &&
+      (userDetailsInfo.age ||
+        userDetailsInfo.weight ||
+        userDetailsInfo.pregnantOrBreastFeed ||
+        userDetailsInfo.alergies.length > 0)
+    ) {
+      setIsTryingToCloseWhenEdited(true);
+      setShowAlertModal(true);
+    } else {
+      props.setShowUserInfoModal(false);
+    }
+  };
+
   return (
-    <Modal closeModal={() => props.setShowUserInfoModal(false)}>
+    <Modal closeModal={() => checkForClosingModal()}>
       <div className="user-info-modal">
         <div className="user-info-modal__header">
           <div className="header-info-image"></div>
@@ -64,7 +97,7 @@ const UserInfoModal = props => {
           </div>
           <div
             className="header-close-icon"
-            onClick={() => props.setShowUserInfoModal(false)}
+            onClick={() => checkForClosingModal()}
           ></div>
         </div>
         <div className="user-info-modal__body">
@@ -80,7 +113,6 @@ const UserInfoModal = props => {
                 min="0"
                 value={userDetailsInfo.age ? userDetailsInfo.age : ''}
                 onChange={e => {
-                  console.log(e.target.valueAsNumber);
                   setUserDetailsInfo({
                     ...userDetailsInfo,
                     age: e.target.value,
@@ -159,7 +191,7 @@ const UserInfoModal = props => {
                 <Dropdown
                   customclass="alergies-dropdown"
                   inputNewData
-                  setNewData={data => dispatch(createNewAlery(data.name))}
+                  inputNewDataPlaceholder="Odaberi ili upiši"
                   handleSelect={item => {
                     if (item === 'Odaberi') {
                       setselectedAlergie(null);
@@ -186,7 +218,6 @@ const UserInfoModal = props => {
                   }
                   headerTitle={alergyDropdownTitle}
                   defaultHeaderOption="Odaberi ili upiši"
-                  inputNewDataPlaceholder='Odaberi ili upiši'
                 />
                 {userDetailsInfo.alergies &&
                   userDetailsInfo.alergies.length > 0 && (
@@ -234,7 +265,10 @@ const UserInfoModal = props => {
         <div className="footer">
           <button
             className="footer__remove-button"
-            onClick={() => dispatch(removeUserById(userDetailsInfo.id))}
+            onClick={() => {
+              setIsTryingToDelete(true);
+              setShowAlertModal(true);
+            }}
           >
             Obriši korisnika
           </button>
@@ -251,6 +285,28 @@ const UserInfoModal = props => {
             Spremi
           </button>
         </div>
+        {showAlertModal && (
+          <AlertModal
+            alertInfotext={
+              isTryingToDelete
+                ? 'Želite li obrisati ovog korisnika?'
+                : 'Jeste li sigurni da želite zatvoriti prozor? Imate ne spremljene promjene!'
+            }
+            confirmOptions={() => {
+              setShowAlertModal(false);
+              if (isTryingToDelete) {
+                dispatch(removeUserById(userDetailsInfo.id));
+              } else {
+                props.setShowUserInfoModal(false);
+              }
+            }}
+            declineOptions={() => {
+              setShowAlertModal(false);
+              setIsTryingToCloseWhenEdited(false);
+              setIsTryingToDelete(false);
+            }}
+          />
+        )}
       </div>
     </Modal>
   );

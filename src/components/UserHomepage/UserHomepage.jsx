@@ -1,24 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { logOutAndWipeLocalStorage } from '../../interceptor';
-import { useDispatch } from 'react-redux';
+import './UserHompeage.scss';
 
 const UserHomepage = props => {
-  const dispatch = useDispatch();
   return (
-    <div>
-      User
-      <button
-        onClick={() => {
-          logOutAndWipeLocalStorage();
-        }}
-      >
-        Odjava
-      </button>
+    <div className="user-homepage">
+      <div className="user-homepage__main-text">
+        Dobrodošli, {props.user.name}!
+      </div>
     </div>
   );
 };
 
-UserHomepage.propTypes = {};
+UserHomepage.propTypes = {
+  user: PropTypes.object,
+};
 
 export default UserHomepage;

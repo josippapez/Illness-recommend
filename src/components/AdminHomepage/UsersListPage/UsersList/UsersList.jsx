@@ -32,25 +32,23 @@ const UsersList = props => {
       <tbody className="list-table__item-row">
         {props.usersList.map(user => {
           return (
-            user.id !== currentUser.id && (
-              <tr className="spacer  item-row" key={user.id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <button
-                    id="link-to-student-page"
-                    onClick={() => {
-                      dispatch(userInfoFetched({ data: null }));
-                      props.setUserId(user.id);
-                      props.setShowUserInfoModal(true);
-                    }}
-                  >
-                    Odaberi
-                  </button>
-                </td>
-              </tr>
-            )
+            <tr className="spacer  item-row" key={user.id}>
+              <td>{user.name}</td>
+              <td>{user.email}</td>
+              <td>{user.role}</td>
+              <td style={{ width: '200px', minWidth: '50px' }}>
+                <button
+                  id="link-to-medication-page"
+                  onClick={() => {
+                    dispatch(userInfoFetched({ data: null }));
+                    props.setUserId(user.id);
+                    props.setShowUserInfoModal(true);
+                  }}
+                >
+                  Odaberi
+                </button>
+              </td>
+            </tr>
           );
         })}
       </tbody>

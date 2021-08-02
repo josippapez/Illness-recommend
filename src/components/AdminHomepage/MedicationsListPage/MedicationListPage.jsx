@@ -9,95 +9,63 @@ import MedicationInfoModal from './MedicationInfoModal/MedicationInfoModal';
 import MedicationList from './MedicationList/MedicationList';
 
 import { getAllMedications } from '../../../store/actions/medicationActions';
+import AddButton from '../../SharedComponents/AddButton/AddButton';
 
 const MedicationListPage = props => {
   const dispatch = useDispatch();
   const medicationList = useSelector(state => state.medicationList);
 
-  const [showUserInfoModal, setShowUserInfoModal] = useState(false);
-  const [medicationId, setMedicationId] = useState(null);
+  const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
+  const [selectedMedication, setSelectedMedication] = useState(null);
   useEffect(() => {
     dispatch(getAllMedications());
   }, []);
 
   return (
-    <div>
+    <div className="medications-list-page">
       <DataDisplay
-        dataHeader="Popis korisnika"
+        dataHeader="Popis lijekova"
         headerBolded
         headerFontSize={23}
         headerTextColor={'#005BA7'}
         dataFullWidth
+        centerHeaderVertically
         TopSpacing={30}
-        /* data={
-            <div className='student-list-page__list__search'>
-              {selectedSubject !== 'Odaberi predmet' && (
-                <Search
-                  searchingByInfo='*Pretraživanje po Imenu, Emailu, JMBAG i Telefonu'
-                  fetchData={() => {
-                    return getStudentForSubjectbyQuery(
-                      null,
-                      selectedStatuses,
-                      selectedStudyType,
-                      startDate
-                        ? moment(startDate)
-                          .startOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : null,
-                      endDate
-                        ? moment(endDate)
-                          .endOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : endDate
-                    );
-                  }}
-                  fetchDataByName={name => {
-                    return getStudentForSubjectbyQuery(
-                      name,
-                      selectedStatuses,
-                      selectedStudyType,
-                      startDate
-                        ? moment(startDate)
-                          .startOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : null,
-                      endDate
-                        ? moment(endDate)
-                          .endOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : endDate
-                    );
-                  }}
-                  setSearchQuery={setSearchQuery}
-                />
-              )}
-            </div>
-          } */
+        floatDataRight
+        data={
+          <AddButton
+            customClassName="add-medication-button"
+            setShowModal={setShowMedicationInfoModal}
+            text="Dodaj lijek"
+          />
+        }
       />
       <DataDisplay
         TopSpacing={40}
         dataFullWidth
         data={
-          <div className="student-list-page__list__display-list">
+          <div className="medications-list-page__list__display-list">
             {medicationList &&
             medicationList.medications &&
             medicationList.medications.length > 0 ? (
                 <MedicationList
                   medicationList={medicationList.medications}
-                  setMedicationId={setMedicationId}
-                  setShowUserInfoModal={setShowUserInfoModal}
+                  setShowMedicationInfoModal={setShowMedicationInfoModal}
+                  setSelectedMedication={setSelectedMedication}
                 />
               ) : (
-                'Nema unesenih lijekova.'
+                <div className="medications-list-page__list__display-list__not-found">
+                Nema unesenih lijekova.
+                </div>
               )}
           </div>
         }
       />
-      {showUserInfoModal && (
+      {showMedicationInfoModal && (
         <MedicationInfoModal
-          medicationId={medicationId}
-          setMedicationId={setMedicationId}
-          setShowUserInfoModal={setShowUserInfoModal}
+          selectedMedication={selectedMedication}
+          setSelectedMedication={setSelectedMedication}
+          setShowMedicationInfoModal={setShowMedicationInfoModal}
         />
       )}
     </div>
