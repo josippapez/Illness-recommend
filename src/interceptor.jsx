@@ -9,14 +9,6 @@ import { persistor, store } from './store/store';
 let subscribers = [];
 let isAlreadyFetchingAccessToken = false;
 
-export const getAuthData = localStore => {
-  if (!localStore.user.accessToken || !localStore.user.refreshToken) {
-    const { accessToken, refreshToken } = localStore.user;
-    return { accessToken, refreshToken };
-  }
-  return localStore ? localStore.user : '';
-};
-
 export const addSubscriber = callback => {
   subscribers.push(callback);
 };
@@ -48,46 +40,41 @@ export const logOutAndWipeLocalStorage = () => {
   window.location.replace('/login');
 };
 
-export const onAccessTokenFetched = accessToken => {
-  subscribers.forEach(callback => callback(accessToken));
+export const onAccessTokenFetched = () => {
+  subscribers.forEach(callback => {
+    callback();
+  });
   subscribers = [];
 };
 
-export const refreshAccessTokenAndReattemptRequest = async error => {
+export const refreshAccessTokenAndReattemptRequest = async (
+  error,
+  refreshToken
+) => {
   try {
     const { response: errorResponse } = error;
-    const { refreshToken } = getAuthData(store.getState());
     if (!refreshToken) {
       return Promise.reject(error);
     }
-
     const originalRequest = new Promise(resolve => {
-      addSubscriber(accessToken => {
-        errorResponse.config.headers.Authorization = `Bearer ${accessToken}`;
+      addSubscriber(() => {
         resolve(axios(errorResponse.config));
       });
     });
     if (!isAlreadyFetchingAccessToken) {
       isAlreadyFetchingAccessToken = true;
       const response = await refreshAuthentication();
-
       if (response.status !== 200) logOutAndWipeLocalStorage();
       if (!response.data) return Promise.reject(error);
-
-      const newAccessToken = response.data.access_token;
-      const newRefreshToken = response.data.refresh_token;
-
-      const newAccessTokenExpiration = token.decode(newAccessToken);
-      const newRefreshTokenExpiration = token.decode(newRefreshToken);
+      const accessTokenExpiration = token.decode(Cookies.get('Accesstoken'));
       if (
-        newAccessTokenExpiration.exp <= moment.utc().unix() ||
-        newRefreshTokenExpiration.exp <= moment.utc().unix()
+        !accessTokenExpiration ||
+        accessTokenExpiration.exp <= moment.utc().unix()
       ) {
         alert('Vaša sjednica je istekla. Ponovno se prijavite!');
         logOutAndWipeLocalStorage();
       }
-
-      onAccessTokenFetched(newAccessToken);
+      onAccessTokenFetched();
       isAlreadyFetchingAccessToken = false;
     }
     return originalRequest;
@@ -95,11 +82,6 @@ export const refreshAccessTokenAndReattemptRequest = async error => {
     logOutAndWipeLocalStorage();
     return Promise.reject(err);
   }
-};
-
-export const isTokenExpiredError = errorResponse => {
-  if (errorResponse) return errorResponse.status === 401;
-  return false;
 };
 
 export const intercept = () => {
@@ -110,7 +92,6 @@ export const intercept = () => {
         refreshTokenExpiration &&
         refreshTokenExpiration.exp <= moment.utc().unix()
       ) {
-        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
         return logOutAndWipeLocalStorage();
       }
       return request;
@@ -122,7 +103,10 @@ export const intercept = () => {
         accessTokenExpiration &&
         accessTokenExpiration.exp <= moment.utc().unix()
       ) {
-        refreshAccessTokenAndReattemptRequest(error);
+        return refreshAccessTokenAndReattemptRequest(
+          error,
+          refreshTokenExpiration
+        );
       }
       if (
         refreshTokenExpiration &&
@@ -138,9 +122,23 @@ export const intercept = () => {
   axios.interceptors.response.use(
     response => response,
     error => {
-      const errorResponse = error.response;
-      if (isTokenExpiredError(errorResponse)) {
-        return refreshAccessTokenAndReattemptRequest(error);
+      const accessTokenExpiration = token.decode(Cookies.get('Accesstoken'));
+      const refreshTokenExpiration = token.decode(Cookies.get('Refreshtoken'));
+      if (
+        accessTokenExpiration &&
+        accessTokenExpiration.exp <= moment.utc().unix()
+      ) {
+        return refreshAccessTokenAndReattemptRequest(
+          error,
+          refreshTokenExpiration
+        );
+      }
+      if (
+        refreshTokenExpiration &&
+        refreshTokenExpiration.exp <= moment.utc().unix()
+      ) {
+        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
+        logOutAndWipeLocalStorage();
       }
       return Promise.reject(error);
     }

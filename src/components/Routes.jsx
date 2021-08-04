@@ -4,6 +4,7 @@ import { Redirect, Switch, Route } from 'react-router-dom';
 import AdminHomepage from './AdminHomepage/AdminHomepage';
 import MedicationListPage from './AdminHomepage/MedicationsListPage/MedicationListPage';
 import UsersListPage from './AdminHomepage/UsersListPage/UsersListPage';
+import MedicationSuggestionPage from './UserHomepage/MedicationSuggestionPage/MedicationSuggestionPage';
 import UserDetailsPage from './UserHomepage/UserDetailsListPage/UserDetailsPage';
 import UserHomepage from './UserHomepage/UserHomepage';
 
@@ -15,6 +16,7 @@ const Routes = () => {
   ];
   const userRoutes = [
     { route: '/user-details', component: <UserDetailsPage userId={user.id} /> },
+    { route: '/medication-suggestion', component: <MedicationSuggestionPage userId={user.id} /> }
   ];
   const isAdmin = user => {
     return user.role === 'admin';

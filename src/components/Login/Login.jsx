@@ -101,7 +101,9 @@ function Login() {
                     onClick={() => {
                       setShowForm(false);
                       setShowRegistration(false);
-                      dispatch(loginError({ message: null, status: null }));
+                      dispatch(
+                        loginError({ message: null, status: null, error: null })
+                      );
                     }}
                   />
                   <div className="sign-in-image" />
@@ -126,18 +128,36 @@ function Login() {
                       displayInColumn
                       dataSeparatorTopSpacing={6}
                       data={
-                        <input
-                          className="content-container__email"
-                          type="text"
-                          aria-autocomplete="inline"
-                          onChange={e => {
-                            e.preventDefault();
-                            setName(e.target.value);
-                          }}
-                          value={name ? name : ''}
-                          placeholder="Ime i prezime"
-                          name="name"
-                        />
+                        <>
+                          <input
+                            className="content-container__email"
+                            type="text"
+                            aria-autocomplete="inline"
+                            onChange={e => {
+                              e.preventDefault();
+                              setName(e.target.value);
+                            }}
+                            value={name ? name : ''}
+                            placeholder="Ime i prezime"
+                            name="name"
+                          />
+                          {errorMessage &&
+                            errorMessage.length > 0 &&
+                            errorMessage.find(
+                              error => error.field === 'name'
+                            ) && (
+                            <div>
+                              {errorMessage.map(
+                                error =>
+                                  error.field === 'name' && (
+                                    <div className="error">
+                                      {error.message}
+                                    </div>
+                                  )
+                              )}
+                            </div>
+                          )}
+                        </>
                       }
                     />
                   )}
@@ -202,9 +222,6 @@ function Login() {
                   >
                     {showRegistration ? 'Registriraj se' : 'Prijavi se'}
                   </button>
-                  {errorMessage && (
-                    <div className="login__message">{errorMessage}</div>
-                  )}
                 </div>
               </div>
             </div>

@@ -38,8 +38,16 @@ export const removeUserById = id => {
       data: { id },
     })
       .then(response => {
-        dispatch(setErrorUserInfo({ error: null, status: response.status }));
-        dispatch(setErrorUserInfo({ error: null, status: null }));
+        dispatch(
+          setErrorUserInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorUserInfo({ message: null, error: null, status: null })
+        );
         dispatch(getAllUsers());
       })
       .catch(error =>
@@ -95,8 +103,16 @@ export const createUserDetails = user => {
       },
     })
       .then(response => {
-        dispatch(setErrorUserInfo({ error: null, status: response.status }));
-        dispatch(setErrorUserInfo({ error: null, status: null }));
+        dispatch(
+          setErrorUserInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorUserInfo({ message: null, error: null, status: null })
+        );
       })
       .catch(error => {
         dispatch(
@@ -109,7 +125,7 @@ export const createUserDetails = user => {
   };
 };
 
-export const updateUserDetails = user => {
+export const updateUserDetails = (user, isUser) => {
   return (dispatch, getState) => {
     axios({
       method: 'PATCH',
@@ -124,8 +140,19 @@ export const updateUserDetails = user => {
       },
     })
       .then(response => {
-        dispatch(setErrorUserInfo({ error: null, status: response.status }));
-        dispatch(setErrorUserInfo({ error: null, status: null }));
+        dispatch(
+          setErrorUserInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorUserInfo({ message: null, error: null, status: null })
+        );
+        if (isUser) {
+          dispatch(fetchUserInfoById(user.id));
+        }
       })
       .catch(error =>
         dispatch(

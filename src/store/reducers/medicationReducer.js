@@ -25,6 +25,7 @@ export const medicationList = (state = initialState, action) => {
         ...state,
         error: action.payload.error,
         status: action.payload.status,
+        message: action.payload.message,
       };
     }
     case MEDICATION_INFO_FETCHED: {
@@ -34,6 +35,7 @@ export const medicationList = (state = initialState, action) => {
           data: action.payload.data,
           error: null,
           status: null,
+          message: action.payload.message,
         },
       };
     }
@@ -44,6 +46,7 @@ export const medicationList = (state = initialState, action) => {
           ...state.medicationInfo,
           error: action.payload.error,
           status: action.payload.status,
+          message: action.payload.message,
         },
       };
     }

@@ -63,6 +63,7 @@ const MedicationListPage = props => {
       />
       {showMedicationInfoModal && (
         <MedicationInfoModal
+          userRole="admin"
           selectedMedication={selectedMedication}
           setSelectedMedication={setSelectedMedication}
           setShowMedicationInfoModal={setShowMedicationInfoModal}

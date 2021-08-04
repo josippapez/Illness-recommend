@@ -7,13 +7,13 @@
   height: 100vh;
   min-width: 300px;
   background-color: var(--unnamed-color-e2e2e3);
-  border-right: 5px solid var(--hover);
+  /* border-right: 5px solid var(--hover); */
   display: flex;
   flex-direction: column;
   position: fixed;
   -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
- /*  border-radius: 0 40px 40px 0; */
+  /*  border-radius: 0 40px 40px 0; */
 
   .navbar-logo {
     cursor: pointer;
@@ -23,18 +23,17 @@
     }
   }
   .navbar-links {
-    padding: 0px 20px 40px 10px;
     position: relative;
     top: 15%;
     .navbar-item {
+      margin: 20px 0 20px 10px;
       text-decoration: none;
       display: flex;
-      margin-top: 20px;
       cursor: pointer;
-      width: 100%;
+      width: calc(100% - 30px);
       height: 50px;
       border: none;
-      border-radius: 5px 10px 10px 5px;
+      border-radius: 50px 10px 10px 50px;
       text-align: center;
       font: normal normal normal 16px "Lato, Bold";
       letter-spacing: 0px;
@@ -44,8 +43,28 @@
       color: var(--main-text);
       transition: all 0.25s;
       &.active {
-        background: var(--brand-blue) 0% 0% no-repeat padding-box;
-        color: var(--unnamed-color-e2e2e3);
+        width: calc(100% - 10px);
+        /* background: var(--brand-blue) 0% 0% no-repeat padding-box; */
+        color: var(--brand-blue);
+        border-radius: 50px 0px 0px 50px;
+
+        background: var(--brand-blue);
+        background: -moz-linear-gradient(
+          90deg,
+          var(--brand-blue) 5%,
+          var(--white) 5%
+        );
+        background: -webkit-linear-gradient(
+          90deg,
+          var(--brand-blue) 5%,
+          var(--white) 5%
+        );
+        background: linear-gradient(
+          90deg,
+          var(--brand-blue) 5%,
+          var(--white) 5%
+        );
+        filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="#005ba7",endColorstr="#ffffff",GradientType=1);
       }
       &:hover:not(.active) {
         background: var(--faded-gray) 0% 0% no-repeat padding-box;

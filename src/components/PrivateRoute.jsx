@@ -9,6 +9,7 @@ import {
   refreshAuthentication,
 } from '../interceptor';
 import Cookies from 'js-cookie';
+import Navbar from './SharedComponents/Navbar/Navbar';
 
 const PrivateRoute = props => {
   const [response, setResponse] = useState(null);
@@ -25,6 +26,13 @@ const PrivateRoute = props => {
     if (expiredTokenCookie) {
       expiredToken = token.decode(expiredTokenCookie).exp;
     } else {
+      logOutAndWipeLocalStorage();
+      return;
+    }
+    if (
+      refreshTokenCookie &&
+      token.decode(refreshTokenCookie).exp <= moment.utc().unix()
+    ) {
       logOutAndWipeLocalStorage();
       return;
     }
@@ -49,12 +57,15 @@ const PrivateRoute = props => {
   };
 
   return response ? (
-    <div className='page-container'>
-      <div className="navbar-container"></div>
-      <div className="page-content">
-        <Route {...props} />
+    <>
+      <Navbar />
+      <div className="page-container">
+        <div className="navbar-container"></div>
+        <div className="page-content">
+          <Route {...props} />
+        </div>
       </div>
-    </div>
+    </>
   ) : response === false ? (
     <Redirect to="/login" />
   ) : null;

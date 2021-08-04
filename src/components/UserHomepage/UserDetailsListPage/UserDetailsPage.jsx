@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from 'react-redux';
 
-import AlertModal from '../../SharedComponents/AlertModal/AlertModal';
 import { Dropdown } from '../../SharedComponents/Dropdown/Dropdown';
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import './UserDetailsPage.scss';
@@ -18,10 +17,6 @@ const UserDetailsPage = props => {
   const userDetails = useSelector(state => state.user.userInfo);
   const alergies = useSelector(state => state.alergies.alergies);
 
-  const [showAlertModal, setShowAlertModal] = useState(false);
-  const [isTryingToDelete, setIsTryingToDelete] = useState(false);
-  const [isTryingToCloseWhenEdited, setIsTryingToCloseWhenEdited] =
-    useState(false);
   const [userDetailsInfo, setUserDetailsInfo] = useState({
     id: props.userId,
     age: null,
@@ -48,12 +43,22 @@ const UserDetailsPage = props => {
 
   return (
     <div className="user-details-page">
+      <DataDisplay
+        dataHeader="Detaljni podaci korisnika"
+        headerBolded
+        headerFontSize={23}
+        headerTextColor={'#005BA7'}
+        dataFullWidth
+        centerHeaderVertically
+        TopSpacing={30}
+        floatDataRight
+        dynamicHeaderWidth
+      />
       <div className="user-details-page__body">
         <DataDisplay
           dataHeader="Dob (g)"
           displayInColumn
           headerBolded
-          removeTopSeparator
           dataSeparatorTopSpacing={4}
           data={
             <input
@@ -69,12 +74,6 @@ const UserDetailsPage = props => {
             />
           }
         />
-        {/* {userDetails.error &&
-          userDetails.error.find(error => error.field === 'age') && (
-          <div className="error">
-            {userDetails.error.find(error => error.field === 'age').message}
-          </div>
-        )} */}
         <DataDisplay
           dataHeader="Težina (kg)"
           displayInColumn
@@ -94,15 +93,6 @@ const UserDetailsPage = props => {
             />
           }
         />
-        {/* {userDetails.error &&
-          userDetails.error.find(error => error.field === 'weight') && (
-          <div className="error">
-            {
-              userDetails.error.find(error => error.field === 'weight')
-                .message
-            }
-          </div>
-        )} */}
         <DataDisplay
           dataHeader="Dojenje ili trudnoća?"
           displayInColumn
@@ -211,27 +201,12 @@ const UserDetailsPage = props => {
         <button
           className="footer__send-button"
           onClick={() => {
-            dispatch(updateUserDetails(userDetailsInfo));
+            dispatch(updateUserDetails(userDetailsInfo, true));
           }}
         >
           Spremi
         </button>
       </div>
-      {showAlertModal && (
-        <AlertModal
-          alertInfotext={
-            isTryingToDelete
-              ? 'Želite li obrisati ovog korisnika?'
-              : 'Jeste li sigurni da želite zatvoriti prozor? Imate ne spremljene promjene!'
-          }
-          confirmOptions={() => {
-            setShowAlertModal(false);
-          }}
-          declineOptions={() => {
-            setShowAlertModal(false);
-          }}
-        />
-      )}
     </div>
   );
 };

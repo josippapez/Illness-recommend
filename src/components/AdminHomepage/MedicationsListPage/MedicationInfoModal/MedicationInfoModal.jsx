@@ -21,6 +21,8 @@ const MedicationInfoModal = props => {
   const symptoms = useSelector(state => state.symptoms.symptoms);
   const medication = useSelector(state => state.medicationList);
 
+  const { userRole } = props;
+
   const [newMedicationInfo, setNewMedicationInfo] = useState(
     props.selectedMedication
       ? props.selectedMedication
@@ -50,8 +52,10 @@ const MedicationInfoModal = props => {
     useState(false);
 
   useEffect(() => {
-    dispatch(getAllAlergies());
-    dispatch(getAllSymptoms());
+    if (userRole === 'admin') {
+      dispatch(getAllAlergies());
+      dispatch(getAllSymptoms());
+    }
     return () => {
       props.setSelectedMedication(null);
     };
@@ -125,7 +129,9 @@ const MedicationInfoModal = props => {
             </div>
             <div className="header-small-text">
               {props.selectedMedication
-                ? 'Ovdje možete pregledati i urediti informacije o lijeku'
+                ? userRole === 'user'
+                  ? 'Ovdje možete pregledati informacije o lijeku'
+                  : 'Ovdje možete pregledati i urediti informacije o lijeku'
                 : 'Unesite informacije o lijeku'}
             </div>
           </div>
@@ -136,133 +142,218 @@ const MedicationInfoModal = props => {
         </div>
         <div className="medication-info-modal__body">
           <div className="medication-info-modal__body__left-side">
-            <DataDisplay
-              dataHeader="Naziv"
-              displayInColumn
-              headerBolded
-              removeTopSeparator
-              dataSeparatorTopSpacing={4}
-              data={
-                <input
-                  value={newMedicationInfo.name ? newMedicationInfo.name : ''}
-                  onChange={e => {
-                    setNewMedicationInfo({
-                      ...newMedicationInfo,
-                      name: e.target.value,
-                    });
-                  }}
-                />
-              }
-            />
-            {medication.medicationInfo &&
-              medication.medicationInfo.error &&
-              medication.medicationInfo.error.find(
-                error => error.field === 'name'
-              ) && (
-              <div>
-                {medication.medicationInfo.error.map(
-                  error =>
-                    error.field === 'name' && (
-                      <div className="error">{error.message}</div>
-                    )
-                )}
-              </div>
-            )}
-            <DataDisplay
-              dataHeader="Opis"
-              displayInColumn
-              headerBolded
-              dataSeparatorTopSpacing={4}
-              data={
-                <textarea
-                  value={
-                    newMedicationInfo.description
-                      ? newMedicationInfo.description
-                      : ''
-                  }
-                  onChange={e => {
-                    setNewMedicationInfo({
-                      ...newMedicationInfo,
-                      description: e.target.value,
-                    });
-                  }}
-                />
-              }
-            />
-            {medication.medicationInfo &&
-              medication.medicationInfo.error &&
-              medication.medicationInfo.error.find(
-                error => error.field === 'description'
-              ) && (
-              <div>
-                {medication.medicationInfo.error.map(
-                  error =>
-                    error.field === 'description' && (
-                      <div className="error">{error.message}</div>
-                    )
-                )}
-              </div>
-            )}
-            <DataDisplay
-              dataHeader="Alergije"
-              displayInColumn
-              headerBolded
-              dataSeparatorTopSpacing={4}
-              data={
-                <div>
-                  <Dropdown
-                    fullWidth
-                    customclass="alergies-dropdown"
-                    handleSelect={item => {
-                      if (item.id) {
+            {userRole === 'admin' ? (
+              <>
+                <DataDisplay
+                  dataHeader="Naziv"
+                  displayInColumn
+                  headerBolded
+                  removeTopSeparator
+                  dataSeparatorTopSpacing={4}
+                  data={
+                    <input
+                      value={
+                        newMedicationInfo.name ? newMedicationInfo.name : ''
+                      }
+                      onChange={e => {
                         setNewMedicationInfo({
                           ...newMedicationInfo,
-                          alergies: [...newMedicationInfo.alergies, item],
+                          name: e.target.value,
                         });
+                      }}
+                    />
+                  }
+                />
+                {medication.medicationInfo &&
+                  medication.medicationInfo.error &&
+                  medication.medicationInfo.error.length &&
+                  medication.medicationInfo.error.find(
+                    error => error.field === 'name'
+                  ) && (
+                  <div>
+                    {medication.medicationInfo.error.map(
+                      error =>
+                        error.field === 'name' && (
+                          <div className="error">{error.message}</div>
+                        )
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <DataDisplay
+                dataHeader="Naziv"
+                displayInColumn
+                headerBolded
+                removeTopSeparator
+                dataSeparatorTopSpacing={4}
+                data={newMedicationInfo.name}
+              />
+            )}
+            {userRole === 'admin' ? (
+              <>
+                <DataDisplay
+                  dataHeader="Opis"
+                  displayInColumn
+                  headerBolded
+                  dataSeparatorTopSpacing={4}
+                  data={
+                    <textarea
+                      value={
+                        newMedicationInfo.description
+                          ? newMedicationInfo.description
+                          : ''
                       }
-                    }}
-                    list={
-                      alergies
-                        ? [
-                          ...alergies.filter(alergy =>
-                            newMedicationInfo.alergies.length > 0
-                              ? !newMedicationInfo.alergies.find(
-                                medicationAlergy =>
-                                  medicationAlergy.id === alergy.id
-                              )
-                              : alergy
-                          ),
-                        ]
-                        : []
-                    }
-                    headerTitle="Odaberi postojeće alergije"
-                    defaultHeaderOption="Odaberi postojeće alergije"
-                  />
-                  <input
-                    className="new-alergy-input"
-                    value={newAlergyName ? newAlergyName : ''}
-                    placeholder="Unosi novu alergiju"
-                    onChange={e => {
-                      setNewAlergyName(e.target.value);
-                    }}
-                  />
-                  <button
-                    className="add-new-contraindication"
-                    disabled={!newAlergyName}
-                    onClick={() => {
-                      setNewMedicationInfo({
-                        ...newMedicationInfo,
-                        alergies: [
-                          ...newMedicationInfo.alergies,
-                          { name: newAlergyName },
-                        ],
-                      });
-                      setNewAlergyName(null);
-                    }}
-                  >
-                    Dodaj novu alergiju
-                  </button>
-                  {newMedicationInfo.alergies && (
+                      onChange={e => {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          description: e.target.value,
+                        });
+                      }}
+                    />
+                  }
+                />
+                {medication.medicationInfo &&
+                  medication.medicationInfo.error &&
+                  medication.medicationInfo.error.length &&
+                  medication.medicationInfo.error.find(
+                    error => error.field === 'description'
+                  ) && (
+                  <div>
+                    {medication.medicationInfo.error.map(
+                      error =>
+                        error.field === 'description' && (
+                          <div className="error">{error.message}</div>
+                        )
+                    )}
+                  </div>
+                )}
+              </>
+            ) : (
+              <DataDisplay
+                dataHeader="Opis"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={newMedicationInfo.description}
+              />
+            )}
+            {userRole === 'admin' ? (
+              <DataDisplay
+                dataHeader="Alergije"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  <div>
+                    <Dropdown
+                      fullWidth
+                      multiselect
+                      customclass="alergies-dropdown"
+                      handleSelect={item => {
+                        if (item.id) {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            alergies: [...newMedicationInfo.alergies, item],
+                          });
+                        }
+                      }}
+                      list={
+                        alergies
+                          ? [
+                            ...alergies.filter(alergy =>
+                              newMedicationInfo.alergies.length > 0
+                                ? !newMedicationInfo.alergies.find(
+                                  medicationAlergy =>
+                                    medicationAlergy.id === alergy.id
+                                )
+                                : alergy
+                            ),
+                          ]
+                          : []
+                      }
+                      headerTitle="Odaberi postojeće alergije"
+                      defaultHeaderOption="Odaberi postojeće alergije"
+                    />
+                    <input
+                      className="new-alergy-input"
+                      value={newAlergyName ? newAlergyName : ''}
+                      placeholder="Unosi novu alergiju"
+                      onChange={e => {
+                        setNewAlergyName(e.target.value);
+                      }}
+                    />
+                    <button
+                      className="add-new-contraindication"
+                      disabled={!newAlergyName}
+                      onClick={() => {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          alergies: [
+                            ...newMedicationInfo.alergies,
+                            { name: newAlergyName },
+                          ],
+                        });
+                        setNewAlergyName(null);
+                      }}
+                    >
+                      Dodaj novu alergiju
+                    </button>
+                    {newMedicationInfo.alergies && (
+                      <div>
+                        <table
+                          style={{ width: '100%', marginTop: '20px' }}
+                          className="list-table"
+                        >
+                          <tbody className="list-table__item-row">
+                            {newMedicationInfo.alergies.length > 0 &&
+                              newMedicationInfo.alergies.map(
+                                (alergy, index) => {
+                                  return (
+                                    <tr
+                                      className="spacer item-row"
+                                      style={{ textAlign: 'center' }}
+                                      key={index}
+                                    >
+                                      <td>{alergy.name}</td>
+                                      <td>
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              alergies: [
+                                                ...newMedicationInfo.alergies,
+                                              ].filter(
+                                                savedAlergy =>
+                                                  savedAlergy.name !==
+                                                  alergy.name
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Obriši
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                              )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                }
+              />
+            ) : (
+              <DataDisplay
+                dataHeader="Alergije"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  newMedicationInfo.alergies && (
                     <div>
                       <table
                         style={{ width: '100%', marginTop: '20px' }}
@@ -278,94 +369,132 @@ const MedicationInfoModal = props => {
                                   key={index}
                                 >
                                   <td>{alergy.name}</td>
-                                  <td>
-                                    <button
-                                      id="link-to-medication-page"
-                                      onClick={() => {
-                                        setNewMedicationInfo({
-                                          ...newMedicationInfo,
-                                          alergies: [
-                                            ...newMedicationInfo.alergies,
-                                          ].filter(
-                                            savedAlergy =>
-                                              savedAlergy.name !== alergy.name
-                                          ),
-                                        });
-                                      }}
-                                    >
-                                      Obriši
-                                    </button>
-                                  </td>
                                 </tr>
                               );
                             })}
                         </tbody>
                       </table>
                     </div>
-                  )}
-                </div>
-              }
-            />
-            <DataDisplay
-              dataHeader="Simptomi"
-              displayInColumn
-              headerBolded
-              dataSeparatorTopSpacing={4}
-              data={
-                <div>
-                  <Dropdown
-                    fullWidth
-                    customclass="symptoms-dropdown"
-                    handleSelect={item => {
-                      if (item.id) {
+                  )
+                }
+              />
+            )}
+            {userRole === 'admin' ? (
+              <DataDisplay
+                dataHeader="Simptomi"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  <div>
+                    <Dropdown
+                      fullWidth
+                      multiselect
+                      customclass="symptoms-dropdown"
+                      handleSelect={item => {
+                        if (item.id) {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            symptoms: [...newMedicationInfo.symptoms, item],
+                          });
+                        }
+                      }}
+                      list={
+                        symptoms
+                          ? [
+                            ...symptoms.filter(symptom =>
+                              newMedicationInfo.symptoms.length > 0
+                                ? !newMedicationInfo.symptoms.find(
+                                  medicationSymptom =>
+                                    medicationSymptom.id === symptom.id
+                                )
+                                : symptom
+                            ),
+                          ]
+                          : []
+                      }
+                      headerTitle="Odaberi postojeće simptome"
+                      defaultHeaderOption="Odaberi postojeće simptome"
+                    />
+                    <input
+                      className="new-alergy-input"
+                      value={newSymptomName ? newSymptomName : ''}
+                      placeholder="Unosi novi simptom"
+                      onChange={e => {
+                        setNewSymptomName(e.target.value);
+                      }}
+                    />
+                    <button
+                      className="add-new-contraindication"
+                      disabled={!newSymptomName}
+                      onClick={() => {
                         setNewMedicationInfo({
                           ...newMedicationInfo,
-                          symptoms: [...newMedicationInfo.symptoms, item],
+                          symptoms: [
+                            ...newMedicationInfo.symptoms,
+                            { name: newSymptomName },
+                          ],
                         });
-                      }
-                    }}
-                    list={
-                      symptoms
-                        ? [
-                          ...symptoms.filter(alergy =>
-                            newMedicationInfo.symptoms.length > 0
-                              ? !newMedicationInfo.symptoms.find(
-                                medicationSymptom =>
-                                  medicationSymptom.id === alergy.id
-                              )
-                              : alergy
-                          ),
-                        ]
-                        : []
-                    }
-                    headerTitle="Odaberi postojeće simptome"
-                    defaultHeaderOption="Odaberi postojeće simptome"
-                  />
-                  <input
-                    className="new-alergy-input"
-                    value={newSymptomName ? newSymptomName : ''}
-                    placeholder="Unosi novi simptom"
-                    onChange={e => {
-                      setNewSymptomName(e.target.value);
-                    }}
-                  />
-                  <button
-                    className="add-new-contraindication"
-                    disabled={!newSymptomName}
-                    onClick={() => {
-                      setNewMedicationInfo({
-                        ...newMedicationInfo,
-                        symptoms: [
-                          ...newMedicationInfo.symptoms,
-                          { name: newSymptomName },
-                        ],
-                      });
-                      setNewSymptomName(null);
-                    }}
-                  >
-                    Dodaj novi simptom
-                  </button>
-                  {newMedicationInfo.symptoms && (
+                        setNewSymptomName(null);
+                      }}
+                    >
+                      Dodaj novi simptom
+                    </button>
+                    {newMedicationInfo.symptoms && (
+                      <div>
+                        <table
+                          style={{ width: '100%', marginTop: '20px' }}
+                          className="list-table"
+                        >
+                          <tbody className="list-table__item-row">
+                            {newMedicationInfo.symptoms.length > 0 &&
+                              newMedicationInfo.symptoms.map(
+                                (symptom, index) => {
+                                  return (
+                                    <tr
+                                      className="spacer item-row"
+                                      style={{ textAlign: 'center' }}
+                                      key={index}
+                                    >
+                                      <td>{symptom.name}</td>
+                                      <td>
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              symptoms: [
+                                                ...newMedicationInfo.symptoms,
+                                              ].filter(
+                                                saveSymptom =>
+                                                  saveSymptom.name !==
+                                                  symptom.name
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Obriši
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                              )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                }
+              />
+            ) : (
+              <DataDisplay
+                dataHeader="Simptomi"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  newMedicationInfo.symptoms && (
                     <div>
                       <table
                         style={{ width: '100%', marginTop: '20px' }}
@@ -381,73 +510,111 @@ const MedicationInfoModal = props => {
                                   key={index}
                                 >
                                   <td>{symptom.name}</td>
-                                  <td>
-                                    <button
-                                      id="link-to-medication-page"
-                                      onClick={() => {
-                                        setNewMedicationInfo({
-                                          ...newMedicationInfo,
-                                          symptoms: [
-                                            ...newMedicationInfo.symptoms,
-                                          ].filter(
-                                            saveSymptom =>
-                                              saveSymptom.name !== symptom.name
-                                          ),
-                                        });
-                                      }}
-                                    >
-                                      Obriši
-                                    </button>
-                                  </td>
                                 </tr>
                               );
                             })}
                         </tbody>
                       </table>
                     </div>
-                  )}
-                </div>
-              }
-            />
+                  )
+                }
+              />
+            )}
           </div>
           <div className="medication-info-modal__body__right-side">
-            <DataDisplay
-              dataHeader="Kontraindikacije"
-              displayInColumn
-              headerBolded
-              removeTopSeparator
-              dataSeparatorTopSpacing={4}
-              data={
-                <div>
+            {userRole === 'admin' ? (
+              <DataDisplay
+                dataHeader="Kontraindikacije"
+                displayInColumn
+                headerBolded
+                removeTopSeparator
+                dataSeparatorTopSpacing={4}
+                data={
                   <div>
-                    <input
-                      value={
-                        contraIndicationDescription
-                          ? contraIndicationDescription
-                          : ''
-                      }
-                      onChange={e => {
-                        setContraIndicationDescription(e.target.value);
-                      }}
-                    />
-                    <button
-                      className="add-new-contraindication"
-                      disabled={!contraIndicationDescription}
-                      onClick={() => {
-                        setNewMedicationInfo({
-                          ...newMedicationInfo,
-                          contraindications: [
-                            ...newMedicationInfo.contraindications,
-                            contraIndicationDescription,
-                          ],
-                        });
-                        setContraIndicationDescription(null);
-                      }}
-                    >
-                      Dodaj novu kontraindikaciju
-                    </button>
+                    <div>
+                      <input
+                        value={
+                          contraIndicationDescription
+                            ? contraIndicationDescription
+                            : ''
+                        }
+                        onChange={e => {
+                          setContraIndicationDescription(e.target.value);
+                        }}
+                      />
+                      <button
+                        className="add-new-contraindication"
+                        disabled={!contraIndicationDescription}
+                        onClick={() => {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            contraindications: [
+                              ...newMedicationInfo.contraindications,
+                              contraIndicationDescription,
+                            ],
+                          });
+                          setContraIndicationDescription(null);
+                        }}
+                      >
+                        Dodaj novu kontraindikaciju
+                      </button>
+                    </div>
+                    {newMedicationInfo.contraindications && (
+                      <div>
+                        <table
+                          style={{ width: '100%', marginTop: '20px' }}
+                          className="list-table"
+                        >
+                          <tbody className="list-table__item-row">
+                            {newMedicationInfo.contraindications.length > 0 &&
+                              newMedicationInfo.contraindications.map(
+                                (contraindication, index) => {
+                                  return (
+                                    <tr
+                                      className="spacer item-row"
+                                      style={{ textAlign: 'center' }}
+                                      key={index}
+                                    >
+                                      <td>{contraindication}</td>
+                                      <td>
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              contraindications: [
+                                                ...newMedicationInfo.contraindications,
+                                              ].filter(
+                                                indication =>
+                                                  indication !==
+                                                  contraindication
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Obriši
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                              )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
                   </div>
-                  {newMedicationInfo.contraindications && (
+                }
+              />
+            ) : (
+              <DataDisplay
+                dataHeader="Kontraindikacije"
+                displayInColumn
+                headerBolded
+                removeTopSeparator
+                dataSeparatorTopSpacing={4}
+                data={
+                  newMedicationInfo.contraindications && (
                     <div>
                       <table
                         style={{ width: '100%', marginTop: '20px' }}
@@ -464,24 +631,6 @@ const MedicationInfoModal = props => {
                                     key={index}
                                   >
                                     <td>{contraindication}</td>
-                                    <td>
-                                      <button
-                                        id="link-to-medication-page"
-                                        onClick={() => {
-                                          setNewMedicationInfo({
-                                            ...newMedicationInfo,
-                                            contraindications: [
-                                              ...newMedicationInfo.contraindications,
-                                            ].filter(
-                                              indication =>
-                                                indication !== contraindication
-                                            ),
-                                          });
-                                        }}
-                                      >
-                                        Obriši
-                                      </button>
-                                    </td>
                                   </tr>
                                 );
                               }
@@ -489,10 +638,10 @@ const MedicationInfoModal = props => {
                         </tbody>
                       </table>
                     </div>
-                  )}
-                </div>
-              }
-            />
+                  )
+                }
+              />
+            )}
             <DataDisplay
               dataHeader="Nuspojave"
               displayInColumn
@@ -503,44 +652,54 @@ const MedicationInfoModal = props => {
                 sideEffectsArray.map((sideEffectItem, index) => (
                   <div key={index} style={{ marginTop: index > 0 && '20px' }}>
                     <div>
-                      <input
-                        placeholder={
-                          sideEffectItem.name === 'regular'
-                            ? 'Česta nuspojava'
-                            : sideEffectItem.name === 'rare'
-                              ? 'Rijetka nuspojava'
-                              : 'Vrlo rijetka nuspojava'
-                        }
-                        value={
-                          sideEffectItem.description
-                            ? sideEffectItem.description
-                            : ''
-                        }
-                        onChange={e => {
-                          sideEffectItem.setDescription(e.target.value);
-                        }}
-                      />
-                      <button
-                        className="add-new-contraindication"
-                        disabled={!sideEffectItem.description}
-                        onClick={() => {
-                          setNewMedicationInfo({
-                            ...newMedicationInfo,
-                            sideEffects: {
-                              ...newMedicationInfo.sideEffects,
-                              [`${sideEffectItem.name}`]: [
-                                ...newMedicationInfo.sideEffects[
-                                  sideEffectItem.name
-                                ],
-                                sideEffectItem.description,
-                              ],
-                            },
-                          });
-                          sideEffectItem.setDescription(null);
-                        }}
-                      >
-                        Dodaj novu nuspojavu
-                      </button>
+                      {userRole === 'admin' ? (
+                        <>
+                          <input
+                            placeholder={
+                              sideEffectItem.name === 'regular'
+                                ? 'Česta nuspojava'
+                                : sideEffectItem.name === 'rare'
+                                  ? 'Rijetka nuspojava'
+                                  : 'Vrlo rijetka nuspojava'
+                            }
+                            value={
+                              sideEffectItem.description
+                                ? sideEffectItem.description
+                                : ''
+                            }
+                            onChange={e => {
+                              sideEffectItem.setDescription(e.target.value);
+                            }}
+                          />
+                          <button
+                            className="add-new-contraindication"
+                            disabled={!sideEffectItem.description}
+                            onClick={() => {
+                              setNewMedicationInfo({
+                                ...newMedicationInfo,
+                                sideEffects: {
+                                  ...newMedicationInfo.sideEffects,
+                                  [`${sideEffectItem.name}`]: [
+                                    ...newMedicationInfo.sideEffects[
+                                      sideEffectItem.name
+                                    ],
+                                    sideEffectItem.description,
+                                  ],
+                                },
+                              });
+                              sideEffectItem.setDescription(null);
+                            }}
+                          >
+                            Dodaj novu nuspojavu
+                          </button>
+                        </>
+                      ) : sideEffectItem.name === 'regular' ? (
+                        'Česta nuspojava'
+                      ) : sideEffectItem.name === 'rare' ? (
+                        'Rijetka nuspojava'
+                      ) : (
+                        'Vrlo rijetka nuspojava'
+                      )}
                     </div>
                     {newMedicationInfo.sideEffects && (
                       <div>
@@ -564,29 +723,32 @@ const MedicationInfoModal = props => {
                                     key={index}
                                   >
                                     <td>{sideEffect}</td>
-                                    <td>
-                                      <button
-                                        id="link-to-medication-page"
-                                        onClick={() => {
-                                          setNewMedicationInfo({
-                                            ...newMedicationInfo,
-                                            sideEffects: {
-                                              ...newMedicationInfo.sideEffects,
-                                              [`${sideEffectItem.name}`]: [
-                                                ...newMedicationInfo
-                                                  .sideEffects[
-                                                    sideEffectItem.name
-                                                  ],
-                                              ].filter(
-                                                effect => effect !== sideEffect
-                                              ),
-                                            },
-                                          });
-                                        }}
-                                      >
-                                        Obriši
-                                      </button>
-                                    </td>
+                                    {userRole === 'admin' && (
+                                      <td>
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              sideEffects: {
+                                                ...newMedicationInfo.sideEffects,
+                                                [`${sideEffectItem.name}`]: [
+                                                  ...newMedicationInfo
+                                                    .sideEffects[
+                                                      sideEffectItem.name
+                                                    ],
+                                                ].filter(
+                                                  effect =>
+                                                    effect !== sideEffect
+                                                ),
+                                              },
+                                            });
+                                          }}
+                                        >
+                                          Obriši
+                                        </button>
+                                      </td>
+                                    )}
                                   </tr>
                                 );
                               })}
@@ -600,31 +762,33 @@ const MedicationInfoModal = props => {
             />
           </div>
         </div>
-        <div className="footer">
-          {props.selectedMedication && (
+        {userRole === 'admin' && (
+          <div className="footer">
+            {props.selectedMedication && (
+              <button
+                className="footer__remove-button"
+                onClick={() => {
+                  setIsTryingToDelete(true);
+                  setShowAlertModal(true);
+                }}
+              >
+                Obriši lijek
+              </button>
+            )}
             <button
-              className="footer__remove-button"
+              className="footer__send-button"
               onClick={() => {
-                setIsTryingToDelete(true);
-                setShowAlertModal(true);
+                if (newMedicationInfo.id) {
+                  dispatch(updateMedication(newMedicationInfo));
+                } else {
+                  dispatch(createMedication(newMedicationInfo));
+                }
               }}
             >
-              Obriši lijek
+              Spremi
             </button>
-          )}
-          <button
-            className="footer__send-button"
-            onClick={() => {
-              if (newMedicationInfo.id) {
-                dispatch(updateMedication(newMedicationInfo));
-              } else {
-                dispatch(createMedication(newMedicationInfo));
-              }
-            }}
-          >
-            Spremi
-          </button>
-        </div>
+          </div>
+        )}
         {showAlertModal && (
           <AlertModal
             alertInfotext={
@@ -655,6 +819,7 @@ MedicationInfoModal.propTypes = {
   selectedMedication: PropTypes.object,
   setSelectedMedication: PropTypes.func,
   setShowMedicationInfoModal: PropTypes.func,
+  userRole: PropTypes.string,
 };
 
 export default MedicationInfoModal;

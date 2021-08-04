@@ -1,0 +1,161 @@
+import React, { useEffect, useState } from 'react';
+import PropTypes from 'prop-types';
+import { useDispatch, useSelector } from 'react-redux';
+
+import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
+import {
+  getAllMedications,
+  getAllSymptoms,
+  getMedicationsBySymptomsAndAlergies,
+} from '../../../store/actions';
+import { Dropdown } from '../../SharedComponents/Dropdown/Dropdown';
+import './MedicationSuggestionPage.scss';
+import MedicationList from '../../AdminHomepage/MedicationsListPage/MedicationList/MedicationList';
+import MedicationInfoModal from '../../AdminHomepage/MedicationsListPage/MedicationInfoModal/MedicationInfoModal';
+
+const MedicationSuggestionPage = props => {
+  const dispatch = useDispatch();
+
+  const symptoms = useSelector(state => state.symptoms.symptoms);
+  const medicationList = useSelector(state => state.medicationList);
+
+  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
+  const [selectedMedication, setSelectedMedication] = useState(null);
+
+  useEffect(() => {
+    dispatch(getAllSymptoms());
+  }, []);
+
+  return (
+    <div className="medication-suggestions-page">
+      <DataDisplay
+        dataHeader="Predlaganje lijekova"
+        headerBolded
+        headerFontSize={23}
+        headerTextColor={'#005BA7'}
+        dataFullWidth
+        centerHeaderVertically
+        TopSpacing={30}
+        floatDataRight
+        data={
+          <button
+            className="serach-medications-button"
+            onClick={() => {
+              dispatch(getMedicationsBySymptomsAndAlergies(selectedSymptoms));
+            }}
+          >
+            Pretraži
+          </button>
+        }
+      />
+      <div className="medication-suggestions-page__body">
+        <div className="medication-suggestions-page__body__symptoms">
+          <DataDisplay
+            dataHeader="Simptomi"
+            displayInColumn
+            headerBolded
+            dataSeparatorTopSpacing={4}
+            data={
+              <div>
+                <Dropdown
+                  fullWidth
+                  customclass="symptoms-dropdown"
+                  multiselect
+                  handleSelect={item => {
+                    if (item.id) {
+                      setSelectedSymptoms([...selectedSymptoms, item]);
+                    }
+                  }}
+                  list={
+                    symptoms
+                      ? [
+                        ...symptoms.filter(symptom =>
+                          selectedSymptoms.length > 0
+                            ? !selectedSymptoms.find(
+                              medicationSymptom =>
+                                medicationSymptom.id === symptom.id
+                            )
+                            : symptom
+                        ),
+                      ]
+                      : []
+                  }
+                  headerTitle="Odaberi postojeće simptome"
+                  defaultHeaderOption="Odaberi postojeće simptome"
+                />
+                {selectedSymptoms && (
+                  <div>
+                    <table
+                      style={{ width: '100%', marginTop: '20px' }}
+                      className="list-table"
+                    >
+                      <tbody className="list-table__item-row">
+                        {selectedSymptoms.length > 0 &&
+                          selectedSymptoms.map((symptom, index) => {
+                            return (
+                              <tr
+                                className="spacer item-row"
+                                style={{ textAlign: 'center' }}
+                                key={index}
+                              >
+                                <td>{symptom.name}</td>
+                                <td>
+                                  <button
+                                    id="link-to-medication-page"
+                                    onClick={() => {
+                                      setSelectedSymptoms(
+                                        [...selectedSymptoms].filter(
+                                          saveSymptom =>
+                                            saveSymptom.name !== symptom.name
+                                        )
+                                      );
+                                    }}
+                                  >
+                                    Obriši
+                                  </button>
+                                </td>
+                              </tr>
+                            );
+                          })}
+                      </tbody>
+                    </table>
+                  </div>
+                )}
+              </div>
+            }
+          />
+        </div>
+        <div className="medication-suggestions-page__body__medication-list">
+          {medicationList &&
+          medicationList.medications &&
+          medicationList.medications.length > 0 ? (
+              <MedicationList
+                medicationList={medicationList.medications}
+                setShowMedicationInfoModal={setShowMedicationInfoModal}
+                setSelectedMedication={setSelectedMedication}
+              />
+            ) : (
+              medicationList.medications && (
+                <div className="medications-list-page__list__display-list__not-found">
+                Nema pronađenih lijekova.
+                </div>
+              )
+            )}
+        </div>
+      </div>
+      {showMedicationInfoModal && (
+        <MedicationInfoModal
+          userRole="user"
+          selectedMedication={selectedMedication}
+          setSelectedMedication={setSelectedMedication}
+          setShowMedicationInfoModal={setShowMedicationInfoModal}
+        />
+      )}
+    </div>
+  );
+};
+
+MedicationSuggestionPage.propTypes = {};
+
+export default MedicationSuggestionPage;

@@ -15,14 +15,14 @@ export const registerUser = (name, email, password) => {
       .then(response => {
         dispatch(loginUser(email, password));
       })
-      .catch(error =>
+      .catch(error => {
         dispatch(
           loginError({
-            message: error.response.data.message,
+            error: error.response.data,
             status: error.response.status,
           })
-        )
-      );
+        );
+      });
   };
 };
 
@@ -43,7 +43,8 @@ export const loginUser = (email, password) => {
       .catch(error =>
         dispatch(
           loginError({
-            message: error.response.data.message,
+            message: error.response.data.successMessage,
+            error: error.response.data,
             status: error.response.status,
           })
         )
@@ -57,7 +58,7 @@ export const userLoggedIn = user => ({
     id: user.id,
     email: user.email,
     name: user.name,
-    role: user.role
+    role: user.role,
   },
 });
 
@@ -65,10 +66,7 @@ export const userLoggedOut = () => ({
   type: USER_LOGGED_OUT,
 });
 
-export const loginError = error => ({
+export const loginError = data => ({
   type: SET_ERROR_USER,
-  payload: {
-    error: error.message,
-    status: error.status,
-  },
+  payload: data,
 });

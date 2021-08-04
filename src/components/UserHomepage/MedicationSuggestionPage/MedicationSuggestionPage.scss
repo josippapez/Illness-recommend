@@ -1,0 +1,46 @@
+.medication-suggestions-page {
+  height: calc(100% - 30px);
+  display: flex;
+  flex-direction: column;
+  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+
+  .serach-medications-button {
+    border: none;
+    color: var(--white);
+    border-radius: 4px;
+    height: 38px;
+    padding: 0 20px;
+    background: var(--hyperlink) 0% 0% no-repeat padding-box;
+    font: normal normal bold 14px "Lato, Regular";
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background: #0964b9;
+    }
+  }
+  &__body {
+    display: flex;
+    flex-direction: row;
+    @media screen and (max-width: 1350px) {
+      flex-direction: column;
+    }
+    &__symptoms {
+      width: 50%;
+      padding-right: 15px;
+      @media screen and (max-width: 1350px) {
+        width: 100%;
+        padding: 0;
+      }
+    }
+    &__medication-list {
+      width: 50%;
+      padding-left: 15px;
+      margin-top: 43px;
+      @media screen and (max-width: 1350px) {
+        width: 100%;
+        padding: 0;
+      }
+    }
+  }
+}

@@ -12,6 +12,7 @@ const initialState = {
   isAuthenticated: false,
   error: null,
   status: null,
+  message: null,
 };
 
 export const user = (state = initialState, action) => {
@@ -25,6 +26,7 @@ export const user = (state = initialState, action) => {
         isAuthenticated: true,
         error: null,
         status: null,
+        message: null,
       };
     case USER_LOGGED_OUT: {
       return {
@@ -35,6 +37,7 @@ export const user = (state = initialState, action) => {
         isAuthenticated: false,
         error: null,
         status: null,
+        message: null,
       };
     }
     case USER_INFO_FETCHED: {
@@ -50,6 +53,7 @@ export const user = (state = initialState, action) => {
           ...state.userInfo,
           error: action.payload.error,
           status: action.payload.status,
+          message: action.payload.message,
         },
       };
     }
@@ -58,6 +62,7 @@ export const user = (state = initialState, action) => {
         ...state,
         error: action.payload.error,
         status: action.payload.status,
+        message: action.payload.message,
       };
     }
     default:

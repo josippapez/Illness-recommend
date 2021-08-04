@@ -91,6 +91,13 @@ const Navbar = () => {
               >
                 Korisnički detalji
               </NavLink>
+              <NavLink
+                className="navbar-item"
+                to="/medication-suggestion"
+                activeClassName="active"
+              >
+                Prijedlog lijekova
+              </NavLink>
             </div>
           )}
           <button

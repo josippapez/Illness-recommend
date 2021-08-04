@@ -14,12 +14,48 @@ export const getAllMedications = () => {
       withCredentials: true,
     })
       .then(response => {
-        dispatch(setUsersList(response.data));
+        dispatch(setMedicationsList(response.data));
       })
       .catch(error =>
         dispatch({
           type: SET_ERROR_MEDICATION_LIST,
           payload: {
+            message: error.message,
+            error: error.message,
+            status: error.status,
+          },
+        })
+      );
+  };
+};
+
+export const getMedicationsBySymptomsAndAlergies = symptoms => {
+  console.log(symptoms);
+  return (dispatch, getState) => {
+    axios({
+      method: 'POST',
+      url: `${process.env.REACT_APP_API_URL}/medications/find-by-symptoms`,
+      withCredentials: true,
+      data: symptoms,
+    })
+      .then(response => {
+        dispatch(
+          setErrorMedicationInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorMedicationInfo({ message: null, error: null, status: null })
+        );
+        dispatch(setMedicationsList(response.data));
+      })
+      .catch(error =>
+        dispatch({
+          type: SET_ERROR_MEDICATION_LIST,
+          payload: {
+            message: error.message,
             error: error.message,
             status: error.status,
           },
@@ -38,9 +74,15 @@ export const createMedication = medication => {
     })
       .then(response => {
         dispatch(
-          setErrorMedicationInfo({ error: null, status: response.status })
+          setErrorMedicationInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
         );
-        dispatch(setErrorMedicationInfo({ error: null, status: null }));
+        dispatch(
+          setErrorMedicationInfo({ message: null, error: null, status: null })
+        );
         dispatch(getAllMedications());
       })
       .catch(error => {
@@ -64,9 +106,15 @@ export const updateMedication = medication => {
     })
       .then(response => {
         dispatch(
-          setErrorMedicationInfo({ error: null, status: response.status })
+          setErrorMedicationInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
         );
-        dispatch(setErrorMedicationInfo({ error: null, status: null }));
+        dispatch(
+          setErrorMedicationInfo({ message: null, error: null, status: null })
+        );
         dispatch(getAllMedications());
       })
       .catch(error =>
@@ -91,15 +139,13 @@ export const removeMedicationById = id => {
       .then(response => {
         dispatch(
           setErrorMedicationInfo({
+            message: response.data.successMessage,
             error: null,
             status: response.status,
           })
         );
         dispatch(
-          setErrorMedicationInfo({
-            error: null,
-            status: null,
-          })
+          setErrorMedicationInfo({ message: null, error: null, status: null })
         );
         dispatch(getAllMedications());
       })
@@ -114,7 +160,7 @@ export const removeMedicationById = id => {
   };
 };
 
-export const setUsersList = data => ({
+export const setMedicationsList = data => ({
   type: MEDICATION_LIST_FETCHED,
   payload: data,
 });
