@@ -128,6 +128,9 @@ const UserDetailsPage = props => {
             <div>
               <Dropdown
                 customclass="alergies-dropdown"
+                inputNewData
+                addButtonShouldBeShown={false}
+                inputNewDataPlaceholder="Odaberi ili upiši"
                 handleSelect={item => {
                   if (item === 'Odaberi') {
                     setselectedAlergie(null);

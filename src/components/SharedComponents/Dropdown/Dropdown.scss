@@ -15,6 +15,7 @@
     }
 
     &__header {
+      position: relative;
       display: inline-flex;
       width: 100%;
       align-items: center;
@@ -29,7 +30,21 @@
       }
 
       .suggestion-input {
-        font-family: 'Lato, Regular';
+        font-family: "Lato, Regular";
+        padding-right: 60px;
+        height: 38px;
+      }
+
+      .add-new-item {
+        position: absolute;
+        right: 10px;
+        border: none;
+        padding: 3px;
+        color: var(--white);
+        border-radius: 4px;
+        background: var(--hyperlink) 0% 0% no-repeat padding-box;
+        font: normal normal bold 14px "Lato, Regular";
+        cursor: pointer;
       }
 
       &.default {
@@ -81,9 +96,9 @@
 
     &__menu {
       position: absolute;
+      width: 100%;
       top: 38px;
       left: 0;
-      width: 300px;
       height: fit-content;
       max-height: 300px;
       border: 1px solid var(--light-gray);
@@ -121,15 +136,15 @@
         }
 
         &__name {
-          font: normal normal normal 16px 'Lato, Regular' !important;
+          font: normal normal normal 16px "Lato, Regular" !important;
         }
         &__name-default {
-          font: normal normal normal 16px 'Lato, Bold' !important;
+          font: normal normal normal 16px "Lato, Bold" !important;
         }
 
         &.selected {
           .dropdown__wrapper__menu__item__name {
-            font: normal normal bold 16px 'Lato, Regular' !important;
+            font: normal normal bold 16px "Lato, Regular" !important;
           }
         }
 

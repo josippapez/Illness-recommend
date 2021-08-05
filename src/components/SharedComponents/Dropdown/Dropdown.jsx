@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import _ from 'lodash';
@@ -8,10 +8,11 @@ import check from '../../../styles/assets/images/check.svg';
 import './Dropdown.scss';
 
 export const Dropdown = props => {
+  const inputRef = useRef();
   const [loading, setLoading] = useState(false);
   const [dropdownOpened, setDropdownOpened] = useState(false);
   const [filterInput, setFilterInput] = useState(null);
-  const [listIncludesFilter, setListIncludesFilter] = useState(false);
+
   const {
     list,
     handleSelect,
@@ -23,11 +24,37 @@ export const Dropdown = props => {
     inputNewDataPlaceholder,
     disabledInput,
     fullWidth,
+    saveNewInput,
+    addButtonShouldBeShown,
   } = props;
+
+  const [showAddbutton, setShowAddbutton] = useState(false);
 
   const selectItem = item => {
     handleSelect(item);
   };
+
+  useEffect(() => {
+    let timeout;
+    if (addButtonShouldBeShown) {
+      if (filterInput && filterInput !== '') {
+        timeout = setTimeout(() => {
+          if (
+            !list.find(
+              item => item.name.toLowerCase() === filterInput.toLowerCase()
+            )
+          ) {
+            setShowAddbutton(true);
+          }
+        }, 500);
+      } else {
+        setShowAddbutton(false);
+      }
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [filterInput]);
 
   return (
     <div className="dropdown" style={{ width: fullWidth && '100%' }}>
@@ -60,20 +87,40 @@ export const Dropdown = props => {
               />
             </div>
           ) : (
-            <input
-              className={classNames(customclass, {
-                dropdown__wrapper__header__box: true,
-                'suggestion-input': true,
-              })}
-              disabled={disabledInput}
-              placeholder={inputNewDataPlaceholder}
-              onClick={() => setDropdownOpened(!dropdownOpened)}
-              value={filterInput ? filterInput : ''}
-              onChange={e => {
-                setFilterInput(e.target.value);
-                setDropdownOpened(true);
+            <form
+              style={{ width: '100%', display: 'flex', alignItems: 'center' }}
+              onSubmit={e => {
+                e.preventDefault();
+                if (addButtonShouldBeShown) {
+                  saveNewInput({ name: filterInput });
+                  setShowAddbutton(false);
+                  setFilterInput(null);
+                  inputRef.current.focus();
+                }
               }}
-            />
+            >
+              <input
+                className={classNames(customclass, {
+                  dropdown__wrapper__header__box: true,
+                  'suggestion-input': true,
+                })}
+                ref={inputRef}
+                disabled={disabledInput}
+                placeholder={inputNewDataPlaceholder}
+                onClick={() => setDropdownOpened(!dropdownOpened)}
+                value={filterInput ? filterInput : ''}
+                onChange={e => {
+                  setShowAddbutton(false);
+                  setFilterInput(e.target.value);
+                  setDropdownOpened(true);
+                }}
+              />
+              {showAddbutton && addButtonShouldBeShown && (
+                <button type="submit" className="add-new-item">
+                  Dodaj
+                </button>
+              )}
+            </form>
           )}
         </div>
         {dropdownOpened &&
@@ -176,6 +223,10 @@ export const Dropdown = props => {
   );
 };
 
+Dropdown.defaultProps = {
+  addButtonShouldBeShown: true,
+};
+
 Dropdown.propTypes = {
   list: PropTypes.arrayOf(PropTypes.shape()),
   handleSelect: PropTypes.func.isRequired,
@@ -189,4 +240,6 @@ Dropdown.propTypes = {
   disabledInput: PropTypes.bool,
   inputNewDataPlaceholder: PropTypes.string,
   fullWidth: PropTypes.bool,
+  saveNewInput: PropTypes.func,
+  addButtonShouldBeShown: PropTypes.bool,
 };

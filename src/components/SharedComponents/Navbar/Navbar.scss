@@ -41,9 +41,9 @@
       align-items: center;
       justify-content: center;
       color: var(--main-text);
-      transition: all 0.25s;
+      transition: all 0.1s;
       &.active {
-        width: calc(100% - 10px);
+        margin-left: 30px;
         /* background: var(--brand-blue) 0% 0% no-repeat padding-box; */
         color: var(--brand-blue);
         border-radius: 50px 0px 0px 50px;

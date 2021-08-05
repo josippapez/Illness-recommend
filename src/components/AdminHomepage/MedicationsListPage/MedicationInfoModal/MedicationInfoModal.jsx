@@ -29,6 +29,7 @@ const MedicationInfoModal = props => {
       : {
         name: null,
         description: null,
+        canBeUsedWhilePregnantOrBreastFeed: true,
         contraindications: [],
         sideEffects: { regular: [], rare: [], veryRare: [] },
         alergies: [],
@@ -152,6 +153,8 @@ const MedicationInfoModal = props => {
                   dataSeparatorTopSpacing={4}
                   data={
                     <input
+                      type="text"
+                      name="medication-name"
                       value={
                         newMedicationInfo.name ? newMedicationInfo.name : ''
                       }
@@ -240,6 +243,48 @@ const MedicationInfoModal = props => {
             )}
             {userRole === 'admin' ? (
               <DataDisplay
+                dataHeader="Smije se koristiti tijekom trudnoće ili dojenja?"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  <div>
+                    <input
+                      className="checkbox"
+                      type="checkbox"
+                      min={0}
+                      checked={
+                        newMedicationInfo.canBeUsedWhilePregnantOrBreastFeed
+                          ? newMedicationInfo.canBeUsedWhilePregnantOrBreastFeed
+                          : false
+                      }
+                      onChange={e => {
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          canBeUsedWhilePregnantOrBreastFeed: e.target.checked,
+                        });
+                      }}
+                    />
+                  </div>
+                }
+              />
+            ) : (
+              <DataDisplay
+                dataHeader="Smije se koristiti tijekom trudnoće ili dojenja?"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={4}
+                data={
+                  newMedicationInfo.canBeUsedWhilePregnantOrBreastFeed ? (
+                    <div className="success">Da</div>
+                  ) : (
+                    <div className="error">Ne</div>
+                  )
+                }
+              />
+            )}
+            {userRole === 'admin' ? (
+              <DataDisplay
                 dataHeader="Alergije"
                 displayInColumn
                 headerBolded
@@ -250,6 +295,14 @@ const MedicationInfoModal = props => {
                       fullWidth
                       multiselect
                       customclass="alergies-dropdown"
+                      inputNewData
+                      inputNewDataPlaceholder="Odaberi postojeće alergije ili unesi novu"
+                      saveNewInput={item =>
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          alergies: [...newMedicationInfo.alergies, item],
+                        })
+                      }
                       handleSelect={item => {
                         if (item.id) {
                           setNewMedicationInfo({
@@ -275,30 +328,6 @@ const MedicationInfoModal = props => {
                       headerTitle="Odaberi postojeće alergije"
                       defaultHeaderOption="Odaberi postojeće alergije"
                     />
-                    <input
-                      className="new-alergy-input"
-                      value={newAlergyName ? newAlergyName : ''}
-                      placeholder="Unosi novu alergiju"
-                      onChange={e => {
-                        setNewAlergyName(e.target.value);
-                      }}
-                    />
-                    <button
-                      className="add-new-contraindication"
-                      disabled={!newAlergyName}
-                      onClick={() => {
-                        setNewMedicationInfo({
-                          ...newMedicationInfo,
-                          alergies: [
-                            ...newMedicationInfo.alergies,
-                            { name: newAlergyName },
-                          ],
-                        });
-                        setNewAlergyName(null);
-                      }}
-                    >
-                      Dodaj novu alergiju
-                    </button>
                     {newMedicationInfo.alergies && (
                       <div>
                         <table
@@ -368,7 +397,13 @@ const MedicationInfoModal = props => {
                                   style={{ textAlign: 'center' }}
                                   key={index}
                                 >
-                                  <td>{alergy.name}</td>
+                                  <td
+                                    style={{
+                                      padding: '10px',
+                                    }}
+                                  >
+                                    {alergy.name}
+                                  </td>
                                 </tr>
                               );
                             })}
@@ -390,6 +425,14 @@ const MedicationInfoModal = props => {
                     <Dropdown
                       fullWidth
                       multiselect
+                      inputNewData
+                      inputNewDataPlaceholder="Odaberi postojeće simptome ili unesi novi"
+                      saveNewInput={item =>
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          symptoms: [...newMedicationInfo.symptoms, item],
+                        })
+                      }
                       customclass="symptoms-dropdown"
                       handleSelect={item => {
                         if (item.id) {
@@ -416,30 +459,6 @@ const MedicationInfoModal = props => {
                       headerTitle="Odaberi postojeće simptome"
                       defaultHeaderOption="Odaberi postojeće simptome"
                     />
-                    <input
-                      className="new-alergy-input"
-                      value={newSymptomName ? newSymptomName : ''}
-                      placeholder="Unosi novi simptom"
-                      onChange={e => {
-                        setNewSymptomName(e.target.value);
-                      }}
-                    />
-                    <button
-                      className="add-new-contraindication"
-                      disabled={!newSymptomName}
-                      onClick={() => {
-                        setNewMedicationInfo({
-                          ...newMedicationInfo,
-                          symptoms: [
-                            ...newMedicationInfo.symptoms,
-                            { name: newSymptomName },
-                          ],
-                        });
-                        setNewSymptomName(null);
-                      }}
-                    >
-                      Dodaj novi simptom
-                    </button>
                     {newMedicationInfo.symptoms && (
                       <div>
                         <table
@@ -509,7 +528,13 @@ const MedicationInfoModal = props => {
                                   style={{ textAlign: 'center' }}
                                   key={index}
                                 >
-                                  <td>{symptom.name}</td>
+                                  <td
+                                    style={{
+                                      padding: '10px',
+                                    }}
+                                  >
+                                    {symptom.name}
+                                  </td>
                                 </tr>
                               );
                             })}
@@ -531,7 +556,19 @@ const MedicationInfoModal = props => {
                 dataSeparatorTopSpacing={4}
                 data={
                   <div>
-                    <div>
+                    <form
+                      onSubmit={e => {
+                        e.preventDefault();
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          contraindications: [
+                            ...newMedicationInfo.contraindications,
+                            contraIndicationDescription,
+                          ],
+                        });
+                        setContraIndicationDescription(null);
+                      }}
+                    >
                       <input
                         value={
                           contraIndicationDescription
@@ -545,20 +582,12 @@ const MedicationInfoModal = props => {
                       <button
                         className="add-new-contraindication"
                         disabled={!contraIndicationDescription}
-                        onClick={() => {
-                          setNewMedicationInfo({
-                            ...newMedicationInfo,
-                            contraindications: [
-                              ...newMedicationInfo.contraindications,
-                              contraIndicationDescription,
-                            ],
-                          });
-                          setContraIndicationDescription(null);
-                        }}
+                        type="submit"
+                        autoFocus
                       >
                         Dodaj novu kontraindikaciju
                       </button>
-                    </div>
+                    </form>
                     {newMedicationInfo.contraindications && (
                       <div>
                         <table
@@ -630,7 +659,9 @@ const MedicationInfoModal = props => {
                                     style={{ textAlign: 'center' }}
                                     key={index}
                                   >
-                                    <td>{contraindication}</td>
+                                    <td style={{ padding: '10px' }}>
+                                      {contraindication}
+                                    </td>
                                   </tr>
                                 );
                               }
@@ -653,7 +684,24 @@ const MedicationInfoModal = props => {
                   <div key={index} style={{ marginTop: index > 0 && '20px' }}>
                     <div>
                       {userRole === 'admin' ? (
-                        <>
+                        <form
+                          onSubmit={e => {
+                            e.preventDefault();
+                            setNewMedicationInfo({
+                              ...newMedicationInfo,
+                              sideEffects: {
+                                ...newMedicationInfo.sideEffects,
+                                [`${sideEffectItem.name}`]: [
+                                  ...newMedicationInfo.sideEffects[
+                                    sideEffectItem.name
+                                  ],
+                                  sideEffectItem.description,
+                                ],
+                              },
+                            });
+                            sideEffectItem.setDescription(null);
+                          }}
+                        >
                           <input
                             placeholder={
                               sideEffectItem.name === 'regular'
@@ -674,25 +722,12 @@ const MedicationInfoModal = props => {
                           <button
                             className="add-new-contraindication"
                             disabled={!sideEffectItem.description}
-                            onClick={() => {
-                              setNewMedicationInfo({
-                                ...newMedicationInfo,
-                                sideEffects: {
-                                  ...newMedicationInfo.sideEffects,
-                                  [`${sideEffectItem.name}`]: [
-                                    ...newMedicationInfo.sideEffects[
-                                      sideEffectItem.name
-                                    ],
-                                    sideEffectItem.description,
-                                  ],
-                                },
-                              });
-                              sideEffectItem.setDescription(null);
-                            }}
+                            type="submit"
+                            autoFocus
                           >
                             Dodaj novu nuspojavu
                           </button>
-                        </>
+                        </form>
                       ) : sideEffectItem.name === 'regular' ? (
                         'Česta nuspojava'
                       ) : sideEffectItem.name === 'rare' ? (
@@ -722,7 +757,13 @@ const MedicationInfoModal = props => {
                                     style={{ textAlign: 'center' }}
                                     key={index}
                                   >
-                                    <td>{sideEffect}</td>
+                                    <td
+                                      style={{
+                                        padding: userRole !== 'admin' && '10px',
+                                      }}
+                                    >
+                                      {sideEffect}
+                                    </td>
                                     {userRole === 'admin' && (
                                       <td>
                                         <button
