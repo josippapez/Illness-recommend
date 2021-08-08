@@ -1,5 +1,4 @@
 import React from 'react';
-import { ToastContainer, toast } from 'react-toastify';
 import { Route, Switch, BrowserRouter as Router } from 'react-router-dom';
 import 'react-toastify/dist/ReactToastify.css';
 import PrivateRoute from './PrivateRoute';
@@ -8,11 +7,19 @@ import Routes from './Routes';
 import './App.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Notification from './SharedComponents/Notification/Notification';
+import { useSelector } from 'react-redux';
+import classNames from 'classnames';
 
 function App() {
+  const theme = useSelector(state => state.theme);
   return (
     <Router>
-      <div className='navigation-setup'>
+      <div
+        className={classNames({
+          'navigation-setup': true,
+          darkTheme: theme.darkTheme,
+        })}
+      >
         <Notification />
         <Switch>
           <Route path="/login" component={Login} />

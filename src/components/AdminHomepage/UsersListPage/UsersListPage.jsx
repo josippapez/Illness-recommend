@@ -24,7 +24,7 @@ const UsersListPage = props => {
         headerBolded
         centerHeaderVertically
         headerFontSize={23}
-        headerTextColor={'#005BA7'}
+        headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
         TopSpacing={30}
         /* data={
@@ -102,6 +102,8 @@ const UsersListPage = props => {
   );
 };
 
-UsersListPage.propTypes = {};
+UsersListPage.propTypes = {
+  theme: PropTypes.object,
+};
 
 export default UsersListPage;

@@ -2,8 +2,8 @@
   height: calc(100% - 30px);
   display: flex;
   flex-direction: column;
-  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 
   .serach-medications-button {
     border: none;

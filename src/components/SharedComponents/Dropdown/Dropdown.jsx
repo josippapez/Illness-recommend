@@ -15,6 +15,7 @@ export const Dropdown = props => {
 
   const {
     list,
+    fullList,
     handleSelect,
     headerTitle,
     multiselect,
@@ -26,6 +27,9 @@ export const Dropdown = props => {
     fullWidth,
     saveNewInput,
     addButtonShouldBeShown,
+    inputNewData,
+    searchData,
+    searchDataPlaceholder,
   } = props;
 
   const [showAddbutton, setShowAddbutton] = useState(false);
@@ -40,7 +44,7 @@ export const Dropdown = props => {
       if (filterInput && filterInput !== '') {
         timeout = setTimeout(() => {
           if (
-            !list.find(
+            !fullList.find(
               item => item.name.toLowerCase() === filterInput.toLowerCase()
             )
           ) {
@@ -65,7 +69,7 @@ export const Dropdown = props => {
             default: headerTitle === defaultHeaderOption,
           })}
         >
-          {!props.inputNewData ? (
+          {!inputNewData && !searchData ? (
             <div
               className={classNames(customclass, {
                 dropdown__wrapper__header__box: true,
@@ -91,7 +95,7 @@ export const Dropdown = props => {
               style={{ width: '100%', display: 'flex', alignItems: 'center' }}
               onSubmit={e => {
                 e.preventDefault();
-                if (addButtonShouldBeShown) {
+                if (addButtonShouldBeShown && showAddbutton) {
                   saveNewInput({ name: filterInput });
                   setShowAddbutton(false);
                   setFilterInput(null);
@@ -104,13 +108,16 @@ export const Dropdown = props => {
                   dropdown__wrapper__header__box: true,
                   'suggestion-input': true,
                 })}
+                style={{ width: fullWidth ? '100%' : 'auto' }}
                 ref={inputRef}
                 disabled={disabledInput}
-                placeholder={inputNewDataPlaceholder}
+                placeholder={inputNewDataPlaceholder || searchDataPlaceholder}
                 onClick={() => setDropdownOpened(!dropdownOpened)}
                 value={filterInput ? filterInput : ''}
                 onChange={e => {
-                  setShowAddbutton(false);
+                  if (inputNewData) {
+                    setShowAddbutton(false);
+                  }
                   setFilterInput(e.target.value);
                   setDropdownOpened(true);
                 }}
@@ -137,7 +144,7 @@ export const Dropdown = props => {
                   e.preventDefault();
                   selectItem(defaultHeaderOption);
                   setDropdownOpened(false);
-                  if (props.inputNewData) {
+                  if (inputNewData || searchData) {
                     setFilterInput(null);
                   }
                 }}
@@ -180,7 +187,8 @@ export const Dropdown = props => {
                           handleSelect(item);
                           setDropdownOpened(false);
                         }
-                        if (props.inputNewData) {
+                        if (inputNewData || searchData) {
+                          inputRef.current.focus();
                           setFilterInput(null);
                         }
                       }}
@@ -242,4 +250,7 @@ Dropdown.propTypes = {
   fullWidth: PropTypes.bool,
   saveNewInput: PropTypes.func,
   addButtonShouldBeShown: PropTypes.bool,
+  fullList: PropTypes.array,
+  searchData: PropTypes.bool,
+  searchDataPlaceholder: PropTypes.string,
 };

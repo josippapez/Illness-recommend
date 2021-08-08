@@ -6,6 +6,7 @@ import { usersList } from './usersList';
 import { alergies } from './alergiesReducer';
 import { medicationList } from './medicationReducer';
 import { symptoms } from './symptomsReducer';
+import { theme } from './themeReducer';
 
 export const reducers = combineReducers({
   user,
@@ -13,4 +14,5 @@ export const reducers = combineReducers({
   alergies,
   medicationList,
   symptoms,
+  theme,
 });

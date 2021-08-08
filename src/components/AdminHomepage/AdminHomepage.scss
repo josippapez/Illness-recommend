@@ -1,11 +1,20 @@
+.navigation-setup:is(.darkTheme) {
+  .admin-homepage {
+    &__main-text {
+      color: var(--white);
+      transition: color 0.3s ease-in-out;
+    }
+  }
+}
+
 .admin-homepage {
   height: 100%;
   background-image: url("../../styles/assets/images/undraw_mornings_re_cofi-animated.svg");
   background-repeat: no-repeat;
   background-position: center center;
   background-size: 700px;
-  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   @media screen and (max-width: 1060px) {
     background-size: 100%;
   }
@@ -20,5 +29,6 @@
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
+    transition: color 0.3s ease-in-out;
   }
 }

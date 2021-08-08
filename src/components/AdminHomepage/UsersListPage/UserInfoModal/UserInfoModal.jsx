@@ -190,8 +190,10 @@ const UserInfoModal = props => {
               <div>
                 <Dropdown
                   customclass="alergies-dropdown"
-                  inputNewData
-                  inputNewDataPlaceholder="Odaberi ili upiši"
+                  searchData
+                  searchDataPlaceholder="Odaberi ili upiši"
+                  addButtonShouldBeShown={false}
+                  multiselect
                   handleSelect={item => {
                     if (item === 'Odaberi') {
                       setselectedAlergie(null);
@@ -221,43 +223,49 @@ const UserInfoModal = props => {
                 />
                 {userDetailsInfo.alergies &&
                   userDetailsInfo.alergies.length > 0 && (
-                  <>
-                    <div className="alergy-list-display-title">
-                        Odabrane alergije:
-                    </div>
-                    <div className="alergy-list-display">
-                      <div className="name">Naziv</div>
-                      <div className="actions">Akcije</div>
-                    </div>
-                  </>
-                )}
-                {userDetailsInfo.alergies &&
-                  userDetailsInfo.alergies.length > 0 &&
-                  userDetailsInfo.alergies.map(alergy => (
-                    <div className="alergy-list-display" key={alergy.id}>
-                      <div className="alergy-list-display__subject-name name">
-                        {alergy.name}
-                      </div>
-
-                      <div className="actions">
-                        <button
-                          className="delete"
-                          onClick={() => {
-                            setUserDetailsInfo({
-                              ...userDetailsInfo,
-                              alergies: [
-                                ...userDetailsInfo.alergies.filter(
-                                  savedAlergy => savedAlergy.id !== alergy.id
-                                ),
-                              ],
-                            });
-                          }}
+                  <table
+                    style={{
+                      width: '100%',
+                      marginTop: '20px',
+                    }}
+                    className="list-table"
+                  >
+                    <tbody className="list-table__item-row">
+                      {userDetailsInfo.alergies.map(alergy => (
+                        <tr
+                          className="spacer item-row"
+                          style={{ textAlign: 'center' }}
+                          key={alergy.id}
                         >
-                          Obriši
-                        </button>
-                      </div>
-                    </div>
-                  ))}
+                          <td>{alergy.name}</td>
+                          <td
+                            style={{
+                              paddingLeft: '20px',
+                              width: '55px',
+                            }}
+                          >
+                            <button
+                              id="link-to-medication-page"
+                              onClick={() => {
+                                setUserDetailsInfo({
+                                  ...userDetailsInfo,
+                                  alergies: [
+                                    ...userDetailsInfo.alergies.filter(
+                                      savedAlergy =>
+                                        savedAlergy.id !== alergy.id
+                                    ),
+                                  ],
+                                });
+                              }}
+                            >
+                                Obriši
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                )}
               </div>
             }
           />

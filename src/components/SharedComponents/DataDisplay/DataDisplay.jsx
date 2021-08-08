@@ -18,6 +18,7 @@ const DataDisplay = props => {
       >
         <div
           className={classNames({
+            dataDisplayHeader: true,
             'col label': !props.displayInColumn,
             row: props.displayInColumn,
             bolded: props.headerBolded,
@@ -26,6 +27,7 @@ const DataDisplay = props => {
           style={{
             fontWeight: props.headerBolded && 'bold',
             color: props.headerTextColor,
+            transition: 'color 0.3s ease-in-out',
             width:
               !props.displayInColumn &&
               (props.dynamicHeaderWidth

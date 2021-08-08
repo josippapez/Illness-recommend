@@ -28,13 +28,20 @@ const MedicationList = props => {
         {props.medicationList.map(medication => {
           return (
             <tr className="spacer  item-row" key={medication.id}>
-              <td style={{ width: '100px', minWidth: '50px' }}>
+              <td style={{ width: '10%', minWidth: '50px' }}>
                 {medication.name}
               </td>
-              <td style={{ width: '600px', minWidth: '250px' }}>
+              <td
+                style={{
+                  maxWidth: 0,
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  whiteSpace: 'nowrap',
+                }}
+              >
                 {medication.description}
               </td>
-              <td style={{ width: '200px', minWidth: '50px' }}>
+              <td style={{ width: '10%', minWidth: '50px' }}>
                 <button
                   id="link-to-medication-page"
                   onClick={() => {

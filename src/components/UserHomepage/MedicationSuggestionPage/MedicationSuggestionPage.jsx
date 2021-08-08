@@ -33,7 +33,7 @@ const MedicationSuggestionPage = props => {
         dataHeader="Predlaganje lijekova"
         headerBolded
         headerFontSize={23}
-        headerTextColor={'#005BA7'}
+        headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
         centerHeaderVertically
         TopSpacing={30}
@@ -62,6 +62,9 @@ const MedicationSuggestionPage = props => {
                   fullWidth
                   customclass="symptoms-dropdown"
                   multiselect
+                  addButtonShouldBeShown={false}
+                  searchData
+                  searchDataPlaceholder="Odaberi ili pretraži postojeće simptome"
                   handleSelect={item => {
                     if (item.id) {
                       setSelectedSymptoms([...selectedSymptoms, item]);
@@ -81,8 +84,8 @@ const MedicationSuggestionPage = props => {
                       ]
                       : []
                   }
-                  headerTitle="Odaberi postojeće simptome"
-                  defaultHeaderOption="Odaberi postojeće simptome"
+                  headerTitle="Odaberi ili pretraži postojeće simptome"
+                  defaultHeaderOption="Odaberi ili pretraži postojeće simptome"
                 />
                 {selectedSymptoms && (
                   <div>
@@ -100,7 +103,12 @@ const MedicationSuggestionPage = props => {
                                 key={index}
                               >
                                 <td>{symptom.name}</td>
-                                <td>
+                                <td
+                                  style={{
+                                    paddingLeft: '20px',
+                                    width: '55px',
+                                  }}
+                                >
                                   <button
                                     id="link-to-medication-page"
                                     onClick={() => {
@@ -156,6 +164,6 @@ const MedicationSuggestionPage = props => {
   );
 };
 
-MedicationSuggestionPage.propTypes = {};
+MedicationSuggestionPage.propTypes = { theme: PropTypes.object };
 
 export default MedicationSuggestionPage;

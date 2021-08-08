@@ -9,7 +9,6 @@ import {
   fetchUserInfoById,
   getAllAlergies,
   updateUserDetails,
-  userInfoFetched,
 } from '../../../store/actions';
 
 const UserDetailsPage = props => {
@@ -24,9 +23,6 @@ const UserDetailsPage = props => {
     pregnantOrBreastFeed: false,
     weight: null,
   });
-  const [selectedAlergie, setselectedAlergie] = useState(null);
-  const [alergyDropdownTitle, setAlergyDropdownTitle] =
-    useState('Odaberi ili upiši');
 
   useEffect(() => {
     dispatch(getAllAlergies());
@@ -47,7 +43,7 @@ const UserDetailsPage = props => {
         dataHeader="Detaljni podaci korisnika"
         headerBolded
         headerFontSize={23}
-        headerTextColor={'#005BA7'}
+        headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
         centerHeaderVertically
         TopSpacing={30}
@@ -129,12 +125,11 @@ const UserDetailsPage = props => {
               <Dropdown
                 customclass="alergies-dropdown"
                 inputNewData
+                multiselect
                 addButtonShouldBeShown={false}
                 inputNewDataPlaceholder="Odaberi ili upiši"
                 handleSelect={item => {
-                  if (item === 'Odaberi') {
-                    setselectedAlergie(null);
-                  } else if (item.id) {
+                  if (item.id) {
                     setUserDetailsInfo({
                       ...userDetailsInfo,
                       alergies: [...userDetailsInfo.alergies, item],
@@ -155,7 +150,7 @@ const UserDetailsPage = props => {
                     ]
                     : []
                 }
-                headerTitle={alergyDropdownTitle}
+                headerTitle="Odaberi ili upiši"
                 defaultHeaderOption="Odaberi ili upiši"
               />
               {userDetailsInfo.alergies && userDetailsInfo.alergies.length > 0 && (
@@ -163,39 +158,51 @@ const UserDetailsPage = props => {
                   <div className="alergy-list-display-title">
                     Odabrane alergije:
                   </div>
-                  <div className="alergy-list-display">
-                    <div className="name">Naziv</div>
-                    <div className="actions">Akcije</div>
-                  </div>
+                  <table
+                    style={{
+                      width: '100%',
+                      marginTop: '20px',
+                      marginBottom: '110px',
+                    }}
+                    className="list-table"
+                  >
+                    <tbody className="list-table__item-row">
+                      {userDetailsInfo.alergies.map(alergy => (
+                        <tr
+                          className="spacer item-row"
+                          style={{ textAlign: 'center' }}
+                          key={alergy.id}
+                        >
+                          <td>{alergy.name}</td>
+                          <td
+                            style={{
+                              paddingLeft: '20px',
+                              width: '55px',
+                            }}
+                          >
+                            <button
+                              id="link-to-medication-page"
+                              onClick={() => {
+                                setUserDetailsInfo({
+                                  ...userDetailsInfo,
+                                  alergies: [
+                                    ...userDetailsInfo.alergies.filter(
+                                      savedAlergy =>
+                                        savedAlergy.id !== alergy.id
+                                    ),
+                                  ],
+                                });
+                              }}
+                            >
+                              Obriši
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
                 </>
               )}
-              {userDetailsInfo.alergies &&
-                userDetailsInfo.alergies.length > 0 &&
-                userDetailsInfo.alergies.map(alergy => (
-                  <div className="alergy-list-display" key={alergy.id}>
-                    <div className="alergy-list-display__subject-name name">
-                      {alergy.name}
-                    </div>
-
-                    <div className="actions">
-                      <button
-                        className="delete"
-                        onClick={() => {
-                          setUserDetailsInfo({
-                            ...userDetailsInfo,
-                            alergies: [
-                              ...userDetailsInfo.alergies.filter(
-                                savedAlergy => savedAlergy.id !== alergy.id
-                              ),
-                            ],
-                          });
-                        }}
-                      >
-                        Obriši
-                      </button>
-                    </div>
-                  </div>
-                ))}
             </div>
           }
         />
@@ -216,6 +223,7 @@ const UserDetailsPage = props => {
 
 UserDetailsPage.propTypes = {
   userId: PropTypes.number,
+  theme: PropTypes.object,
 };
 
 export default UserDetailsPage;

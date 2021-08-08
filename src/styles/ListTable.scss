@@ -1,13 +1,43 @@
+.navigation-setup:is(.darkTheme) {
+  .list-table {
+    box-shadow: 0 0 0 1px transparent;
+    transition: all 0.3s ease-in-out;
+    &__table-header {
+      &__row {
+        transition: color 0.3s ease-in-out, background 0.3s ease-in-out;
+        color: var(--white);
+        background: var(--input-dark-background);
+        border-bottom: 1px solid transparent;
+      }
+    }
+    &__item-row {
+      color: var(--white);
+      .item-row {
+        border: 1px solid var(--input-dark-background);
+        transition: border 0.3s ease-in-out, background 0.3s ease-in-out;
+        &:nth-child(even) {
+          background: var(--input-dark-background) 0% 0% no-repeat padding-box;
+        }
+        &:nth-child(odd) {
+          background: var(--input-darker-background) 0% 0% no-repeat padding-box;
+        }
+      }
+    }
+  }
+}
+
 .list-table {
   border-spacing: 0;
   border-collapse: collapse;
   border-style: hidden;
   box-shadow: 0 0 0 1px var(--unnamed-color-e2e2e3);
+  transition: all 0.3s ease-in-out;
   border-radius: 4px 4px 0 0;
   overflow: hidden;
   &__table-header {
     text-align: left;
     &__row {
+      transition: color 0.3s ease-in-out, background 0.3s ease-in-out;
       background: var(--unnamed-color-f9fafb) 0% 0% no-repeat padding-box;
       border-bottom: 1px solid var(--unnamed-color-e2e2e3);
       border-radius: 4px 4px 0px 0px;
@@ -33,6 +63,7 @@
       height: 50px;
     }
     .item-row {
+      transition: border 0.3s ease-in-out, background 0.3s ease-in-out;
       td {
         padding: 10px 0 10px 40px;
         #link-to-medication-page,
@@ -86,6 +117,9 @@
       &:nth-child(even) {
         background: var(--unnamed-color-f9fafb) 0% 0% no-repeat padding-box;
         border: 1px solid var(--unnamed-color-e2e2e3);
+      }
+      &:nth-child(odd) {
+        background: var(--white) 0% 0% no-repeat padding-box;
       }
 
       .action-row {

@@ -311,6 +311,7 @@ const MedicationInfoModal = props => {
                           });
                         }
                       }}
+                      fullList={alergies}
                       list={
                         alergies
                           ? [
@@ -345,7 +346,12 @@ const MedicationInfoModal = props => {
                                       key={index}
                                     >
                                       <td>{alergy.name}</td>
-                                      <td>
+                                      <td
+                                        style={{
+                                          paddingLeft: '20px',
+                                          width: '55px',
+                                        }}
+                                      >
                                         <button
                                           id="link-to-medication-page"
                                           onClick={() => {
@@ -442,6 +448,7 @@ const MedicationInfoModal = props => {
                           });
                         }
                       }}
+                      fullList={symptoms}
                       list={
                         symptoms
                           ? [
@@ -476,7 +483,12 @@ const MedicationInfoModal = props => {
                                       key={index}
                                     >
                                       <td>{symptom.name}</td>
-                                      <td>
+                                      <td
+                                        style={{
+                                          paddingLeft: '20px',
+                                          width: '55px',
+                                        }}
+                                      >
                                         <button
                                           id="link-to-medication-page"
                                           onClick={() => {
@@ -605,7 +617,39 @@ const MedicationInfoModal = props => {
                                       key={index}
                                     >
                                       <td>{contraindication}</td>
-                                      <td>
+                                      <td
+                                        style={{
+                                          paddingLeft: '20px',
+                                          width: '55px',
+                                        }}
+                                      >
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setContraIndicationDescription(
+                                              contraindication
+                                            );
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              contraindications: [
+                                                ...newMedicationInfo.contraindications,
+                                              ].filter(
+                                                indication =>
+                                                  indication !==
+                                                  contraindication
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Uredi
+                                        </button>
+                                      </td>
+                                      <td
+                                        style={{
+                                          padding: '0 20px',
+                                          width: '55px',
+                                        }}
+                                      >
                                         <button
                                           id="link-to-medication-page"
                                           onClick={() => {
@@ -765,30 +809,69 @@ const MedicationInfoModal = props => {
                                       {sideEffect}
                                     </td>
                                     {userRole === 'admin' && (
-                                      <td>
-                                        <button
-                                          id="link-to-medication-page"
-                                          onClick={() => {
-                                            setNewMedicationInfo({
-                                              ...newMedicationInfo,
-                                              sideEffects: {
-                                                ...newMedicationInfo.sideEffects,
-                                                [`${sideEffectItem.name}`]: [
-                                                  ...newMedicationInfo
-                                                    .sideEffects[
-                                                      sideEffectItem.name
-                                                    ],
-                                                ].filter(
-                                                  effect =>
-                                                    effect !== sideEffect
-                                                ),
-                                              },
-                                            });
+                                      <>
+                                        <td
+                                          style={{
+                                            paddingLeft: '20px',
+                                            width: '55px',
                                           }}
                                         >
-                                          Obriši
-                                        </button>
-                                      </td>
+                                          <button
+                                            id="link-to-medication-page"
+                                            onClick={() => {
+                                              sideEffectItem.setDescription(
+                                                sideEffect.name
+                                              );
+                                              setNewMedicationInfo({
+                                                ...newMedicationInfo,
+                                                sideEffects: {
+                                                  ...newMedicationInfo.sideEffects,
+                                                  [`${sideEffectItem.name}`]: [
+                                                    ...newMedicationInfo
+                                                      .sideEffects[
+                                                        sideEffectItem.name
+                                                      ],
+                                                  ].filter(
+                                                    effect =>
+                                                      effect !== sideEffect
+                                                  ),
+                                                },
+                                              });
+                                            }}
+                                          >
+                                            Uredi
+                                          </button>
+                                        </td>
+                                        <td
+                                          style={{
+                                            padding: '0 20px',
+                                            width: '55px',
+                                          }}
+                                        >
+                                          <button
+                                            id="link-to-medication-page"
+                                            onClick={() => {
+                                              setNewMedicationInfo({
+                                                ...newMedicationInfo,
+                                                sideEffects: {
+                                                  ...newMedicationInfo.sideEffects,
+                                                  [`${sideEffectItem.name}`]: [
+                                                    ...newMedicationInfo
+                                                      .sideEffects[
+                                                        sideEffectItem.name
+                                                      ],
+                                                  ].filter(
+                                                    effect =>
+                                                      effect !== sideEffect
+                                                  ),
+                                                },
+                                              });
+                                            }}
+                                          >
+                                            Obriši
+                                          </button>
+                                        </td>
+                                      </>
                                     )}
                                   </tr>
                                 );

@@ -20,3 +20,10 @@
 .bolded {
   font-family: "Lato, Bold";
 }
+
+.navigation-setup:is(.darkTheme) {
+  .dataDisplayHeader[style*="color: black"] {
+    color: var(--white) !important;
+    transition: color 0.3s ease-in-out;
+  }
+}

@@ -1,3 +1,29 @@
+.navigation-setup:is(.darkTheme) {
+  .dropdown {
+    &__wrapper {
+      &__header {
+        .suggestion-input {
+          color: var(--white);
+        }
+        &__box {
+          background-color: var(--input-dark-background);
+          border: 1px solid transparent;
+          transition: all 0.3s ease-in-out;
+        }
+      }
+      &__menu {
+        background-color: var(--input-dark-background);
+        border: 1px solid transparent;
+        color: var(--white);
+        transition: background-color 0.3s ease-in-out;
+        &__item:hover {
+          background: var(--brand-blue);
+        }
+      }
+    }
+  }
+}
+
 .dropdown {
   display: inline-flex;
   align-items: flex-start;
@@ -33,6 +59,7 @@
         font-family: "Lato, Regular";
         padding-right: 60px;
         height: 38px;
+        font-size: 16px;
       }
 
       .add-new-item {
@@ -60,6 +87,7 @@
         border-radius: 3px;
         justify-content: space-between;
         cursor: pointer;
+        transition: all 0.3s ease-in-out;
 
         @media screen and (max-width: 768px) {
           width: 95%;
@@ -113,6 +141,7 @@
       transform-origin: top center;
       background: var(--white);
       z-index: 1;
+      transition: background-color 0.3s ease-in-out;
 
       @media screen and (max-width: 768px) {
         width: 95%;

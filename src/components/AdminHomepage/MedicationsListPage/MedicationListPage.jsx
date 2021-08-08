@@ -27,7 +27,7 @@ const MedicationListPage = props => {
         dataHeader="Popis lijekova"
         headerBolded
         headerFontSize={23}
-        headerTextColor={'#005BA7'}
+        headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
         centerHeaderVertically
         TopSpacing={30}
@@ -73,6 +73,8 @@ const MedicationListPage = props => {
   );
 };
 
-MedicationListPage.propTypes = {};
+MedicationListPage.propTypes = {
+  theme: PropTypes.object,
+};
 
 export default MedicationListPage;

@@ -27,6 +27,12 @@ body {
   --light-gray: #dededf;
   --faded-gray: #b5b5b5;
   --hover: #f8f8f8;
+
+  --dark-background: #212121;
+  --page-content-background: #363636;
+  --dark-navbar-items: #000000;
+  --input-dark-background: #444444;
+  --input-darker-background: #222222;
 }
 
 @font-face {
@@ -53,6 +59,16 @@ body {
     width: 80%;
     position: relative;
     padding: 20px 35px;
+    transition: background-color 0.3s ease-in-out;
+  }
+}
+
+.navigation-setup:is(.darkTheme) {
+  .page-container {
+    .page-content {
+      background-color: var(--page-content-background);
+      transition: background-color 0.3s ease-in-out;
+    }
   }
 }
 
@@ -67,7 +83,7 @@ body {
 }
 
 .header-info-image {
-  background-image: url('../styles/assets/images/information.svg');
+  background-image: url("../styles/assets/images/information.svg");
   background-repeat: no-repeat;
   width: 38px;
   height: 38px;
@@ -79,13 +95,12 @@ body {
   cursor: pointer;
   position: absolute;
   right: 20px;
-  background-image: url('../styles/assets/images/CloseIcon.svg');
+  background-image: url("../styles/assets/images/CloseIcon.svg");
   &:hover {
     background-color: #ebebeb;
     border-radius: 50%;
   }
 }
-
 
 @-webkit-keyframes fade-in {
   0% {

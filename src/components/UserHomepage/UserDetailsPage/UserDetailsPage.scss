@@ -1,13 +1,33 @@
+.navigation-setup:is(.darkTheme) {
+  .user-details-page {
+    .alergy-list-display-title {
+      color: var(--white);
+      transition: color 0.3s ease-in-out;
+    }
+    &__body {
+      input {
+        background-color: var(--input-dark-background);
+        border: 1px solid transparent;
+        color: var(--white);
+        transition: all 0.3s ease-in-out;
+      }
+    }
+    .footer {
+      background: var(--input-dark-background);
+      transition: background 0.3s ease-in-out;
+    }
+  }
+}
+
 .user-details-page {
-  background: var(--white) 0% 0% no-repeat padding-box;
   width: 100%;
   height: calc(100% - 30px);
   background-image: url("../../../styles/assets/images/undraw_Social_bio_re_0t9u.svg");
   background-repeat: no-repeat;
-  background-position: center center;
+  background-position: center 100px;
   background-size: 700px;
-  -webkit-animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  animation: fade-in 0.5s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+  animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   position: relative;
 
   &__header {
@@ -47,12 +67,14 @@
       background-color: var(--white);
       border: 1px solid #dededf;
       border-radius: 4px;
+      transition: all 0.3s ease-in-out;
     }
     .checkbox {
       width: 30px;
     }
     .alergy-list-display-title {
       margin-top: 20px;
+      transition: color 0.3s ease-in-out;
     }
     .alergy-list-display {
       display: inline-flex;
