@@ -8,14 +8,14 @@
         &__box {
           background-color: var(--input-dark-background);
           border: 1px solid transparent;
-          transition: all 0.3s ease-in-out;
+          transition: all 0.2s ease-in-out;
         }
       }
       &__menu {
         background-color: var(--input-dark-background);
         border: 1px solid transparent;
         color: var(--white);
-        transition: background-color 0.3s ease-in-out;
+        transition: background-color 0.2s ease-in-out;
         &__item:hover {
           background: var(--brand-blue);
         }
@@ -87,7 +87,7 @@
         border-radius: 3px;
         justify-content: space-between;
         cursor: pointer;
-        transition: all 0.3s ease-in-out;
+        transition: all 0.2s ease-in-out;
 
         @media screen and (max-width: 768px) {
           width: 95%;
@@ -141,7 +141,7 @@
       transform-origin: top center;
       background: var(--white);
       z-index: 1;
-      transition: background-color 0.3s ease-in-out;
+      transition: background-color 0.2s ease-in-out;
 
       @media screen and (max-width: 768px) {
         width: 95%;

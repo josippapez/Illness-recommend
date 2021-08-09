@@ -14,6 +14,7 @@ import {
   updateMedication,
 } from '../../../../store/actions';
 import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
+import DosageTable from '../../../SharedComponents/DosageTable/DosageTable';
 
 const MedicationInfoModal = props => {
   const dispatch = useDispatch();
@@ -30,12 +31,15 @@ const MedicationInfoModal = props => {
         name: null,
         description: null,
         canBeUsedWhilePregnantOrBreastFeed: true,
+        interactions: [],
         contraindications: [],
         sideEffects: { regular: [], rare: [], veryRare: [] },
+        dosage: { byWeight: [], byAge: [] },
         alergies: [],
         symptoms: [],
       }
   );
+  const [interactionsDescription, setInteractionsDescription] = useState(null);
   const [contraIndicationDescription, setContraIndicationDescription] =
     useState(null);
   const [regularSideEffectDescription, setRegularSideEffectDescription] =
@@ -44,9 +48,6 @@ const MedicationInfoModal = props => {
     useState(null);
   const [veryRareSideEffectDescription, setVeryRareSideEffectDescription] =
     useState(null);
-  const [newAlergyName, setNewAlergyName] = useState(null);
-  const [newSymptomName, setNewSymptomName] = useState(null);
-  const [selectedAlergie, setselectedAlergie] = useState(null);
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [isTryingToDelete, setIsTryingToDelete] = useState(false);
   const [isTryingToCloseWhenEdited, setIsTryingToCloseWhenEdited] =
@@ -280,6 +281,63 @@ const MedicationInfoModal = props => {
                   ) : (
                     <div className="error">Ne</div>
                   )
+                }
+              />
+            )}
+            {(userRole === 'user'
+              ? newMedicationInfo.dosage.byAge &&
+                newMedicationInfo.dosage.byWeight &&
+                (newMedicationInfo.dosage.byAge.length ||
+                  newMedicationInfo.dosage.byWeight.length)
+              : newMedicationInfo && newMedicationInfo.dosage) && (
+              <DataDisplay
+                dataHeader="Doziranje"
+                displayInColumn
+                headerBolded
+                dataSeparatorTopSpacing={10}
+                data={
+                  <div>
+                    {(userRole === 'user'
+                      ? newMedicationInfo.dosage.byAge &&
+                        newMedicationInfo.dosage.byAge.length
+                      : newMedicationInfo.dosage.byAge) && (
+                      <DosageTable
+                        dosageList={newMedicationInfo.dosage.byAge}
+                        setDosage={newDosage => {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            dosage: {
+                              ...newMedicationInfo.dosage,
+                              byAge: [...newDosage],
+                            },
+                          });
+                        }}
+                        checkByKey={'age'}
+                        tableHeader="Doziranje po godinama"
+                        readOnly={userRole === 'user'}
+                      />
+                    )}
+                    {(userRole === 'user'
+                      ? newMedicationInfo.dosage.byWeight &&
+                        newMedicationInfo.dosage.byWeight.length
+                      : newMedicationInfo.dosage.byWeight) && (
+                      <DosageTable
+                        dosageList={newMedicationInfo.dosage.byWeight}
+                        setDosage={newDosage => {
+                          setNewMedicationInfo({
+                            ...newMedicationInfo,
+                            dosage: {
+                              ...newMedicationInfo.dosage,
+                              byWeight: [...newDosage],
+                            },
+                          });
+                        }}
+                        checkByKey={'weight'}
+                        tableHeader="Doziranje po kilaži"
+                        readOnly={userRole === 'user'}
+                      />
+                    )}
+                  </div>
                 }
               />
             )}
@@ -561,10 +619,165 @@ const MedicationInfoModal = props => {
           <div className="medication-info-modal__body__right-side">
             {userRole === 'admin' ? (
               <DataDisplay
-                dataHeader="Kontraindikacije"
+                dataHeader="Lijekovi koji se ne smiju koristiti u isto vrijeme kao i ovaj lijek"
                 displayInColumn
                 headerBolded
                 removeTopSeparator
+                dataSeparatorTopSpacing={4}
+                data={
+                  <div>
+                    <form
+                      onSubmit={e => {
+                        e.preventDefault();
+                        setNewMedicationInfo({
+                          ...newMedicationInfo,
+                          interactions: [
+                            ...newMedicationInfo.interactions,
+                            interactionsDescription,
+                          ],
+                        });
+                        setInteractionsDescription(null);
+                      }}
+                    >
+                      <input
+                        value={
+                          interactionsDescription ? interactionsDescription : ''
+                        }
+                        onChange={e => {
+                          setInteractionsDescription(e.target.value);
+                        }}
+                      />
+                      <button
+                        className="add-new-contraindication"
+                        disabled={!interactionsDescription}
+                        type="submit"
+                        autoFocus
+                      >
+                        Dodaj novu interakciju
+                      </button>
+                    </form>
+                    {newMedicationInfo.interactions && (
+                      <div>
+                        <table
+                          style={{ width: '100%', marginTop: '20px' }}
+                          className="list-table"
+                        >
+                          <tbody className="list-table__item-row">
+                            {newMedicationInfo.interactions.length > 0 &&
+                              newMedicationInfo.interactions.map(
+                                (interaction, index) => {
+                                  return (
+                                    <tr
+                                      className="spacer item-row"
+                                      style={{ textAlign: 'center' }}
+                                      key={index}
+                                    >
+                                      <td>{interaction}</td>
+                                      <td
+                                        style={{
+                                          paddingLeft: '20px',
+                                          width: '55px',
+                                        }}
+                                      >
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setInteractionsDescription(
+                                              interaction
+                                            );
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              interactions: [
+                                                ...newMedicationInfo.interactions,
+                                              ].filter(
+                                                saveInteraction =>
+                                                  saveInteraction !==
+                                                  interaction
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Uredi
+                                        </button>
+                                      </td>
+                                      <td
+                                        style={{
+                                          padding: '0 20px',
+                                          width: '55px',
+                                        }}
+                                      >
+                                        <button
+                                          id="link-to-medication-page"
+                                          onClick={() => {
+                                            setNewMedicationInfo({
+                                              ...newMedicationInfo,
+                                              interactions: [
+                                                ...newMedicationInfo.interactions,
+                                              ].filter(
+                                                saveInteraction =>
+                                                  saveInteraction !==
+                                                  interaction
+                                              ),
+                                            });
+                                          }}
+                                        >
+                                          Obriši
+                                        </button>
+                                      </td>
+                                    </tr>
+                                  );
+                                }
+                              )}
+                          </tbody>
+                        </table>
+                      </div>
+                    )}
+                  </div>
+                }
+              />
+            ) : (
+              <DataDisplay
+                dataHeader="Lijekovi koji se ne smiju koristiti u isto vrijeme kao i ovaj lijek"
+                displayInColumn
+                headerBolded
+                removeTopSeparator
+                dataSeparatorTopSpacing={4}
+                data={
+                  newMedicationInfo.interactions && (
+                    <div>
+                      <table
+                        style={{ width: '100%', marginTop: '20px' }}
+                        className="list-table"
+                      >
+                        <tbody className="list-table__item-row">
+                          {newMedicationInfo.interactions.length > 0 &&
+                            newMedicationInfo.interactions.map(
+                              (interaction, index) => {
+                                return (
+                                  <tr
+                                    className="spacer item-row"
+                                    style={{ textAlign: 'center' }}
+                                    key={index}
+                                  >
+                                    <td style={{ padding: '10px' }}>
+                                      {interaction}
+                                    </td>
+                                  </tr>
+                                );
+                              }
+                            )}
+                        </tbody>
+                      </table>
+                    </div>
+                  )
+                }
+              />
+            )}
+            {userRole === 'admin' ? (
+              <DataDisplay
+                dataHeader="Kontraindikacije"
+                displayInColumn
+                headerBolded
                 dataSeparatorTopSpacing={4}
                 data={
                   <div>
@@ -684,7 +897,6 @@ const MedicationInfoModal = props => {
                 dataHeader="Kontraindikacije"
                 displayInColumn
                 headerBolded
-                removeTopSeparator
                 dataSeparatorTopSpacing={4}
                 data={
                   newMedicationInfo.contraindications && (
@@ -944,6 +1156,7 @@ MedicationInfoModal.propTypes = {
   setSelectedMedication: PropTypes.func,
   setShowMedicationInfoModal: PropTypes.func,
   userRole: PropTypes.string,
+  userDetails: PropTypes.object,
 };
 
 export default MedicationInfoModal;

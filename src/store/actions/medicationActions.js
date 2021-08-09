@@ -30,7 +30,6 @@ export const getAllMedications = () => {
 };
 
 export const getMedicationsBySymptomsAndAlergies = symptoms => {
-  console.log(symptoms);
   return (dispatch, getState) => {
     axios({
       method: 'POST',

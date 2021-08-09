@@ -48,6 +48,7 @@ const Navbar = () => {
             type="checkbox"
             className="darkmode-switch__input"
             id="Switch"
+            readOnly
             checked={!theme.darkTheme}
             onClick={() => dispatch(setDarkTheme(!theme.darkTheme))}
           />

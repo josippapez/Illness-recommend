@@ -126,6 +126,7 @@ const UserDetailsPage = props => {
                 customclass="alergies-dropdown"
                 inputNewData
                 multiselect
+                fullWidth
                 addButtonShouldBeShown={false}
                 inputNewDataPlaceholder="Odaberi ili upiši"
                 handleSelect={item => {

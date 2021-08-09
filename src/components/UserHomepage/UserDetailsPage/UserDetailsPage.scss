@@ -2,19 +2,19 @@
   .user-details-page {
     .alergy-list-display-title {
       color: var(--white);
-      transition: color 0.3s ease-in-out;
+      transition: color 0.2s ease-in-out;
     }
     &__body {
       input {
         background-color: var(--input-dark-background);
         border: 1px solid transparent;
         color: var(--white);
-        transition: all 0.3s ease-in-out;
+        transition: all 0.2s ease-in-out;
       }
     }
     .footer {
       background: var(--input-dark-background);
-      transition: background 0.3s ease-in-out;
+      transition: background 0.2s ease-in-out;
     }
   }
 }
@@ -67,14 +67,14 @@
       background-color: var(--white);
       border: 1px solid #dededf;
       border-radius: 4px;
-      transition: all 0.3s ease-in-out;
+      transition: all 0.2s ease-in-out;
     }
     .checkbox {
       width: 30px;
     }
     .alergy-list-display-title {
       margin-top: 20px;
-      transition: color 0.3s ease-in-out;
+      transition: color 0.2s ease-in-out;
     }
     .alergy-list-display {
       display: inline-flex;

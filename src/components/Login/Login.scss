@@ -162,8 +162,8 @@
     position: absolute;
     background: var(--white) 0% 0% no-repeat padding-box;
     &.isClosed {
-      -webkit-animation: slide-login-top 0.3s ease-in-out both;
-      animation: slide-login-top 0.3s ease-in-out both;
+      -webkit-animation: slide-login-top 0.2s ease-in-out both;
+      animation: slide-login-top 0.2s ease-in-out both;
     }
     &__form {
       width: 100%;

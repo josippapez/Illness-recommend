@@ -2,7 +2,7 @@
   .admin-homepage {
     &__main-text {
       color: var(--white);
-      transition: color 0.3s ease-in-out;
+      transition: color 0.2s ease-in-out;
     }
   }
 }
@@ -29,6 +29,6 @@
     -webkit-user-select: none; /* Safari */
     -ms-user-select: none; /* IE 10 and IE 11 */
     user-select: none; /* Standard syntax */
-    transition: color 0.3s ease-in-out;
+    transition: color 0.2s ease-in-out;
   }
 }
