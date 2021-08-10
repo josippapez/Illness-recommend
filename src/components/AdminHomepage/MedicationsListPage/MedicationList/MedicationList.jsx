@@ -4,7 +4,6 @@ import { useDispatch } from 'react-redux';
 import ListHeader from '../../../SharedComponents/ListHeader/ListHeader';
 import '../../../../styles/ListTable.scss';
 import { medicationInfoFetched } from '../../../../store/actions/medicationActions';
-import { Table } from 'reactstrap';
 
 const MedicationList = props => {
   const dispatch = useDispatch();

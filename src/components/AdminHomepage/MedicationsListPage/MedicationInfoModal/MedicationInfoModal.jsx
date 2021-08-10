@@ -1142,6 +1142,8 @@ const MedicationInfoModal = props => {
               }
             }}
             declineOptions={() => {
+              setIsTryingToCloseWhenEdited(false);
+              setIsTryingToDelete(false);
               setShowAlertModal(false);
             }}
           />
