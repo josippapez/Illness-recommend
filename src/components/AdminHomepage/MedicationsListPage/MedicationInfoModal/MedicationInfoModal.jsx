@@ -287,8 +287,8 @@ const MedicationInfoModal = props => {
             {(userRole === 'user'
               ? newMedicationInfo.dosage.byAge &&
                 newMedicationInfo.dosage.byWeight &&
-                (newMedicationInfo.dosage.byAge.length ||
-                  newMedicationInfo.dosage.byWeight.length)
+                (newMedicationInfo.dosage.byAge.length > 0 ||
+                  newMedicationInfo.dosage.byWeight.length > 0)
               : newMedicationInfo && newMedicationInfo.dosage) && (
               <DataDisplay
                 dataHeader="Doziranje"
@@ -299,8 +299,8 @@ const MedicationInfoModal = props => {
                   <div>
                     {(userRole === 'user'
                       ? newMedicationInfo.dosage.byAge &&
-                        newMedicationInfo.dosage.byAge.length
-                      : newMedicationInfo.dosage.byAge) && (
+                        newMedicationInfo.dosage.byAge.length > 0
+                      : true) && (
                       <DosageTable
                         dosageList={newMedicationInfo.dosage.byAge}
                         setDosage={newDosage => {
@@ -319,8 +319,8 @@ const MedicationInfoModal = props => {
                     )}
                     {(userRole === 'user'
                       ? newMedicationInfo.dosage.byWeight &&
-                        newMedicationInfo.dosage.byWeight.length
-                      : newMedicationInfo.dosage.byWeight) && (
+                        newMedicationInfo.dosage.byWeight.length > 0
+                      : true) && (
                       <DosageTable
                         dosageList={newMedicationInfo.dosage.byWeight}
                         setDosage={newDosage => {

@@ -20,7 +20,6 @@ const DosageTable = props => {
     let timeout;
     if (
       dosageArray &&
-      dosageArray.length &&
       JSON.stringify(dosageArray) !== JSON.stringify(props.dosageList)
     ) {
       timeout = setTimeout(() => {
