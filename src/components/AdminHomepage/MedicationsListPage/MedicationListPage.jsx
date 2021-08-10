@@ -8,8 +8,12 @@ import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import MedicationInfoModal from './MedicationInfoModal/MedicationInfoModal';
 import MedicationList from './MedicationList/MedicationList';
 
-import { getAllMedications } from '../../../store/actions/medicationActions';
+import {
+  getAllMedications,
+  searchMedicationsByText,
+} from '../../../store/actions/medicationActions';
 import AddButton from '../../SharedComponents/AddButton/AddButton';
+import Search from '../../SharedComponents/Search/Search';
 
 const MedicationListPage = props => {
   const dispatch = useDispatch();
@@ -17,6 +21,7 @@ const MedicationListPage = props => {
 
   const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
   const [selectedMedication, setSelectedMedication] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(null);
   useEffect(() => {
     dispatch(getAllMedications());
   }, []);
@@ -33,11 +38,23 @@ const MedicationListPage = props => {
         TopSpacing={30}
         floatDataRight
         data={
-          <AddButton
-            customClassName="add-medication-button"
-            setShowModal={setShowMedicationInfoModal}
-            text="Dodaj lijek"
-          />
+          <div className="medications-list-page__actions">
+            <Search
+              setSearchQuery={setSearchQuery}
+              fetchData={() => {
+                return getAllMedications();
+              }}
+              fetchDataByName={name => {
+                return searchMedicationsByText(name);
+              }}
+              searchingByInfo="*Pretraživanje po nazivu i opisu"
+            />
+            <AddButton
+              customClassName="add-medication-button"
+              setShowModal={setShowMedicationInfoModal}
+              text="Dodaj lijek"
+            />
+          </div>
         }
       />
       <DataDisplay

@@ -29,6 +29,28 @@ export const getAllUsers = () => {
   };
 };
 
+export const searchUsersByText = query => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/users/search?search=${query}`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(setUsersList(response.data));
+      })
+      .catch(error =>
+        dispatch({
+          type: SET_ERROR_USER_LIST,
+          payload: {
+            error: error.message,
+            status: error.status,
+          },
+        })
+      );
+  };
+};
+
 export const removeUserById = id => {
   return (dispatch, getState) => {
     axios({

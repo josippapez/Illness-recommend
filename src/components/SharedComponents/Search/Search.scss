@@ -1,0 +1,51 @@
+.navigation-setup:is(.darkTheme) {
+  .search {
+    .search-by-text {
+      color: var(--white);
+    }
+    &__form {
+      .search-input {
+        background-color: var(--input-dark-background);
+        background-image: url("../../../styles/assets/images/SearchIconWhite.svg");
+        border: 1px solid transparent;
+        color: var(--white);
+        transition: all 0.2s ease-in-out;
+      }
+    }
+  }
+}
+
+.search {
+  width: 400px;
+  min-height: 38px;
+  @media screen and (max-width: 430px) {
+    width: 100% !important;
+  }
+  .search-by-text {
+    color: #5c5c5c;
+    transition: all 0.2s ease-in-out;
+  }
+  &__form {
+    display: flex;
+    float: left;
+    width: 100% !important;
+    min-width: fit-content;
+    position: relative;
+    .search-input {
+      transition: all 0.2s ease-in-out;
+      height: 38px;
+      width: 100%;
+      padding: 0 45px 0 15px;
+      background: var(--white) 0% 0% no-repeat padding-box;
+      border: 1px solid #dededf;
+      border-radius: 4px;
+      background-image: url("../../../styles/assets/images/SearchIcon.svg");
+      background-repeat: no-repeat;
+      background-position: right 15px center;
+      font: normal normal normal 14px "Lato, Regular";
+      &:disabled {
+        background: rgb(219, 218, 218);
+      }
+    }
+  }
+}

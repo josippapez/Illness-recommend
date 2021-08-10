@@ -2,10 +2,14 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './UsersListPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../../../store/actions/usersActions';
+import {
+  getAllUsers,
+  searchUsersByText,
+} from '../../../store/actions/usersActions';
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import UsersList from './UsersList/UsersList';
 import UserInfoModal from './UserInfoModal/UserInfoModal';
+import Search from '../../SharedComponents/Search/Search';
 
 const UsersListPage = props => {
   const dispatch = useDispatch();
@@ -13,6 +17,7 @@ const UsersListPage = props => {
 
   const [showUserInfoModal, setShowUserInfoModal] = useState(false);
   const [userId, setUserId] = useState(null);
+  const [searchQuery, setSearchQuery] = useState(null);
   useEffect(() => {
     dispatch(getAllUsers());
   }, []);
@@ -27,50 +32,19 @@ const UsersListPage = props => {
         headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
         TopSpacing={30}
-        /* data={
-            <div className='student-list-page__list__search'>
-              {selectedSubject !== 'Odaberi predmet' && (
-                <Search
-                  searchingByInfo='*Pretraživanje po Imenu, Emailu, JMBAG i Telefonu'
-                  fetchData={() => {
-                    return getStudentForSubjectbyQuery(
-                      null,
-                      selectedStatuses,
-                      selectedStudyType,
-                      startDate
-                        ? moment(startDate)
-                          .startOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : null,
-                      endDate
-                        ? moment(endDate)
-                          .endOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : endDate
-                    );
-                  }}
-                  fetchDataByName={name => {
-                    return getStudentForSubjectbyQuery(
-                      name,
-                      selectedStatuses,
-                      selectedStudyType,
-                      startDate
-                        ? moment(startDate)
-                          .startOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : null,
-                      endDate
-                        ? moment(endDate)
-                          .endOf('day')
-                          .format('YYYY-MM-DD HH:mm:ss')
-                        : endDate
-                    );
-                  }}
-                  setSearchQuery={setSearchQuery}
-                />
-              )}
-            </div>
-          } */
+        floatDataRight
+        data={
+          <Search
+            searchingByInfo="*Pretraživanje po Imenu i Email-u"
+            fetchData={() => {
+              return getAllUsers();
+            }}
+            fetchDataByName={text => {
+              return searchUsersByText(text);
+            }}
+            setSearchQuery={setSearchQuery}
+          />
+        }
       />
       <DataDisplay
         TopSpacing={40}
@@ -85,7 +59,9 @@ const UsersListPage = props => {
               />
             ) : (
               <div className="users-list-page__list__display-list__not-found">
-                Nema pronđenih korisnika
+                {searchQuery
+                  ? 'Nema pronđenih korisnika'
+                  : 'Nema unesenih korisnika'}
               </div>
             )}
           </div>

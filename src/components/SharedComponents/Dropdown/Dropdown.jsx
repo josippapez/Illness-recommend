@@ -108,7 +108,7 @@ export const Dropdown = props => {
                   dropdown__wrapper__header__box: true,
                   'suggestion-input': true,
                 })}
-                style={{ width: fullWidth ? '100%' : 'auto' }}
+                style={{ width: fullWidth && '100%' }}
                 ref={inputRef}
                 disabled={disabledInput}
                 placeholder={inputNewDataPlaceholder || searchDataPlaceholder}

@@ -29,6 +29,29 @@ export const getAllMedications = () => {
   };
 };
 
+export const searchMedicationsByText = query => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/medications/search?search=${query}`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(setMedicationsList(response.data));
+      })
+      .catch(error =>
+        dispatch({
+          type: SET_ERROR_MEDICATION_LIST,
+          payload: {
+            message: error.message,
+            error: error.message,
+            status: error.status,
+          },
+        })
+      );
+  };
+};
+
 export const getMedicationsBySymptomsAndAlergies = symptoms => {
   return (dispatch, getState) => {
     axios({
