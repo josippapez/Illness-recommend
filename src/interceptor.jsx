@@ -23,6 +23,8 @@ export const refreshAuthentication = () => {
       /* store.dispatch(userLoggedIn(response.data)); */
       Cookies.set('Accesstoken', response.data, {
         expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+        sameSite: 'None',
+        secure: true,
       });
       return response;
     })
