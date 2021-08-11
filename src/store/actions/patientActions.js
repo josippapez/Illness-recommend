@@ -1,5 +1,71 @@
 import axios from 'axios';
-import { PATIENT_INFO_FETCHED, PATIENT_INFO_FETCHED_ERROR } from '../types';
+import {
+  PATIENT_INFO_FETCHED,
+  PATIENT_INFO_FETCHED_ERROR,
+  PATIENT_LIST_FETCHED,
+} from '../types';
+
+export const getAllPatientsForAdmin = () => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/patients-details/`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(setPatientsList(response.data));
+      })
+      .catch(error =>
+        setErrorCurrentPatientInfo({
+          message: error.message,
+          error: error.message,
+          status: error.status,
+        })
+      );
+  };
+};
+
+export const getAllPatientsForUser = () => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/patients-details/forUser`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(setPatientsList(response.data));
+      })
+      .catch(error =>
+        setErrorCurrentPatientInfo({
+          message: error.message,
+          error: error.message,
+          status: error.status,
+        })
+      );
+  };
+};
+
+export const searchPatientsByText = query => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/patients-details/search?search=${query}`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(setPatientsList(response.data));
+      })
+      .catch(error =>
+        dispatch(
+          setErrorCurrentPatientInfo({
+            message: error.message,
+            error: error.message,
+            status: error.status,
+          })
+        )
+      );
+  };
+};
 
 export const fetchPatientById = patientId => {
   return (dispatch, getState) => {
@@ -9,11 +75,11 @@ export const fetchPatientById = patientId => {
       withCredentials: true,
     })
       .then(response => {
-        dispatch(patientInfoFetched(response.data));
+        dispatch(currentPatientInfoFetched(response.data));
       })
       .catch(error =>
         dispatch(
-          setErrorPatientInfo({
+          setErrorCurrentPatientInfo({
             error: error.message,
             status: error.status,
           })
@@ -35,19 +101,23 @@ export const createPatientDetails = patient => {
       .then(response => {
         dispatch(fetchPatientById(response.data.id));
         dispatch(
-          setErrorPatientInfo({
+          setErrorCurrentPatientInfo({
             message: response.data.successMessage,
             error: null,
             status: response.status,
           })
         );
         dispatch(
-          setErrorPatientInfo({ message: null, error: null, status: null })
+          setErrorCurrentPatientInfo({
+            message: null,
+            error: null,
+            status: null,
+          })
         );
       })
       .catch(error => {
         dispatch(
-          setErrorPatientInfo({
+          setErrorCurrentPatientInfo({
             error: error.response.data,
             status: error.status,
           })
@@ -68,20 +138,24 @@ export const updatePatientDetails = patient => {
     })
       .then(response => {
         dispatch(
-          setErrorPatientInfo({
+          setErrorCurrentPatientInfo({
             message: response.data.successMessage,
             error: null,
             status: response.status,
           })
         );
         dispatch(
-          setErrorPatientInfo({ message: null, error: null, status: null })
+          setErrorCurrentPatientInfo({
+            message: null,
+            error: null,
+            status: null,
+          })
         );
         dispatch(fetchPatientById(patient.id));
       })
       .catch(error =>
         dispatch(
-          setErrorPatientInfo({
+          setErrorCurrentPatientInfo({
             error: error.response.data,
             status: error.status,
           })
@@ -90,12 +164,53 @@ export const updatePatientDetails = patient => {
   };
 };
 
-export const patientInfoFetched = data => ({
+export const removePatientDetailsById = id => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'DELETE',
+      url: `${process.env.REACT_APP_API_URL}/patients-details/delete`,
+      withCredentials: true,
+      data: { id },
+    })
+      .then(response => {
+        dispatch(
+          setErrorCurrentPatientInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorCurrentPatientInfo({
+            message: null,
+            error: null,
+            status: null,
+          })
+        );
+        dispatch(getAllPatientsForAdmin());
+      })
+      .catch(error =>
+        dispatch(
+          setErrorCurrentPatientInfo({
+            error: error.response.data,
+            status: error.status,
+          })
+        )
+      );
+  };
+};
+
+export const setPatientsList = data => ({
+  type: PATIENT_LIST_FETCHED,
+  payload: data,
+});
+
+export const currentPatientInfoFetched = data => ({
   type: PATIENT_INFO_FETCHED,
   payload: data,
 });
 
-export const setErrorPatientInfo = data => ({
+export const setErrorCurrentPatientInfo = data => ({
   type: PATIENT_INFO_FETCHED_ERROR,
   payload: data,
 });

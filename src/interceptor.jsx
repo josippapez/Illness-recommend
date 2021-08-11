@@ -20,7 +20,10 @@ export const refreshAuthentication = () => {
     withCredentials: true,
   })
     .then(response => {
-      store.dispatch(userLoggedIn(response.data));
+      /* store.dispatch(userLoggedIn(response.data)); */
+      Cookies.set('Accesstoken', response.data, {
+        expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+      });
       return response;
     })
     .catch(error => error);

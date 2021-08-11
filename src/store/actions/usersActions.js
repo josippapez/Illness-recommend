@@ -51,6 +51,63 @@ export const searchUsersByText = query => {
   };
 };
 
+export const fetchUserInfoById = userId => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'GET',
+      url: `${process.env.REACT_APP_API_URL}/users/${userId}`,
+      withCredentials: true,
+    })
+      .then(response => {
+        dispatch(userInfoFetched(response));
+      })
+      .catch(error =>
+        dispatch({
+          type: SET_ERROR_USER_LIST,
+          payload: {
+            error: error.message,
+            status: error.status,
+          },
+        })
+      );
+  };
+};
+
+export const updateUserDetails = userDetails => {
+  return (dispatch, getState) => {
+    axios({
+      method: 'PATCH',
+      url: `${process.env.REACT_APP_API_URL}/users/`,
+      withCredentials: true,
+      data: {
+        ...userDetails,
+      },
+    })
+      .then(response => {
+        dispatch(
+          setErrorUserInfo({
+            message: response.data.successMessage,
+            error: null,
+            status: response.status,
+          })
+        );
+        dispatch(
+          setErrorUserInfo({ message: null, error: null, status: null })
+        );
+        dispatch(getAllUsers());
+      })
+      .catch(error =>
+        dispatch({
+          type: SET_ERROR_USER_LIST,
+          payload: {
+            error: error.message,
+            status: error.status,
+          },
+        })
+      );
+  };
+};
+
 export const removeUserById = id => {
   return (dispatch, getState) => {
     axios({
@@ -83,6 +140,11 @@ export const removeUserById = id => {
       );
   };
 };
+
+export const userInfoFetched = data => ({
+  type: USER_INFO_FETCHED,
+  payload: data,
+});
 
 export const setUsersList = data => ({
   type: USERS_LIST_FETCHED,

@@ -27,7 +27,6 @@ const UsersListPage = props => {
       <DataDisplay
         dataHeader="Popis korisnika"
         headerBolded
-        centerHeaderVertically
         headerFontSize={23}
         headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
@@ -67,13 +66,13 @@ const UsersListPage = props => {
           </div>
         }
       />
-      {/*  {showUserInfoModal && (
+      {showUserInfoModal && (
         <UserInfoModal
           userId={userId}
           setUserId={setUserId}
           setShowUserInfoModal={setShowUserInfoModal}
         />
-      )} */}
+      )}
     </div>
   );
 };

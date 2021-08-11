@@ -3,6 +3,7 @@ import { useSelector } from 'react-redux';
 import { Redirect, Switch, Route } from 'react-router-dom';
 import AdminHomepage from './AdminHomepage/AdminHomepage';
 import MedicationListPage from './AdminHomepage/MedicationsListPage/MedicationListPage';
+import PatientsListPage from './AdminHomepage/PatientsListPage/PatientsListPage';
 import UsersListPage from './AdminHomepage/UsersListPage/UsersListPage';
 import MedicationSuggestionPage from './UserHomepage/MedicationSuggestionPage/MedicationSuggestionPage';
 import PatientDetailsPage from './UserHomepage/PatientDetailsPage/PatientDetailsPage';
@@ -11,24 +12,43 @@ import UserHomepage from './UserHomepage/UserHomepage';
 const Routes = () => {
   const user = useSelector(state => state.user);
   const theme = useSelector(state => state.theme);
+  const patient = useSelector(state => state.patient.currentPatientInfo);
+
   const adminRoutes = [
     { route: '/users', component: <UsersListPage theme={theme} /> },
     { route: '/medications', component: <MedicationListPage theme={theme} /> },
-  ];
-  const userRoutes = [
     {
-      route: '/user-details',
-      component: <PatientDetailsPage theme={theme} />,
-    },
-    {
-      route: '/medication-suggestion',
-      component: <MedicationSuggestionPage userId={user.id} theme={theme} />,
-    },
-    {
-      route: '/user-details-history',
-      component: <MedicationSuggestionPage userId={user.id} theme={theme} />,
+      route: '/patients-details-history',
+      component: <PatientsListPage userRole={user.role} theme={theme} />,
     },
   ];
+  const userRoutes = patient
+    ? [
+      {
+        route: '/patient-details',
+        component: <PatientDetailsPage userId={user.id} theme={theme} />,
+      },
+      {
+        route: '/medication-suggestion',
+        component: (
+          <MedicationSuggestionPage userId={user.id} theme={theme} />
+        ),
+      },
+      {
+        route: '/patients-details-history',
+        component: <PatientsListPage userRole={user.role} theme={theme} />,
+      },
+    ]
+    : [
+      {
+        route: '/patient-details',
+        component: <PatientDetailsPage userId={user.id} theme={theme} />,
+      },
+      {
+        route: '/patients-details-history',
+        component: <PatientsListPage userRole={user.role} theme={theme} />,
+      },
+    ];
   const isAdmin = user => {
     return user.role === 'admin';
   };

@@ -403,7 +403,9 @@ const MedicationInfoModal = props => {
                                       style={{ textAlign: 'center' }}
                                       key={index}
                                     >
-                                      <td>{alergy.name}</td>
+                                      <td style={{ wordBreak: 'break-word' }}>
+                                        {alergy.name}
+                                      </td>
                                       <td
                                         style={{
                                           paddingLeft: '20px',
@@ -464,6 +466,7 @@ const MedicationInfoModal = props => {
                                   <td
                                     style={{
                                       padding: '10px',
+                                      wordBreak: 'break-word',
                                     }}
                                   >
                                     {alergy.name}
@@ -540,7 +543,9 @@ const MedicationInfoModal = props => {
                                       style={{ textAlign: 'center' }}
                                       key={index}
                                     >
-                                      <td>{symptom.name}</td>
+                                      <td style={{ wordBreak: 'break-word' }}>
+                                        {symptom.name}
+                                      </td>
                                       <td
                                         style={{
                                           paddingLeft: '20px',
@@ -601,6 +606,7 @@ const MedicationInfoModal = props => {
                                   <td
                                     style={{
                                       padding: '10px',
+                                      wordBreak: 'break-word',
                                     }}
                                   >
                                     {symptom.name}
@@ -672,7 +678,7 @@ const MedicationInfoModal = props => {
                                       style={{ textAlign: 'center' }}
                                       key={index}
                                     >
-                                      <td>{interaction}</td>
+                                      <td style={{ wordBreak: 'break-word' }}>{interaction}</td>
                                       <td
                                         style={{
                                           paddingLeft: '20px',
@@ -759,7 +765,12 @@ const MedicationInfoModal = props => {
                                     style={{ textAlign: 'center' }}
                                     key={index}
                                   >
-                                    <td style={{ padding: '10px' }}>
+                                    <td
+                                      style={{
+                                        padding: '10px',
+                                        wordBreak: 'break-word',
+                                      }}
+                                    >
                                       {interaction}
                                     </td>
                                   </tr>
@@ -829,7 +840,9 @@ const MedicationInfoModal = props => {
                                       style={{ textAlign: 'center' }}
                                       key={index}
                                     >
-                                      <td>{contraindication}</td>
+                                      <td style={{ wordBreak: 'break-word' }}>
+                                        {contraindication}
+                                      </td>
                                       <td
                                         style={{
                                           paddingLeft: '20px',
@@ -915,7 +928,12 @@ const MedicationInfoModal = props => {
                                     style={{ textAlign: 'center' }}
                                     key={index}
                                   >
-                                    <td style={{ padding: '10px' }}>
+                                    <td
+                                      style={{
+                                        padding: '10px',
+                                        wordBreak: 'break-word',
+                                      }}
+                                    >
                                       {contraindication}
                                     </td>
                                   </tr>
@@ -1016,6 +1034,7 @@ const MedicationInfoModal = props => {
                                     <td
                                       style={{
                                         padding: userRole !== 'admin' && '10px',
+                                        wordBreak: 'break-word',
                                       }}
                                     >
                                       {sideEffect}

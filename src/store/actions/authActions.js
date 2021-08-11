@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { SET_ERROR_USER, USER_LOGGED_IN, USER_LOGGED_OUT } from '../types';
 
 export const registerUser = (name, email, password) => {
@@ -38,7 +39,13 @@ export const loginUser = (email, password) => {
       },
     })
       .then(response => {
-        dispatch(userLoggedIn(response.data));
+        Cookies.set('Accesstoken', response.data.accessToken, {
+          expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+        });
+        Cookies.set('Refreshtoken', response.data.refreshToken, {
+          expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
+        });
+        dispatch(userLoggedIn(response.data.user));
       })
       .catch(error =>
         dispatch(

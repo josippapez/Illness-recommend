@@ -26,6 +26,7 @@ const Navbar = () => {
 
   const theme = useSelector(state => state.theme);
   const user = useSelector(state => state.user);
+  const patient = useSelector(state => state.patient.currentPatientInfo);
 
   return (
     user.isAuthenticated &&
@@ -107,46 +108,50 @@ const Navbar = () => {
             <div>
               <NavLink
                 className="navbar-item"
-                to="/user-details"
+                to="/patient-details"
                 activeClassName="active"
               >
                 <img
-                  src={theme.darkTheme ? UserDetailsImageWhite : UserDetailsImage}
+                  src={
+                    theme.darkTheme ? UserDetailsImageWhite : UserDetailsImage
+                  }
                   alt="home"
                   className="navbar-icon"
                 />
                 Detalji pacijenta
               </NavLink>
-              <NavLink
-                className="navbar-item"
-                to="/medication-suggestion"
-                activeClassName="active"
-              >
-                <img
-                  src={
-                    theme.darkTheme
-                      ? MedicationSuggestionImageWhite
-                      : MedicationSuggestionImage
-                  }
-                  alt="home"
-                  className="navbar-icon"
-                />
-                Prijedlog lijekova
-              </NavLink>
-              <NavLink
-                className="navbar-item"
-                to="/user-details-history"
-                activeClassName="active"
-              >
-                <img
-                  src={theme.darkTheme ? UserDetailsImageWhite : UserDetailsImage}
-                  alt="home"
-                  className="navbar-icon"
-                />
-                Prošli pacijenti
-              </NavLink>
+              {patient && (
+                <NavLink
+                  className="navbar-item"
+                  to="/medication-suggestion"
+                  activeClassName="active"
+                >
+                  <img
+                    src={
+                      theme.darkTheme
+                        ? MedicationSuggestionImageWhite
+                        : MedicationSuggestionImage
+                    }
+                    alt="home"
+                    className="navbar-icon"
+                  />
+                  Prijedlog lijekova
+                </NavLink>
+              )}
             </div>
           )}
+          <NavLink
+            className="navbar-item"
+            to="/patients-details-history"
+            activeClassName="active"
+          >
+            <img
+              src={theme.darkTheme ? UserDetailsImageWhite : UserDetailsImage}
+              alt="home"
+              className="navbar-icon"
+            />
+            {user.role === 'admin' ? 'Podaci pacijenata' : 'Prošli pacijenti'}
+          </NavLink>
           <button
             className="navbar-item"
             onClick={() => {

@@ -5,8 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import './PatientsListPage.scss';
 
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
-import MedicationInfoModal from './MedicationInfoModal/MedicationInfoModal';
-import MedicationList from './MedicationList/MedicationList';
 
 import {
   getAllMedications,
@@ -14,22 +12,38 @@ import {
 } from '../../../store/actions/medicationActions';
 import AddButton from '../../SharedComponents/AddButton/AddButton';
 import Search from '../../SharedComponents/Search/Search';
+import {
+  getAllPatientsForAdmin,
+  getAllPatientsForUser,
+  searchPatientsByText,
+} from '../../../store/actions';
+import PatientsList from './PatientsList/PatientsList';
+import PatientDetailsModal from './PatientDetailsModal/PatientDetailsModal';
 
 const PatientsListPage = props => {
   const dispatch = useDispatch();
-  const medicationList = useSelector(state => state.medicationList);
+  const patientsList = useSelector(state => state.patient.patientList);
 
-  const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
-  const [selectedMedication, setSelectedMedication] = useState(null);
   const [searchQuery, setSearchQuery] = useState(null);
+  const [selectedPatient, setSelectedPatient] = useState(null);
+  const [showPatientViewInfo, setShowPatientViewInfo] = useState(null);
+
   useEffect(() => {
-    dispatch(getAllMedications());
+    getPatientsForUserByRole();
   }, []);
+
+  const getPatientsForUserByRole = () => {
+    if (props.userRole === 'user') {
+      dispatch(getAllPatientsForUser());
+    } else {
+      dispatch(getAllPatientsForAdmin());
+    }
+  };
 
   return (
     <div className="patients-list-page">
       <DataDisplay
-        dataHeader="Popis lijekova"
+        dataHeader="Popis prošlih pacijenata"
         headerBolded
         headerFontSize={23}
         headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
@@ -42,17 +56,16 @@ const PatientsListPage = props => {
             <Search
               setSearchQuery={setSearchQuery}
               fetchData={() => {
-                return getAllMedications();
+                if (props.userRole === 'user') {
+                  return getAllPatientsForUser();
+                } else {
+                  return getAllPatientsForAdmin();
+                }
               }}
               fetchDataByName={name => {
-                return searchMedicationsByText(name);
+                return searchPatientsByText(name);
               }}
               searchingByInfo="*Pretraživanje po Imenu i prezimenu, OIB-u"
-            />
-            <AddButton
-              customClassName="add-medication-button"
-              setShowModal={setShowMedicationInfoModal}
-              text="Dodaj lijek"
             />
           </div>
         }
@@ -62,28 +75,28 @@ const PatientsListPage = props => {
         dataFullWidth
         data={
           <div className="patients-list-page__list__display-list">
-            {medicationList &&
-            medicationList.medications &&
-            medicationList.medications.length > 0 ? (
-                <MedicationList
-                  medicationList={medicationList.medications}
-                  setShowMedicationInfoModal={setShowMedicationInfoModal}
-                  setSelectedMedication={setSelectedMedication}
-                />
-              ) : (
-                <div className="patients-list-page__list__display-list__not-found">
-                Nema unesenih lijekova.
-                </div>
-              )}
+            {patientsList && patientsList.length > 0 ? (
+              <PatientsList
+                patientsList={patientsList}
+                setShowPatientViewModal={setShowPatientViewInfo}
+                setSelectedPatient={setSelectedPatient}
+              />
+            ) : (
+              <div className="patients-list-page__list__display-list__not-found">
+                {searchQuery
+                  ? 'Nema pronađenih pacijenata.'
+                  : 'Nema unesenih pacijenata.'}
+              </div>
+            )}
           </div>
         }
       />
-      {showMedicationInfoModal && (
-        <MedicationInfoModal
-          userRole="admin"
-          selectedMedication={selectedMedication}
-          setSelectedMedication={setSelectedMedication}
-          setShowMedicationInfoModal={setShowMedicationInfoModal}
+      {showPatientViewInfo && (
+        <PatientDetailsModal
+          userRole={props.userRole}
+          selectedPatient={selectedPatient}
+          setSelectedPatient={setSelectedPatient}
+          setShowPatientViewInfo={setShowPatientViewInfo}
         />
       )}
     </div>
@@ -92,6 +105,7 @@ const PatientsListPage = props => {
 
 PatientsListPage.propTypes = {
   theme: PropTypes.object,
+  userRole: PropTypes.string.isRequired,
 };
 
 export default PatientsListPage;

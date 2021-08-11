@@ -12,7 +12,9 @@ import {
   getAllAlergies,
   removeUserById,
   updatePatientDetails,
-/*   userInfoFetched, */
+  updateUserDetails,
+  userInfoFetched,
+  /*   userInfoFetched, */
 } from '../../../../store/actions';
 import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 
@@ -23,37 +25,30 @@ const UserInfoModal = props => {
 
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [isTryingToDelete, setIsTryingToDelete] = useState(false);
-  const [isTryingToCloseWhenEdited, setIsTryingToCloseWhenEdited] =
-    useState(false);
   const [userDetailsInfo, setUserDetailsInfo] = useState({
     id: props.userId,
-    age: null,
-    alergies: [],
-    pregnantOrBreastFeed: false,
-    weight: null,
+    name: null,
+    email: null,
+    role: null,
   });
-  const [selectedAlergie, setselectedAlergie] = useState(null);
-  const [alergyDropdownTitle, setAlergyDropdownTitle] =
-    useState('Odaberi ili upiši');
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    /*  if (props.userId) {
+    if (props.userId) {
       dispatch(fetchUserInfoById(props.userId));
-    } */
+    }
     return () => {
       props.setUserId(null);
-      /*  dispatch(
+      dispatch(
         userInfoFetched({
           data: {
             id: null,
-            age: null,
-            alergies: [],
-            pregnantOrBreastFeed: false,
-            weight: null,
+            name: null,
+            email: null,
+            role: null,
           },
         })
-      ); */
+      );
     };
   }, []);
 
@@ -71,16 +66,11 @@ const UserInfoModal = props => {
 
   const checkForClosingModal = () => {
     if (userDetails.data && userDetails.data !== userDetailsInfo) {
-      setIsTryingToCloseWhenEdited(true);
       setShowAlertModal(true);
     } else if (
       !userDetails.data &&
-      (userDetailsInfo.age ||
-        userDetailsInfo.weight ||
-        userDetailsInfo.pregnantOrBreastFeed ||
-        userDetailsInfo.alergies.length > 0)
+      (userDetailsInfo.name || userDetailsInfo.email || userDetailsInfo.role)
     ) {
-      setIsTryingToCloseWhenEdited(true);
       setShowAlertModal(true);
     } else {
       props.setShowUserInfoModal(false);
@@ -102,170 +92,85 @@ const UserInfoModal = props => {
         </div>
         <div className="user-info-modal__body">
           <DataDisplay
-            dataHeader="Dob (g)"
+            dataHeader="Ime i prezime"
             displayInColumn
             headerBolded
             removeTopSeparator
             dataSeparatorTopSpacing={4}
             data={
               <input
-                type="number"
-                min="0"
-                value={userDetailsInfo.age ? userDetailsInfo.age : ''}
+                type="text"
+                value={userDetailsInfo.name ? userDetailsInfo.name : ''}
                 onChange={e => {
                   setUserDetailsInfo({
                     ...userDetailsInfo,
-                    age: e.target.value,
+                    name: e.target.value,
                   });
                 }}
               />
             }
           />
           {userDetails.error &&
-            userDetails.error.find(error => error.field === 'age') && (
-            <div className="error">
-              {userDetails.error.find(error => error.field === 'age').message}
-            </div>
-          )}
-          <DataDisplay
-            dataHeader="Težina (kg)"
-            displayInColumn
-            headerBolded
-            dataSeparatorTopSpacing={4}
-            data={
-              <input
-                type="number"
-                min="0"
-                value={userDetailsInfo.weight ? userDetailsInfo.weight : ''}
-                onChange={e => {
-                  setUserDetailsInfo({
-                    ...userDetailsInfo,
-                    weight: e.target.value,
-                  });
-                }}
-              />
-            }
-          />
-          {userDetails.error &&
-            userDetails.error.find(error => error.field === 'weight') && (
+            userDetails.error.find(error => error.field === 'name') && (
             <div className="error">
               {
-                userDetails.error.find(error => error.field === 'weight')
+                userDetails.error.find(error => error.field === 'name')
                   .message
               }
             </div>
           )}
           <DataDisplay
-            dataHeader="Dojenje ili trudnoća?"
+            dataHeader="Email"
             displayInColumn
             headerBolded
             dataSeparatorTopSpacing={4}
             data={
-              <div>
-                <input
-                  className="checkbox"
-                  type="checkbox"
-                  min={0}
-                  checked={
-                    userDetailsInfo.pregnantOrBreastFeed
-                      ? userDetailsInfo.pregnantOrBreastFeed
-                      : false
-                  }
-                  onChange={e => {
-                    setUserDetailsInfo({
-                      ...userDetailsInfo,
-                      pregnantOrBreastFeed: e.target.checked,
-                    });
-                  }}
-                />
-              </div>
+              <input
+                type="text"
+                value={userDetailsInfo.email ? userDetailsInfo.email : ''}
+                onChange={e => {
+                  setUserDetailsInfo({
+                    ...userDetailsInfo,
+                    email: e.target.value,
+                  });
+                }}
+              />
             }
           />
+          {userDetails.error &&
+            userDetails.error.find(error => error.field === 'email') && (
+            <div className="error">
+              {
+                userDetails.error.find(error => error.field === 'email')
+                  .message
+              }
+            </div>
+          )}
           <DataDisplay
-            dataHeader="Alergije"
+            dataHeader="Rola"
             displayInColumn
             headerBolded
             dataSeparatorTopSpacing={4}
             data={
               <div>
                 <Dropdown
-                  customclass="alergies-dropdown"
-                  searchData
-                  searchDataPlaceholder="Odaberi ili upiši"
+                  customclass="role-dropdown"
                   addButtonShouldBeShown={false}
-                  multiselect
                   handleSelect={item => {
-                    if (item === 'Odaberi') {
-                      setselectedAlergie(null);
-                    } else if (item.id) {
+                    if (item.id) {
                       setUserDetailsInfo({
                         ...userDetailsInfo,
-                        alergies: [...userDetailsInfo.alergies, item],
+                        role: item.name,
                       });
                     }
                   }}
-                  list={
-                    alergies
-                      ? [
-                        ...alergies.filter(alergy =>
-                          userDetailsInfo.alergies.length > 0
-                            ? !userDetailsInfo.alergies.find(
-                              userInfoAlergy =>
-                                userInfoAlergy.id === alergy.id
-                            )
-                            : alergy
-                        ),
-                      ]
-                      : []
-                  }
-                  headerTitle={alergyDropdownTitle}
-                  defaultHeaderOption="Odaberi ili upiši"
+                  list={[
+                    { id: 1, name: 'user' },
+                    { id: 2, name: 'admin' },
+                  ]}
+                  headerTitle={userDetailsInfo.role}
+                  defaultHeaderOption="Odaberi"
                 />
-                {userDetailsInfo.alergies &&
-                  userDetailsInfo.alergies.length > 0 && (
-                  <table
-                    style={{
-                      width: '100%',
-                      marginTop: '20px',
-                    }}
-                    className="list-table"
-                  >
-                    <tbody className="list-table__item-row">
-                      {userDetailsInfo.alergies.map(alergy => (
-                        <tr
-                          className="spacer item-row"
-                          style={{ textAlign: 'center' }}
-                          key={alergy.id}
-                        >
-                          <td>{alergy.name}</td>
-                          <td
-                            style={{
-                              paddingLeft: '20px',
-                              width: '55px',
-                            }}
-                          >
-                            <button
-                              id="link-to-medication-page"
-                              onClick={() => {
-                                setUserDetailsInfo({
-                                  ...userDetailsInfo,
-                                  alergies: [
-                                    ...userDetailsInfo.alergies.filter(
-                                      savedAlergy =>
-                                        savedAlergy.id !== alergy.id
-                                    ),
-                                  ],
-                                });
-                              }}
-                            >
-                                Obriši
-                            </button>
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                )}
               </div>
             }
           />
@@ -283,11 +188,9 @@ const UserInfoModal = props => {
           <button
             className="footer__send-button"
             onClick={() => {
-              /* if (userDetails.data) {
+              if (userDetails.data) {
                 dispatch(updateUserDetails(userDetailsInfo));
-              } else {
-                dispatch(createUserDetails(userDetailsInfo));
-              } */
+              }
             }}
           >
             Spremi
@@ -310,7 +213,6 @@ const UserInfoModal = props => {
             }}
             declineOptions={() => {
               setShowAlertModal(false);
-              setIsTryingToCloseWhenEdited(false);
               setIsTryingToDelete(false);
             }}
           />

@@ -34,7 +34,6 @@ const MedicationListPage = props => {
         headerFontSize={23}
         headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
         dataFullWidth
-        centerHeaderVertically
         TopSpacing={30}
         floatDataRight
         data={

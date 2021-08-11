@@ -10,7 +10,7 @@ import {
   fetchPatientById,
   fetchUserInfoById,
   getAllAlergies,
-  patientInfoFetched,
+  currentPatientInfoFetched,
   updatePatientDetails,
 } from '../../../store/actions';
 
@@ -20,9 +20,10 @@ const PatientDetailsPage = props => {
   const alergies = useSelector(state => state.alergies.alergies);
 
   const [PatientDetailsInfo, setPatientDetailsInfo] = useState(
-    PatientDetails && PatientDetails.patientInfo
-      ? { ...PatientDetails.patientInfo }
+    PatientDetails && PatientDetails.currentPatientInfo
+      ? { ...PatientDetails.currentPatientInfo, userId: props.userId }
       : {
+        userId: props.userId,
         oib: null,
         name: null,
         age: null,
@@ -34,14 +35,14 @@ const PatientDetailsPage = props => {
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (PatientDetails.patientInfo && PatientDetails.patientInfo.id) {
-      dispatch(fetchPatientById(PatientDetails.patientInfo.id));
+    if (PatientDetails.currentPatientInfo && PatientDetails.currentPatientInfo.id) {
+      dispatch(fetchPatientById(PatientDetails.currentPatientInfo.id));
     }
   }, []);
 
   useEffect(() => {
-    if (PatientDetails && PatientDetails.patientInfo) {
-      setPatientDetailsInfo(PatientDetails.patientInfo);
+    if (PatientDetails && PatientDetails.currentPatientInfo) {
+      setPatientDetailsInfo(PatientDetails.currentPatientInfo);
     }
   }, [PatientDetails]);
 
@@ -60,8 +61,9 @@ const PatientDetailsPage = props => {
           <button
             className="new-patient-button"
             onClick={() => {
-              dispatch(patientInfoFetched(null));
+              dispatch(currentPatientInfoFetched(null));
               setPatientDetailsInfo({
+                userId: props.userId,
                 oib: null,
                 name: null,
                 age: null,
@@ -275,7 +277,7 @@ const PatientDetailsPage = props => {
         <button
           className="footer__send-button"
           onClick={() => {
-            if (PatientDetails.patientInfo && PatientDetails.patientInfo.id) {
+            if (PatientDetails.currentPatientInfo && PatientDetails.currentPatientInfo.id) {
               dispatch(updatePatientDetails(PatientDetailsInfo));
             } else {
               dispatch(createPatientDetails(PatientDetailsInfo));

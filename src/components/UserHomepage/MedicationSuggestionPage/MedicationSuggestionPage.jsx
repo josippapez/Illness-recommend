@@ -7,7 +7,7 @@ import {
   getAllMedications,
   getAllSymptoms,
   getMedicationsBySymptomsAndAlergies,
-  patientInfoFetched,
+  currentPatientInfoFetched,
   updatePatientDetails,
 } from '../../../store/actions';
 import { Dropdown } from '../../SharedComponents/Dropdown/Dropdown';
@@ -23,11 +23,12 @@ const MedicationSuggestionPage = props => {
   const PatientDetails = useSelector(state => state.patient);
 
   const [PatientDetailsInfo, setPatientDetailsInfo] = useState(
-    PatientDetails.patientInfo
+    PatientDetails.currentPatientInfo
   );
 
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
+  const [medicationToView, setMedicationToView] = useState(null);
   const [selectedMedication, setSelectedMedication] = useState(
     PatientDetailsInfo ? PatientDetailsInfo.medicationsSelected : []
   );
@@ -53,7 +54,7 @@ const MedicationSuggestionPage = props => {
   useEffect(() => {
     dispatch(getAllSymptoms());
   }, []);
-  console.log(selectedMedication);
+
   const setMedicationList = medication => {
     if (
       selectedMedication.find(
@@ -194,7 +195,7 @@ const MedicationSuggestionPage = props => {
               <MedicationList
                 medicationList={medicationList.medications}
                 setShowMedicationInfoModal={setShowMedicationInfoModal}
-                setSelectedMedication={setSelectedMedication}
+                setSelectedMedication={setMedicationToView}
                 setMedicationList={setMedicationList}
                 selectedMedicationList={PatientDetailsInfo.medicationsSelected}
               />
@@ -210,8 +211,8 @@ const MedicationSuggestionPage = props => {
       {showMedicationInfoModal && (
         <MedicationInfoModal
           userRole="user"
-          selectedMedication={selectedMedication}
-          setSelectedMedication={setSelectedMedication}
+          selectedMedication={medicationToView}
+          setSelectedMedication={setMedicationToView}
           setShowMedicationInfoModal={setShowMedicationInfoModal}
         />
       )}

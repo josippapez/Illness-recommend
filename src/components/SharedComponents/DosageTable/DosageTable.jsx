@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux';
 import classNames from 'classnames';
 
 const DosageTable = props => {
-  const userDetails = useSelector(state => state.user.userInfo);
+  const PatientDetails = useSelector(state => state.patient.currentPatientInfo);
   const [dosageRowCounter, setDosageRowCounter] = useState(
     props.dosageList ? props.dosageList.length : 0
   );
@@ -39,13 +39,13 @@ const DosageTable = props => {
           highlight:
             props.readOnly &&
             (dosageArray[dosage].comparison === '<='
-              ? userDetails.data[props.checkByKey] <= dosageArray[dosage].name
+              ? PatientDetails[props.checkByKey] <= dosageArray[dosage].name
               : dosageArray[dosage].comparison === '>='
-                ? userDetails.data[props.checkByKey] >= dosageArray[dosage].name
+                ? PatientDetails[props.checkByKey] >= dosageArray[dosage].name
                 : dosageArray[dosage].comparison === '<'
-                  ? userDetails.data[props.checkByKey] < dosageArray[dosage].name
+                  ? PatientDetails[props.checkByKey] < dosageArray[dosage].name
                   : dosageArray[dosage].comparison === '>'
-                    ? userDetails.data[props.checkByKey] > dosageArray[dosage].name
+                    ? PatientDetails[props.checkByKey] > dosageArray[dosage].name
                     : false),
         })}
         key={dosage}
