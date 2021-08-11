@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
   PATIENT_INFO_FETCHED,
   PATIENT_INFO_FETCHED_ERROR,
@@ -10,7 +11,9 @@ export const getAllPatientsForAdmin = () => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/patients-details/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setPatientsList(response.data));
@@ -30,7 +33,9 @@ export const getAllPatientsForUser = () => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/patients-details/forUser`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setPatientsList(response.data));
@@ -50,7 +55,9 @@ export const searchPatientsByText = query => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/patients-details/search?search=${query}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setPatientsList(response.data));
@@ -72,7 +79,9 @@ export const fetchPatientById = patientId => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/patients-details/${patientId}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(currentPatientInfoFetched(response.data));
@@ -93,7 +102,9 @@ export const createPatientDetails = patient => {
     axios({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/patients-details/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: {
         ...patient,
       },
@@ -131,7 +142,9 @@ export const updatePatientDetails = patient => {
     axios({
       method: 'PATCH',
       url: `${process.env.REACT_APP_API_URL}/patients-details/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: {
         ...patient,
       },
@@ -169,7 +182,9 @@ export const removePatientDetailsById = id => {
     axios({
       method: 'DELETE',
       url: `${process.env.REACT_APP_API_URL}/patients-details/delete`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: { id },
     })
       .then(response => {

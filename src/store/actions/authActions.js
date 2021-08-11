@@ -32,7 +32,6 @@ export const loginUser = (email, password) => {
     axios({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/authentication/log-in`,
-      withCredentials: true,
       data: {
         email,
         password,
@@ -41,13 +40,9 @@ export const loginUser = (email, password) => {
       .then(response => {
         Cookies.set('Accesstoken', response.data.accessToken, {
           expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
-          sameSite: 'None',
-          secure: true,
         });
         Cookies.set('Refreshtoken', response.data.refreshToken, {
           expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
-          sameSite: 'None',
-          secure: true,
         });
         dispatch(userLoggedIn(response.data.user));
       })

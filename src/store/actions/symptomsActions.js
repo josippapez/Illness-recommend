@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { SYMPTOMS_LIST_FETCHED, SET_ERROR_SYMPTOMS_LIST } from '../types';
 
 export const getAllSymptoms = () => {
@@ -6,7 +7,9 @@ export const getAllSymptoms = () => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/symptom`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setSymptomsList(response.data));

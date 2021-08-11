@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
   MEDICATION_INFO_FETCHED,
   MEDICATION_INFO_FETCHED_ERROR,
@@ -11,7 +12,9 @@ export const getAllMedications = () => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/medications/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setMedicationsList(response.data));
@@ -34,7 +37,9 @@ export const searchMedicationsByText = query => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/medications/search?search=${query}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setMedicationsList(response.data));
@@ -57,7 +62,9 @@ export const getMedicationsBySymptomsAndAlergies = symptoms => {
     axios({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/medications/find-by-symptoms`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: symptoms,
     })
       .then(response => {
@@ -91,7 +98,9 @@ export const createMedication = medication => {
     axios({
       method: 'POST',
       url: `${process.env.REACT_APP_API_URL}/medications/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: medication,
     })
       .then(response => {
@@ -123,7 +132,9 @@ export const updateMedication = medication => {
     axios({
       method: 'PATCH',
       url: `${process.env.REACT_APP_API_URL}/medications/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: medication,
     })
       .then(response => {
@@ -155,7 +166,9 @@ export const removeMedicationById = id => {
     axios({
       method: 'DELETE',
       url: `${process.env.REACT_APP_API_URL}/medications/delete`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: { id },
     })
       .then(response => {

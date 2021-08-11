@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import { ALERGIES_LIST_FETCHED, SET_ERROR_ALERGIES_LIST } from '../types';
 
 export const getAllAlergies = () => {
@@ -6,7 +7,9 @@ export const getAllAlergies = () => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/alergies`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setAlergiesList(response.data));

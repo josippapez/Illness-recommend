@@ -17,14 +17,10 @@ export const refreshAuthentication = () => {
   return axios({
     method: 'GET',
     url: `${process.env.REACT_APP_API_URL}/authentication/refresh`,
-    withCredentials: true,
   })
     .then(response => {
-      /* store.dispatch(userLoggedIn(response.data)); */
       Cookies.set('Accesstoken', response.data, {
         expires: new Date(new Date().getTime() + 1000 * 60 * 60 * 24 * 30),
-        sameSite: 'None',
-        secure: true,
       });
       return response;
     })

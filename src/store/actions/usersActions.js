@@ -1,18 +1,20 @@
 import axios from 'axios';
+import Cookies from 'js-cookie';
 import {
   SET_ERROR_USER_LIST,
   USERS_LIST_FETCHED,
   USER_INFO_FETCHED,
   USER_INFO_FETCHED_ERROR,
 } from '../types';
-import { createAlergiesUserInfoRelation } from './alergiesActions';
 
 export const getAllUsers = () => {
   return (dispatch, getState) => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/users`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setUsersList(response.data));
@@ -34,7 +36,9 @@ export const searchUsersByText = query => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/users/search?search=${query}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(setUsersList(response.data));
@@ -56,7 +60,9 @@ export const fetchUserInfoById = userId => {
     axios({
       method: 'GET',
       url: `${process.env.REACT_APP_API_URL}/users/${userId}`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
     })
       .then(response => {
         dispatch(userInfoFetched(response));
@@ -78,7 +84,9 @@ export const updateUserDetails = userDetails => {
     axios({
       method: 'PATCH',
       url: `${process.env.REACT_APP_API_URL}/users/`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: {
         ...userDetails,
       },
@@ -113,7 +121,9 @@ export const removeUserById = id => {
     axios({
       method: 'DELETE',
       url: `${process.env.REACT_APP_API_URL}/users/delete`,
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
+      },
       data: { id },
     })
       .then(response => {
