@@ -4,43 +4,51 @@ import { useDispatch, useSelector } from 'react-redux';
 
 import { Dropdown } from '../../SharedComponents/Dropdown/Dropdown';
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
-import './UserDetailsPage.scss';
+import './PatientDetailsPage.scss';
 import {
+  createPatientDetails,
+  fetchPatientById,
   fetchUserInfoById,
   getAllAlergies,
-  updateUserDetails,
+  patientInfoFetched,
+  updatePatientDetails,
 } from '../../../store/actions';
 
-const UserDetailsPage = props => {
+const PatientDetailsPage = props => {
   const dispatch = useDispatch();
-  const userDetails = useSelector(state => state.user.userInfo);
+  const PatientDetails = useSelector(state => state.patient);
   const alergies = useSelector(state => state.alergies.alergies);
 
-  const [userDetailsInfo, setUserDetailsInfo] = useState({
-    id: props.userId,
-    age: null,
-    alergies: [],
-    pregnantOrBreastFeed: false,
-    weight: null,
-  });
+  const [PatientDetailsInfo, setPatientDetailsInfo] = useState(
+    PatientDetails && PatientDetails.patientInfo
+      ? { ...PatientDetails.patientInfo }
+      : {
+        oib: null,
+        name: null,
+        age: null,
+        alergies: [],
+        pregnantOrBreastFeed: false,
+        weight: null,
+      }
+  );
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (props.userId && (!userDetails || !userDetails.data)) {
-      dispatch(fetchUserInfoById(props.userId));
+    if (PatientDetails.patientInfo && PatientDetails.patientInfo.id) {
+      dispatch(fetchPatientById(PatientDetails.patientInfo.id));
     }
   }, []);
 
   useEffect(() => {
-    if (userDetails && userDetails.data) {
-      setUserDetailsInfo({ ...userDetailsInfo, ...userDetails.data });
+    if (PatientDetails && PatientDetails.patientInfo) {
+      setPatientDetailsInfo(PatientDetails.patientInfo);
     }
-  }, [userDetails]);
+  }, [PatientDetails]);
 
   return (
-    <div className="user-details-page">
+    <div className="patient-details-page">
       <DataDisplay
-        dataHeader="Detaljni podaci korisnika"
+        dataHeader="Podaci o pacijentu"
         headerBolded
         headerFontSize={23}
         headerTextColor={props.theme.darkTheme ? '#fff' : '#005BA7'}
@@ -48,9 +56,64 @@ const UserDetailsPage = props => {
         centerHeaderVertically
         TopSpacing={30}
         floatDataRight
-        dynamicHeaderWidth
+        data={
+          <button
+            className="new-patient-button"
+            onClick={() => {
+              dispatch(patientInfoFetched(null));
+              setPatientDetailsInfo({
+                oib: null,
+                name: null,
+                age: null,
+                alergies: [],
+                pregnantOrBreastFeed: false,
+                weight: null,
+              });
+            }}
+          >
+            Novi pacijent
+          </button>
+        }
       />
-      <div className="user-details-page__body">
+      <div className="patient-details-page__body">
+        <DataDisplay
+          dataHeader="Ime i prezime"
+          displayInColumn
+          headerBolded
+          dataSeparatorTopSpacing={4}
+          data={
+            <input
+              type="text"
+              min="0"
+              value={PatientDetailsInfo.name ? PatientDetailsInfo.name : ''}
+              onChange={e => {
+                setPatientDetailsInfo({
+                  ...PatientDetailsInfo,
+                  name: e.target.value,
+                });
+              }}
+            />
+          }
+        />
+        <DataDisplay
+          dataHeader="OIB"
+          displayInColumn
+          headerBolded
+          dataSeparatorTopSpacing={4}
+          data={
+            <input
+              type="number"
+              min="0"
+              value={PatientDetailsInfo.oib ? PatientDetailsInfo.oib : ''}
+              onChange={e => {
+                setPatientDetailsInfo({
+                  ...PatientDetailsInfo,
+                  oib: e.target.value,
+                });
+              }}
+            />
+          }
+        />
         <DataDisplay
           dataHeader="Dob (g)"
           displayInColumn
@@ -60,10 +123,10 @@ const UserDetailsPage = props => {
             <input
               type="number"
               min="0"
-              value={userDetailsInfo.age ? userDetailsInfo.age : ''}
+              value={PatientDetailsInfo.age ? PatientDetailsInfo.age : ''}
               onChange={e => {
-                setUserDetailsInfo({
-                  ...userDetailsInfo,
+                setPatientDetailsInfo({
+                  ...PatientDetailsInfo,
                   age: e.target.value,
                 });
               }}
@@ -79,10 +142,10 @@ const UserDetailsPage = props => {
             <input
               type="number"
               min="0"
-              value={userDetailsInfo.weight ? userDetailsInfo.weight : ''}
+              value={PatientDetailsInfo.weight ? PatientDetailsInfo.weight : ''}
               onChange={e => {
-                setUserDetailsInfo({
-                  ...userDetailsInfo,
+                setPatientDetailsInfo({
+                  ...PatientDetailsInfo,
                   weight: e.target.value,
                 });
               }}
@@ -101,13 +164,13 @@ const UserDetailsPage = props => {
                 type="checkbox"
                 min={0}
                 checked={
-                  userDetailsInfo.pregnantOrBreastFeed
-                    ? userDetailsInfo.pregnantOrBreastFeed
+                  PatientDetailsInfo.pregnantOrBreastFeed
+                    ? PatientDetailsInfo.pregnantOrBreastFeed
                     : false
                 }
                 onChange={e => {
-                  setUserDetailsInfo({
-                    ...userDetailsInfo,
+                  setPatientDetailsInfo({
+                    ...PatientDetailsInfo,
                     pregnantOrBreastFeed: e.target.checked,
                   });
                 }}
@@ -130,9 +193,9 @@ const UserDetailsPage = props => {
                 inputNewDataPlaceholder="Odaberi ili upiši"
                 handleSelect={item => {
                   if (item.id) {
-                    setUserDetailsInfo({
-                      ...userDetailsInfo,
-                      alergies: [...userDetailsInfo.alergies, item],
+                    setPatientDetailsInfo({
+                      ...PatientDetailsInfo,
+                      alergies: [...PatientDetailsInfo.alergies, item],
                     });
                   }
                 }}
@@ -140,8 +203,8 @@ const UserDetailsPage = props => {
                   alergies
                     ? [
                       ...alergies.filter(alergy =>
-                        userDetailsInfo.alergies.length > 0
-                          ? !userDetailsInfo.alergies.find(
+                        PatientDetailsInfo.alergies.length > 0
+                          ? !PatientDetailsInfo.alergies.find(
                             userInfoAlergy =>
                               userInfoAlergy.id === alergy.id
                           )
@@ -153,10 +216,11 @@ const UserDetailsPage = props => {
                 headerTitle="Odaberi ili upiši"
                 defaultHeaderOption="Odaberi ili upiši"
               />
-              {userDetailsInfo.alergies && userDetailsInfo.alergies.length > 0 && (
+              {PatientDetailsInfo.alergies &&
+                PatientDetailsInfo.alergies.length > 0 && (
                 <>
                   <div className="alergy-list-display-title">
-                    Odabrane alergije:
+                      Odabrane alergije:
                   </div>
                   <table
                     style={{
@@ -167,7 +231,7 @@ const UserDetailsPage = props => {
                     className="list-table"
                   >
                     <tbody className="list-table__item-row">
-                      {userDetailsInfo.alergies.map(alergy => (
+                      {PatientDetailsInfo.alergies.map(alergy => (
                         <tr
                           className="spacer item-row"
                           style={{ textAlign: 'center' }}
@@ -183,10 +247,10 @@ const UserDetailsPage = props => {
                             <button
                               id="link-to-medication-page"
                               onClick={() => {
-                                setUserDetailsInfo({
-                                  ...userDetailsInfo,
+                                setPatientDetailsInfo({
+                                  ...PatientDetailsInfo,
                                   alergies: [
-                                    ...userDetailsInfo.alergies.filter(
+                                    ...PatientDetailsInfo.alergies.filter(
                                       savedAlergy =>
                                         savedAlergy.id !== alergy.id
                                     ),
@@ -194,7 +258,7 @@ const UserDetailsPage = props => {
                                 });
                               }}
                             >
-                              Obriši
+                                Obriši
                             </button>
                           </td>
                         </tr>
@@ -211,7 +275,11 @@ const UserDetailsPage = props => {
         <button
           className="footer__send-button"
           onClick={() => {
-            dispatch(updateUserDetails(userDetailsInfo, true));
+            if (PatientDetails.patientInfo && PatientDetails.patientInfo.id) {
+              dispatch(updatePatientDetails(PatientDetailsInfo));
+            } else {
+              dispatch(createPatientDetails(PatientDetailsInfo));
+            }
           }}
         >
           Spremi
@@ -221,9 +289,9 @@ const UserDetailsPage = props => {
   );
 };
 
-UserDetailsPage.propTypes = {
+PatientDetailsPage.propTypes = {
   userId: PropTypes.number,
   theme: PropTypes.object,
 };
 
-export default UserDetailsPage;
+export default PatientDetailsPage;

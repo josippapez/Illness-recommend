@@ -83,7 +83,7 @@ const Navbar = () => {
                   alt="home"
                   className="navbar-icon"
                 />
-                Korisnici
+                Liječnici
               </NavLink>
               <NavLink
                 className="navbar-item"
@@ -115,7 +115,7 @@ const Navbar = () => {
                   alt="home"
                   className="navbar-icon"
                 />
-                Korisnički detalji
+                Detalji pacijenta
               </NavLink>
               <NavLink
                 className="navbar-item"
@@ -132,6 +132,18 @@ const Navbar = () => {
                   className="navbar-icon"
                 />
                 Prijedlog lijekova
+              </NavLink>
+              <NavLink
+                className="navbar-item"
+                to="/user-details-history"
+                activeClassName="active"
+              >
+                <img
+                  src={theme.darkTheme ? UserDetailsImageWhite : UserDetailsImage}
+                  alt="home"
+                  className="navbar-icon"
+                />
+                Prošli pacijenti
               </NavLink>
             </div>
           )}

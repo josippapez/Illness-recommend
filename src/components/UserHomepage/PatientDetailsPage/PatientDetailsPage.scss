@@ -1,5 +1,5 @@
 .navigation-setup:is(.darkTheme) {
-  .user-details-page {
+  .patient-details-page {
     .alergy-list-display-title {
       color: var(--white);
       transition: color 0.2s ease-in-out;
@@ -19,7 +19,7 @@
   }
 }
 
-.user-details-page {
+.patient-details-page {
   width: 100%;
   height: calc(100% - 30px);
   background-image: url("../../../styles/assets/images/undraw_Social_bio_re_0t9u.svg");
@@ -29,6 +29,21 @@
   -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   position: relative;
+
+  .new-patient-button {
+    border: none;
+    color: var(--white);
+    border-radius: 4px;
+    height: 38px;
+    padding: 0 20px;
+    background: var(--hyperlink) 0% 0% no-repeat padding-box;
+    font: normal normal bold 14px "Lato, Regular";
+    &:hover {
+      cursor: pointer;
+      color: white;
+      background: #0964b9;
+    }
+  }
 
   &__header {
     display: flex;

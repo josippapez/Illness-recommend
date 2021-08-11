@@ -5,7 +5,8 @@
   -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
 
-  .serach-medications-button {
+  .search-medications-button,
+  .save-patient-info {
     border: none;
     color: var(--white);
     border-radius: 4px;
@@ -18,6 +19,9 @@
       color: white;
       background: #0964b9;
     }
+  }
+  .save-patient-info {
+    margin-right: 20px;
   }
   &__body {
     display: flex;

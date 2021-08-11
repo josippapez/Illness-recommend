@@ -7,12 +7,12 @@ import Modal from '../../../SharedComponents/Modal/Modal';
 import DataDisplay from '../../../SharedComponents/DataDisplay/DataDisplay';
 import { Dropdown } from '../../../SharedComponents/Dropdown/Dropdown';
 import {
-  createUserDetails,
+  createPatientDetails,
   fetchUserInfoById,
   getAllAlergies,
   removeUserById,
-  updateUserDetails,
-  userInfoFetched,
+  updatePatientDetails,
+/*   userInfoFetched, */
 } from '../../../../store/actions';
 import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 
@@ -38,12 +38,12 @@ const UserInfoModal = props => {
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (props.userId) {
+    /*  if (props.userId) {
       dispatch(fetchUserInfoById(props.userId));
-    }
+    } */
     return () => {
       props.setUserId(null);
-      dispatch(
+      /*  dispatch(
         userInfoFetched({
           data: {
             id: null,
@@ -53,7 +53,7 @@ const UserInfoModal = props => {
             weight: null,
           },
         })
-      );
+      ); */
     };
   }, []);
 
@@ -283,11 +283,11 @@ const UserInfoModal = props => {
           <button
             className="footer__send-button"
             onClick={() => {
-              if (userDetails.data) {
+              /* if (userDetails.data) {
                 dispatch(updateUserDetails(userDetailsInfo));
               } else {
                 dispatch(createUserDetails(userDetailsInfo));
-              }
+              } */
             }}
           >
             Spremi

@@ -67,13 +67,13 @@ const UsersListPage = props => {
           </div>
         }
       />
-      {showUserInfoModal && (
+      {/*  {showUserInfoModal && (
         <UserInfoModal
           userId={userId}
           setUserId={setUserId}
           setShowUserInfoModal={setShowUserInfoModal}
         />
-      )}
+      )} */}
     </div>
   );
 };

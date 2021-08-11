@@ -7,6 +7,7 @@ import { alergies } from './alergiesReducer';
 import { medicationList } from './medicationReducer';
 import { symptoms } from './symptomsReducer';
 import { theme } from './themeReducer';
+import { patient } from './patientReducer';
 
 export const reducers = combineReducers({
   user,
@@ -15,4 +16,5 @@ export const reducers = combineReducers({
   medicationList,
   symptoms,
   theme,
+  patient,
 });

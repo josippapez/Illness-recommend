@@ -4,3 +4,4 @@ export * from './alergiesTypes';
 export * from './medicationTypes';
 export * from './symptomsTypes';
 export * from './appThemeTypes';
+export * from './patientTypes';

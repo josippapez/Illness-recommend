@@ -5,7 +5,7 @@ import AdminHomepage from './AdminHomepage/AdminHomepage';
 import MedicationListPage from './AdminHomepage/MedicationsListPage/MedicationListPage';
 import UsersListPage from './AdminHomepage/UsersListPage/UsersListPage';
 import MedicationSuggestionPage from './UserHomepage/MedicationSuggestionPage/MedicationSuggestionPage';
-import UserDetailsPage from './UserHomepage/UserDetailsPage/UserDetailsPage';
+import PatientDetailsPage from './UserHomepage/PatientDetailsPage/PatientDetailsPage';
 import UserHomepage from './UserHomepage/UserHomepage';
 
 const Routes = () => {
@@ -18,10 +18,14 @@ const Routes = () => {
   const userRoutes = [
     {
       route: '/user-details',
-      component: <UserDetailsPage userId={user.id} theme={theme} />,
+      component: <PatientDetailsPage theme={theme} />,
     },
     {
       route: '/medication-suggestion',
+      component: <MedicationSuggestionPage userId={user.id} theme={theme} />,
+    },
+    {
+      route: '/user-details-history',
       component: <MedicationSuggestionPage userId={user.id} theme={theme} />,
     },
   ];

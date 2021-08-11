@@ -25,6 +25,12 @@ const MedicationList = props => {
       <ListHeader setHeaders={setHeaders} headers={headers} />
       <tbody className="list-table__item-row">
         {props.medicationList.map(medication => {
+          let addedToList = false;
+          if (props.selectedMedicationList && props.setMedicationList) {
+            addedToList = props.selectedMedicationList.find(
+              selectedMedication => selectedMedication.id === medication.id
+            );
+          }
           return (
             <tr className="spacer  item-row" key={medication.id}>
               <td style={{ width: '10%', minWidth: '50px' }}>
@@ -40,7 +46,23 @@ const MedicationList = props => {
               >
                 {medication.description}
               </td>
-              <td style={{ width: '10%', minWidth: '50px' }}>
+              <td
+                style={{ width: '10%', minWidth: '50px', padding: '10px 40px' }}
+              >
+                {props.setMedicationList && (
+                  <button
+                    id="link-to-medication-page"
+                    style={{
+                      marginBottom: '20px',
+                      color: addedToList && 'red',
+                    }}
+                    onClick={() => {
+                      props.setMedicationList(medication);
+                    }}
+                  >
+                    {addedToList ? 'Obriši' : 'Dodaj'}
+                  </button>
+                )}
                 <button
                   id="link-to-medication-page"
                   onClick={() => {
@@ -64,6 +86,8 @@ MedicationList.propTypes = {
   medicationList: PropTypes.arrayOf(PropTypes.shape({})).isRequired,
   setSelectedMedication: PropTypes.func,
   setShowMedicationInfoModal: PropTypes.func,
+  setMedicationList: PropTypes.func,
+  selectedMedicationList: PropTypes.array,
 };
 
 export default MedicationList;

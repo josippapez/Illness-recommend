@@ -40,7 +40,7 @@ const UsersList = props => {
                 <button
                   id="link-to-medication-page"
                   onClick={() => {
-                    dispatch(userInfoFetched({ data: null }));
+                    /*  dispatch(userInfoFetched({ data: null })); */
                     props.setUserId(user.id);
                     props.setShowUserInfoModal(true);
                   }}

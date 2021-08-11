@@ -7,6 +7,8 @@ import {
   getAllMedications,
   getAllSymptoms,
   getMedicationsBySymptomsAndAlergies,
+  patientInfoFetched,
+  updatePatientDetails,
 } from '../../../store/actions';
 import { Dropdown } from '../../SharedComponents/Dropdown/Dropdown';
 import './MedicationSuggestionPage.scss';
@@ -18,14 +20,55 @@ const MedicationSuggestionPage = props => {
 
   const symptoms = useSelector(state => state.symptoms.symptoms);
   const medicationList = useSelector(state => state.medicationList);
+  const PatientDetails = useSelector(state => state.patient);
+
+  const [PatientDetailsInfo, setPatientDetailsInfo] = useState(
+    PatientDetails.patientInfo
+  );
 
   const [selectedSymptoms, setSelectedSymptoms] = useState([]);
   const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
-  const [selectedMedication, setSelectedMedication] = useState(null);
+  const [selectedMedication, setSelectedMedication] = useState(
+    PatientDetailsInfo ? PatientDetailsInfo.medicationsSelected : []
+  );
+
+  useEffect(() => {
+    let timeout;
+    if (
+      JSON.stringify(selectedMedication) !==
+      JSON.stringify(PatientDetailsInfo.medicationsSelected)
+    ) {
+      timeout = setTimeout(() => {
+        setPatientDetailsInfo({
+          ...PatientDetailsInfo,
+          medicationsSelected: selectedMedication,
+        });
+      }, 500);
+    }
+    return () => {
+      clearTimeout(timeout);
+    };
+  }, [selectedMedication]);
 
   useEffect(() => {
     dispatch(getAllSymptoms());
   }, []);
+  console.log(selectedMedication);
+  const setMedicationList = medication => {
+    if (
+      selectedMedication.find(
+        savedMedication => savedMedication.id === medication.id
+      )
+    ) {
+      setSelectedMedication(
+        [...selectedMedication].filter(
+          savedMedication => savedMedication.id !== medication.id
+        )
+      );
+    } else {
+      setSelectedMedication([...selectedMedication, medication]);
+    }
+  };
 
   return (
     <div className="medication-suggestions-page">
@@ -39,14 +82,24 @@ const MedicationSuggestionPage = props => {
         TopSpacing={30}
         floatDataRight
         data={
-          <button
-            className="serach-medications-button"
-            onClick={() => {
-              dispatch(getMedicationsBySymptomsAndAlergies(selectedSymptoms));
-            }}
-          >
-            Pretraži
-          </button>
+          <>
+            <button
+              className="save-patient-info"
+              onClick={() => {
+                dispatch(updatePatientDetails(PatientDetailsInfo));
+              }}
+            >
+              Spremi odabrane lijekove
+            </button>
+            <button
+              className="search-medications-button"
+              onClick={() => {
+                dispatch(getMedicationsBySymptomsAndAlergies(selectedSymptoms));
+              }}
+            >
+              Pretraži
+            </button>
+          </>
         }
       />
       <div className="medication-suggestions-page__body">
@@ -142,6 +195,8 @@ const MedicationSuggestionPage = props => {
                 medicationList={medicationList.medications}
                 setShowMedicationInfoModal={setShowMedicationInfoModal}
                 setSelectedMedication={setSelectedMedication}
+                setMedicationList={setMedicationList}
+                selectedMedicationList={PatientDetailsInfo.medicationsSelected}
               />
             ) : (
               medicationList.medications && (

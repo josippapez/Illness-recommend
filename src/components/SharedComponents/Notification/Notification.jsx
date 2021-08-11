@@ -5,11 +5,12 @@ import { ToastContainer, toast } from 'react-toastify';
 const Notification = () => {
   const user = useSelector(state => state.user);
   const userInfo = useSelector(state => state.user.userInfo);
+  const patientInfo = useSelector(state => state.patient);
   const medicationInfo = useSelector(
     state => state.medicationList.medicationInfo
   );
 
-  const statusArray = [user, userInfo, medicationInfo];
+  const statusArray = [user, userInfo, medicationInfo, userInfo, patientInfo];
   useEffect(() => {
     statusArray.map(statusInfo => {
       if (
