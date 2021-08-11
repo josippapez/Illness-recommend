@@ -137,7 +137,7 @@ export const createPatientDetails = patient => {
   };
 };
 
-export const updatePatientDetails = patient => {
+export const updatePatientDetails = (patient, selectedSymptoms) => {
   return (dispatch, getState) => {
     axios({
       method: 'PATCH',
@@ -147,6 +147,7 @@ export const updatePatientDetails = patient => {
       },
       data: {
         ...patient,
+        symptomsSelected: selectedSymptoms,
       },
     })
       .then(response => {

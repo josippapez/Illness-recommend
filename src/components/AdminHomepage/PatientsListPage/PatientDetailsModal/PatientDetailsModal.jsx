@@ -6,6 +6,7 @@ import './PatientDetailsModa.scss';
 import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 import { useDispatch, useSelector } from 'react-redux';
 import { removePatientDetailsById } from '../../../../store/actions';
+import moment from 'moment';
 
 const PatientDetailsModal = props => {
   const dispatch = useDispatch();
@@ -44,6 +45,13 @@ const PatientDetailsModal = props => {
             data={selectedPatient.name}
           />
           <DataDisplay
+            dataHeader="Datum pregleda"
+            displayInColumn
+            headerBolded
+            dataSeparatorTopSpacing={4}
+            data={moment(selectedPatient.created).format('DD.MM.YYYY. HH:mm:ss')}
+          />
+          <DataDisplay
             dataHeader="OIB"
             displayInColumn
             headerBolded
@@ -74,7 +82,7 @@ const PatientDetailsModal = props => {
           {selectedPatient.symptomsSelected &&
             selectedPatient.symptomsSelected.length > 0 && (
             <DataDisplay
-              dataHeader="Alergije"
+              dataHeader="Odabrani simptomi"
               displayInColumn
               headerBolded
               dataSeparatorTopSpacing={4}

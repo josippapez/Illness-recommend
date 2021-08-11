@@ -26,7 +26,9 @@ const MedicationSuggestionPage = props => {
     PatientDetails.currentPatientInfo
   );
 
-  const [selectedSymptoms, setSelectedSymptoms] = useState([]);
+  const [selectedSymptoms, setSelectedSymptoms] = useState(
+    PatientDetailsInfo ? PatientDetailsInfo.symptomsSelected : []
+  );
   const [showMedicationInfoModal, setShowMedicationInfoModal] = useState(false);
   const [medicationToView, setMedicationToView] = useState(null);
   const [selectedMedication, setSelectedMedication] = useState(
@@ -85,14 +87,18 @@ const MedicationSuggestionPage = props => {
         data={
           <>
             <button
+              type="button"
               className="save-patient-info"
               onClick={() => {
-                dispatch(updatePatientDetails(PatientDetailsInfo));
+                dispatch(
+                  updatePatientDetails(PatientDetailsInfo, selectedSymptoms)
+                );
               }}
             >
               Spremi odabrane lijekove
             </button>
             <button
+              type="button"
               className="search-medications-button"
               onClick={() => {
                 dispatch(getMedicationsBySymptomsAndAlergies(selectedSymptoms));

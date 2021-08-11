@@ -65,7 +65,7 @@ export const getMedicationsBySymptomsAndAlergies = symptoms => {
       headers: {
         Authorization: `Bearer ${Cookies.get('Accesstoken')}`,
       },
-      data: symptoms,
+      data: { symptoms, userId: getState().patient.currentPatientInfo.id },
     })
       .then(response => {
         dispatch(
