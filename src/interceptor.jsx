@@ -17,6 +17,9 @@ export const refreshAuthentication = () => {
   return axios({
     method: 'GET',
     url: `${process.env.REACT_APP_API_URL}/authentication/refresh`,
+    headers: {
+      Authorization: `Bearer ${Cookies.get('Refreshtoken')}`,
+    },
   })
     .then(response => {
       Cookies.set('Accesstoken', response.data, {
@@ -59,6 +62,9 @@ export const refreshAccessTokenAndReattemptRequest = async (
     }
     const originalRequest = new Promise(resolve => {
       addSubscriber(() => {
+        errorResponse.config.headers.Authorization = `Bearer ${Cookies.get(
+          'Accesstoken'
+        )}`;
         resolve(axios(errorResponse.config));
       });
     });
