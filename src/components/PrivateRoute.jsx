@@ -10,8 +10,10 @@ import {
 } from '../interceptor';
 import Cookies from 'js-cookie';
 import Navbar from './SharedComponents/Navbar/Navbar';
+import { useSelector } from 'react-redux';
 
 const PrivateRoute = props => {
+  const user = useSelector(state => state.user);
   const [response, setResponse] = useState(null);
   const [alreadyFetched, setAlreadyFetched] = useState(null);
 
@@ -20,23 +22,22 @@ const PrivateRoute = props => {
   }, []);
 
   const renderFunc = async () => {
-    let expiredToken;
-    const expiredTokenCookie = Cookies.get('Accesstoken');
+    let accessToken;
+    const accessTokenCookie = Cookies.get('Accesstoken');
     const refreshTokenCookie = Cookies.get('Refreshtoken');
-    if (expiredTokenCookie) {
-      expiredToken = token.decode(expiredTokenCookie).exp;
-    } else {
-      logOutAndWipeLocalStorage();
-      return;
+    if (accessTokenCookie) {
+      accessToken = token.decode(accessTokenCookie).exp;
     }
     if (
-      refreshTokenCookie &&
-      token.decode(refreshTokenCookie).exp <= moment.utc().unix()
+      (refreshTokenCookie &&
+        token.decode(refreshTokenCookie).exp <= moment.utc().unix()) ||
+      !accessTokenCookie ||
+      !user.id
     ) {
       logOutAndWipeLocalStorage();
       return;
     }
-    if (expiredToken && expiredToken > moment.utc().unix()) {
+    if (accessToken && accessToken > moment.utc().unix()) {
       setResponse(true);
       setAlreadyFetched(false);
     } else if (!alreadyFetched && refreshTokenCookie) {

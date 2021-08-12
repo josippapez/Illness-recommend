@@ -107,6 +107,14 @@ export const intercept = () => {
       const accessTokenExpiration = token.decode(Cookies.get('Accesstoken'));
       const refreshTokenExpiration = token.decode(Cookies.get('Refreshtoken'));
       if (
+        !refreshTokenExpiration ||
+        (refreshTokenExpiration &&
+          refreshTokenExpiration.exp <= moment.utc().unix())
+      ) {
+        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
+        logOutAndWipeLocalStorage();
+      }
+      if (
         accessTokenExpiration &&
         accessTokenExpiration.exp <= moment.utc().unix()
       ) {
@@ -114,13 +122,6 @@ export const intercept = () => {
           error,
           refreshTokenExpiration
         );
-      }
-      if (
-        refreshTokenExpiration &&
-        refreshTokenExpiration.exp <= moment.utc().unix()
-      ) {
-        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
-        logOutAndWipeLocalStorage();
       }
       Promise.reject(error);
     }
@@ -132,6 +133,14 @@ export const intercept = () => {
       const accessTokenExpiration = token.decode(Cookies.get('Accesstoken'));
       const refreshTokenExpiration = token.decode(Cookies.get('Refreshtoken'));
       if (
+        !refreshTokenExpiration ||
+        (refreshTokenExpiration &&
+          refreshTokenExpiration.exp <= moment.utc().unix())
+      ) {
+        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
+        logOutAndWipeLocalStorage();
+      }
+      if (
         accessTokenExpiration &&
         accessTokenExpiration.exp <= moment.utc().unix()
       ) {
@@ -139,13 +148,6 @@ export const intercept = () => {
           error,
           refreshTokenExpiration
         );
-      }
-      if (
-        refreshTokenExpiration &&
-        refreshTokenExpiration.exp <= moment.utc().unix()
-      ) {
-        alert('Vaša sjednica je istekla. Ponovno se prijavite!');
-        logOutAndWipeLocalStorage();
       }
       return Promise.reject(error);
     }

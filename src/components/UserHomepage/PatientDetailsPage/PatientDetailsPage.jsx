@@ -35,7 +35,10 @@ const PatientDetailsPage = props => {
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (PatientDetails.currentPatientInfo && PatientDetails.currentPatientInfo.id) {
+    if (
+      PatientDetails.currentPatientInfo &&
+      PatientDetails.currentPatientInfo.id
+    ) {
       dispatch(fetchPatientById(PatientDetails.currentPatientInfo.id));
     }
   }, []);
@@ -97,6 +100,14 @@ const PatientDetailsPage = props => {
             />
           }
         />
+        {PatientDetails.error &&
+          PatientDetails.error.find(error => error.field === 'name') &&
+          PatientDetails.error.map(
+            error =>
+              error.field === 'name' && (
+                <div className="error">{error.message}</div>
+              )
+          )}
         <DataDisplay
           dataHeader="OIB"
           displayInColumn
@@ -116,6 +127,14 @@ const PatientDetailsPage = props => {
             />
           }
         />
+        {PatientDetails.error &&
+          PatientDetails.error.find(error => error.field === 'oib') &&
+          PatientDetails.error.map(
+            error =>
+              error.field === 'oib' && (
+                <div className="error">{error.message}</div>
+              )
+          )}
         <DataDisplay
           dataHeader="Dob (g)"
           displayInColumn
@@ -135,6 +154,14 @@ const PatientDetailsPage = props => {
             />
           }
         />
+        {PatientDetails.error &&
+          PatientDetails.error.find(error => error.field === 'age') &&
+          PatientDetails.error.map(
+            error =>
+              error.field === 'age' && (
+                <div className="error">{error.message}</div>
+              )
+          )}
         <DataDisplay
           dataHeader="Težina (kg)"
           displayInColumn
@@ -154,6 +181,14 @@ const PatientDetailsPage = props => {
             />
           }
         />
+        {PatientDetails.error &&
+          PatientDetails.error.find(error => error.field === 'weight') &&
+          PatientDetails.error.map(
+            error =>
+              error.field === 'weight' && (
+                <div className="error">{error.message}</div>
+              )
+          )}
         <DataDisplay
           dataHeader="Dojenje ili trudnoća?"
           displayInColumn
@@ -277,7 +312,10 @@ const PatientDetailsPage = props => {
         <button
           className="footer__send-button"
           onClick={() => {
-            if (PatientDetails.currentPatientInfo && PatientDetails.currentPatientInfo.id) {
+            if (
+              PatientDetails.currentPatientInfo &&
+              PatientDetails.currentPatientInfo.id
+            ) {
               dispatch(updatePatientDetails(PatientDetailsInfo));
             } else {
               dispatch(createPatientDetails(PatientDetailsInfo));
