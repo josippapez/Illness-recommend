@@ -7,8 +7,6 @@ import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import './PatientDetailsPage.scss';
 import {
   createPatientDetails,
-  fetchPatientById,
-  fetchUserInfoById,
   getAllAlergies,
   currentPatientInfoFetched,
   updatePatientDetails,
@@ -35,12 +33,6 @@ const PatientDetailsPage = props => {
 
   useEffect(() => {
     dispatch(getAllAlergies());
-    if (
-      PatientDetails.currentPatientInfo &&
-      PatientDetails.currentPatientInfo.id
-    ) {
-      dispatch(fetchPatientById(PatientDetails.currentPatientInfo.id));
-    }
   }, []);
 
   useEffect(() => {
