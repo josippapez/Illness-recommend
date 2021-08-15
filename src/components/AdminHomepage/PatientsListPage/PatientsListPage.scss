@@ -13,12 +13,6 @@
 .patients-list-page {
   -webkit-animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: fade-in 0.3s cubic-bezier(0.39, 0.575, 0.565, 1) both;
-  &__actions {
-    display: flex;
-    .search {
-      margin-right: 10px;
-    }
-  }
   &__list {
     &__display-list {
       &__not-found {
