@@ -2,10 +2,7 @@ import React, { useEffect, useState } from 'react';
 import PropTypes from 'prop-types';
 import './UsersListPage.scss';
 import { useDispatch, useSelector } from 'react-redux';
-import {
-  getAllUsers,
-  searchUsersByText,
-} from '../../../store/actions/usersActions';
+import { getAllUsers, searchUsersByText } from '../../../store/actions';
 import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import UsersList from './UsersList/UsersList';
 import UserInfoModal from './UserInfoModal/UserInfoModal';

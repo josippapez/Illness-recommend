@@ -44,16 +44,16 @@ const PrivateRoute = props => {
       const response = await refreshAuthentication();
       if (response.status !== 200) {
         logOutAndWipeLocalStorage();
+        return;
       }
       const newToken = Cookies.get('Accesstoken');
       const decodedToken = token.decode(newToken);
       if (decodedToken == null || decodedToken.exp <= moment.utc().unix()) {
         logOutAndWipeLocalStorage();
+        return;
       }
       setAlreadyFetched(true);
       renderFunc();
-    } else {
-      logOutAndWipeLocalStorage();
     }
   };
 
@@ -67,8 +67,6 @@ const PrivateRoute = props => {
         </div>
       </div>
     </>
-  ) : response === false ? (
-    <Redirect to="/login" />
   ) : null;
 };
 

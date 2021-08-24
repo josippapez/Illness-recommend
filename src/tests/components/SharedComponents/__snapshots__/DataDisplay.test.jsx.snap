@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Data display renders correctly 1`] = `"<div style=\\"margin-top: 20px; margin-bottom: 0px;\\"><div class=\\"\\"><div class=\\"dataDisplayHeader row bolded\\" style=\\"font-weight: bold; color: black; transition: color 0.2s ease-in-out; font-size: 16px; text-align: left;\\">test</div><div style=\\"border-top: 1px solid #000000; margin-top: 15px; margin-bottom: 0px;\\"></div></div></div>"`;
+
+exports[`Data display renders correctly when data prop is passed 1`] = `"<div style=\\"margin-top: 20px; margin-bottom: 0px;\\"><div class=\\"\\"><div class=\\"dataDisplayHeader row\\" style=\\"color: black; transition: color 0.2s ease-in-out; font-size: 16px; text-align: left;\\">test </div><div style=\\"margin-top: 0px; margin-bottom: 0px;\\"></div><div class=\\"\\">test</div></div></div>"`;
+
+exports[`Data display renders correctly when url prop is passed 1`] = `"<div style=\\"margin-top: 20px; margin-bottom: 0px;\\"><div class=\\"row-display\\"><div class=\\"dataDisplayHeader col label bolded\\" style=\\"font-weight: bold; color: black; transition: color 0.2s ease-in-out; min-width: 25%; margin-right: 16px; font-size: 16px; text-align: left;\\">test</div><div class=\\"col\\" style=\\"padding-left: 16px;\\"><a href=\\"//test\\" rel=\\"noopener noreferrer\\" target=\\"_blank\\"></a></div></div></div>"`;

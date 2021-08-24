@@ -1,0 +1,7 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Notification Modal closes on close button click 1`] = `"<div class=\\"Toastify\\"></div>"`;
+
+exports[`Notification Renders correctly when no request successfuly finished 1`] = `"<div class=\\"Toastify\\"></div>"`;
+
+exports[`Notification Renders correctly when request successfuly finished 1`] = `"<div class=\\"Toastify\\"></div>"`;

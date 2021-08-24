@@ -233,7 +233,8 @@
         .body {
           width: 100%;
         }
-        &__email {
+        &__email,
+        &__name {
           z-index: 2;
           padding: 8px 10px;
           font-size: 16px;

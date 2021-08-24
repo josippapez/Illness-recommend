@@ -1,0 +1,5 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Routes renders correctly 1`] = `"<div class=\\"admin-homepage\\"><div class=\\"admin-homepage__main-text\\">Dobrodošli, Josip Papež!</div></div>"`;
+
+exports[`Routes renders correctly when user is authenticated 1`] = `"<div class=\\"admin-homepage\\"><div class=\\"admin-homepage__main-text\\">Dobrodošli, Josip Papež!</div></div>"`;

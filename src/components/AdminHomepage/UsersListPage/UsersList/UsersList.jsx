@@ -4,7 +4,7 @@ import { Container, Table } from 'reactstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import ListHeader from '../../../SharedComponents/ListHeader/ListHeader';
 import '../../../../styles/ListTable.scss';
-import { userInfoFetched } from '../../../../store/actions/usersActions';
+import { userInfoFetched } from '../../../../store/actions';
 
 const UsersList = props => {
   const currentUser = useSelector(state => state.user);

@@ -9,7 +9,7 @@ import DataDisplay from '../../SharedComponents/DataDisplay/DataDisplay';
 import {
   getAllMedications,
   searchMedicationsByText,
-} from '../../../store/actions/medicationActions';
+} from '../../../store/actions';
 import AddButton from '../../SharedComponents/AddButton/AddButton';
 import Search from '../../SharedComponents/Search/Search';
 import {

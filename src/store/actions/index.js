@@ -4,3 +4,4 @@ export * from './alergiesActions';
 export * from './symptomsActions';
 export * from './medicationActions';
 export * from './patientActions';
+export * from './appThemeActions';

@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Alert Modal Renders correctly 1`] = `"<div class=\\"modal modal-for-alert\\"><div class=\\"overlay\\"><div class=\\"overlay__children\\"><div class=\\"modal-container-alert\\"><div class=\\"alert-modal\\"><div class=\\"alert-modal__icon-alert\\"></div><div class=\\"alert-modal__header-text\\"><div class=\\"header-main-text\\">Oprez!</div><div class=\\"header-small-text\\">test</div></div><div class=\\"button-container\\"><button class=\\"alert-decline-button\\">Ne</button><button class=\\"alert-confirm-button\\">Da</button></div></div></div></div></div></div>"`;

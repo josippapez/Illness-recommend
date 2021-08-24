@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import classNames from 'classnames';
 import { NavLink, useHistory } from 'react-router-dom';
 
 import './Navbar.scss';
 import { logOutAndWipeLocalStorage } from '../../../interceptor';
-import { setDarkTheme } from '../../../store/actions/appThemeActions';
+import { setDarkTheme } from '../../../store/actions';
 
 import Logo from '../../../styles/assets/images/Logo.svg';
 import LogoWithWhiteText from '../../../styles/assets/images/LogoWhiteText.svg';

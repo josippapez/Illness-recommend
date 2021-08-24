@@ -11,7 +11,7 @@ import MedicationList from './MedicationList/MedicationList';
 import {
   getAllMedications,
   searchMedicationsByText,
-} from '../../../store/actions/medicationActions';
+} from '../../../store/actions';
 import AddButton from '../../SharedComponents/AddButton/AddButton';
 import Search from '../../SharedComponents/Search/Search';
 

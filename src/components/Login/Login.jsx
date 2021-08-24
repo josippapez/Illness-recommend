@@ -130,7 +130,7 @@ function Login() {
                       data={
                         <>
                           <input
-                            className="content-container__email"
+                            className="content-container__name"
                             type="text"
                             aria-autocomplete="inline"
                             onChange={e => {
@@ -148,9 +148,9 @@ function Login() {
                             ) && (
                             <div>
                               {errorMessage.map(
-                                error =>
+                                (error, index) =>
                                   error.field === 'name' && (
-                                    <div className="error">
+                                    <div key={index} className="error">
                                       {error.message}
                                     </div>
                                   )

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 import { useDispatch } from 'react-redux';
 import ListHeader from '../../../SharedComponents/ListHeader/ListHeader';
 import '../../../../styles/ListTable.scss';
-import { medicationInfoFetched } from '../../../../store/actions/medicationActions';
+import { medicationInfoFetched } from '../../../../store/actions';
 
 const PatientsList = props => {
   const dispatch = useDispatch();
