@@ -83,6 +83,7 @@ function Login() {
           }}
           onClick={e => {
             if (
+              e.target.className !== 'content-container__name' &&
               e.target.className !== 'content-container__email' &&
               e.target.className !== 'content-container__password' &&
               buttonRef.current
@@ -169,18 +170,36 @@ function Login() {
                     displayInColumn
                     dataSeparatorTopSpacing={6}
                     data={
-                      <input
-                        className="content-container__email"
-                        type="email"
-                        aria-autocomplete="inline"
-                        onChange={e => {
-                          e.preventDefault();
-                          setEmail(e.target.value);
-                        }}
-                        value={email ? email : ''}
-                        placeholder="E-mail"
-                        name="email"
-                      />
+                      <>
+                        <input
+                          className="content-container__email"
+                          type="email"
+                          aria-autocomplete="inline"
+                          onChange={e => {
+                            e.preventDefault();
+                            setEmail(e.target.value);
+                          }}
+                          value={email ? email : ''}
+                          placeholder="E-mail"
+                          name="email"
+                        />
+                        {errorMessage &&
+                          errorMessage.length > 0 &&
+                          errorMessage.find(
+                            error => error.field === 'email'
+                          ) && (
+                          <div>
+                            {errorMessage.map(
+                              (error, index) =>
+                                error.field === 'email' && (
+                                  <div key={index} className="error">
+                                    {error.message}
+                                  </div>
+                                )
+                            )}
+                          </div>
+                        )}
+                      </>
                     }
                   />
                   <DataDisplay
@@ -211,6 +230,19 @@ function Login() {
                             'show-password': displayPassword,
                           })}
                         />
+                        {errorMessage &&
+                          errorMessage.length > 0 &&
+                          errorMessage.find(
+                            error => error.field === 'password'
+                          ) && (
+                          <div className="error">
+                            {
+                              errorMessage.find(
+                                error => error.field === 'password'
+                              ).message
+                            }
+                          </div>
+                        )}
                       </div>
                     }
                   />

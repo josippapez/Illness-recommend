@@ -101,11 +101,6 @@ const initialState = {
     patientList: null,
   },
 };
-/*
-jest.mock('react', () => ({
-  ...jest.requireActual('react'),
-  useLayoutEffect: jest.requireActual('react').useEffect,
-})); */
 
 jest.mock('react-redux', () => ({
   ...jest.requireActual('react-redux'),

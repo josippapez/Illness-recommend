@@ -2,9 +2,8 @@ import axios from 'axios';
 import Cookies from 'js-cookie';
 import token from 'jsonwebtoken';
 import moment from 'moment';
-import { userLoggedIn } from './store/actions';
 
-import { persistor, store } from './store/store';
+import { persistor } from './store/store';
 
 let subscribers = [];
 let isAlreadyFetchingAccessToken = false;

@@ -128,6 +128,15 @@ const MedicationSuggestionPage = props => {
                   handleSelect={item => {
                     if (item.id) {
                       setSelectedSymptoms([...selectedSymptoms, item]);
+                      dispatch(
+                        currentPatientInfoFetched({
+                          ...PatientDetailsInfo,
+                          symptomsSelected: [
+                            ...selectedSymptoms,
+                            item,
+                          ],
+                        })
+                      );
                     }
                   }}
                   list={

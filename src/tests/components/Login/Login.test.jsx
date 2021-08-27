@@ -69,21 +69,6 @@ describe('Login', () => {
     expect(component.html()).toMatchSnapshot();
   });
 
-  it('it should show an error message if there is error', () => {
-    window.location.replace('/login?message=error');
-    jest.spyOn(URLSearchParams.prototype, 'get').mockImplementation(key => key);
-    loginError.mockImplementation(message => ({
-      type: 'TEST',
-      payload: { message },
-    }));
-    const newComponent = mount(
-      <Provider store={store}>
-        <Login />
-      </Provider>
-    );
-    expect(newComponent.find('.login__message')).toBeTruthy();
-  });
-
   describe('form', () => {
     it('it should show a form when clicked on non-student login button', () => {
       const registerBtn = component.find(
@@ -105,7 +90,7 @@ describe('Login', () => {
       expect(loginError).toBeCalled();
     });
 
-    it('email and password content changes on input', () => {
+    it('name, email and password content changes on input', () => {
       component
         .find('.login__button-container__register-btn')
         .simulate('click');

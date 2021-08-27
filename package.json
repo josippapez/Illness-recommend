@@ -30,7 +30,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
-    "test": "CI=true react-scripts test --updateSnapshot --reporters=default --coverage",
+    "test": "set CI=true&&react-scripts test --updateSnapshot --reporters=default --coverage",
     "test-coverage": "CI=true npm test -- --coverage",
     "test-watch": "react-scripts test",
     "eject": "react-scripts eject",

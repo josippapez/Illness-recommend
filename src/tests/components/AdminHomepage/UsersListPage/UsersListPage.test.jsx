@@ -3,11 +3,8 @@ import React from 'react';
 import { Provider } from 'react-redux';
 import configureStore from 'redux-mock-store';
 import { mount } from 'enzyme';
-
-import UsersList from '../../../../components/AdminHomepage/UsersListPage/UsersList/UsersList';
 import {
   fetchUserInfoById,
-  getAllAlergies,
   getAllUsers,
   searchUsersByText,
   userInfoFetched,
@@ -37,20 +34,6 @@ const store = mockStore({
       error: null,
       status: null,
     },
-  },
-  alergies: {
-    alergies: [
-      {
-        id: 1,
-        name: 'Amikacin',
-      },
-      {
-        id: 2,
-        name: 'Azitromicin',
-      },
-    ],
-    error: null,
-    status: null,
   },
   usersList: {
     users: [
@@ -90,7 +73,6 @@ describe('Users list page', () => {
     getAllUsers.mockImplementation(() => ({ type: 'test' }));
     searchUsersByText.mockImplementation(() => ({ type: 'test' }));
     userInfoFetched.mockImplementation(() => ({ type: 'test' }));
-    getAllAlergies.mockImplementation(() => ({ type: 'test' }));
     fetchUserInfoById.mockImplementation(() => ({ type: 'test' }));
     component = mount(
       <Provider store={store}>

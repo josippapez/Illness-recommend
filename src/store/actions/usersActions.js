@@ -108,8 +108,8 @@ export const updateUserDetails = userDetails => {
         dispatch({
           type: SET_ERROR_USER_LIST,
           payload: {
-            error: error.message,
-            status: error.status,
+            error: error.response.data,
+            status: error.response.status,
           },
         })
       );

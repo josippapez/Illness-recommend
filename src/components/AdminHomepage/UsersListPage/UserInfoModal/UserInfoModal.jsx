@@ -7,21 +7,17 @@ import Modal from '../../../SharedComponents/Modal/Modal';
 import DataDisplay from '../../../SharedComponents/DataDisplay/DataDisplay';
 import { Dropdown } from '../../../SharedComponents/Dropdown/Dropdown';
 import {
-  createPatientDetails,
   fetchUserInfoById,
-  getAllAlergies,
   removeUserById,
-  updatePatientDetails,
   updateUserDetails,
   userInfoFetched,
-  /*   userInfoFetched, */
 } from '../../../../store/actions';
 import AlertModal from '../../../SharedComponents/AlertModal/AlertModal';
 
 const UserInfoModal = props => {
   const dispatch = useDispatch();
   const userDetails = useSelector(state => state.user.userInfo);
-  const alergies = useSelector(state => state.alergies.alergies);
+  const userList = useSelector(state => state.usersList);
 
   const [showAlertModal, setShowAlertModal] = useState(false);
   const [isTryingToDelete, setIsTryingToDelete] = useState(false);
@@ -33,7 +29,6 @@ const UserInfoModal = props => {
   });
 
   useEffect(() => {
-    dispatch(getAllAlergies());
     if (props.userId) {
       dispatch(fetchUserInfoById(props.userId));
     }
@@ -119,6 +114,13 @@ const UserInfoModal = props => {
               }
             </div>
           )}
+          {userList &&
+            userList.error &&
+            userList.error.find(error => error.field === 'name') && (
+            <div className="error">
+              {userList.error.find(error => error.field === 'name').message}
+            </div>
+          )}
           <DataDisplay
             dataHeader="Email"
             displayInColumn
@@ -144,6 +146,13 @@ const UserInfoModal = props => {
                 userDetails.error.find(error => error.field === 'email')
                   .message
               }
+            </div>
+          )}
+          {userList &&
+            userList.error &&
+            userList.error.find(error => error.field === 'email') && (
+            <div className="error">
+              {userList.error.find(error => error.field === 'email').message}
             </div>
           )}
           <DataDisplay
